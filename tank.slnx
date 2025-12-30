@@ -1,0 +1,7 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="tank/tank.vcxproj" Id="a17023ea-4508-497b-a682-fe9cc9fce411" />
+</Solution>
