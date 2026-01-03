@@ -172,7 +172,6 @@ public:
             {position[0] + 1, position[1] + step, position[2] + 1},
             {position[0] - 1, position[1] + step, position[2] + 1},
             {position[0] + 1, position[1] - step, position[2] - 1},
-            // можно добавить остальные вершины куба, чтобы точнее
         };
     }
 };
@@ -192,13 +191,11 @@ public:
 
         glPushMatrix();
 
-        // ===== WORLD TRANSFORM =====
         glTranslatef(position[0], position[1], position[2]);
         glRotatef(angle, 0, 1, 0);
-
-        // ================= BODY =================
         glColor3f(0, 0.8f, 0);
 
+        //BODY
         glBegin(GL_QUADS);
         // Front
         glVertex3f(-1, -bodyH, 1);
@@ -284,7 +281,7 @@ public:
         glVertex3f(-t, -t, t);
         glEnd();
 
-        // ================= GUN =================
+        //GUN
         glPushMatrix();
 
         glTranslatef(0.0f, 0.0f, t);
@@ -346,19 +343,16 @@ public:
 };
 class Radar : public Enemy {
 public:
-    float rotationSpeed = 90.0f; // градусов в секунду
+    float rotationSpeed = 90.0f;
 
     Radar() {
         maxHealth = 120;
         health = 120;
     }
-
     void Update(float dt) override {
         angle += rotationSpeed * dt;
         if (angle >= 360.0f) angle -= 360.0f;
     }
-
-    // ===== Примитив: цилиндр =====
     void DrawCylinder(float r, float h, int slices) {
         glBegin(GL_QUAD_STRIP);
         for (int i = 0; i <= slices; i++) {
@@ -370,12 +364,10 @@ public:
         }
         glEnd();
     }
-
-    // ===== Примитив: параболическая тарелка =====
     void DrawDish(float radius, float depth) {
         int slices = 20;
         glBegin(GL_TRIANGLE_FAN);
-        glVertex3f(0, 0, 0); // центр
+        glVertex3f(0, 0, 0); 
         for (int i = 0; i <= slices; i++) {
             float a = i * 2.0f * 3.14159f / slices;
             float x = cos(a) * radius;
@@ -384,12 +376,10 @@ public:
         }
         glEnd();
     }
-
     void OnDraw() override {
         glPushMatrix();
         glTranslatef(position[0], position[1], position[2]);
 
-        // ===== БЕТОННОЕ ОСНОВАНИЕ =====
         glColor3f(0.4f, 0.4f, 0.4f);
         glBegin(GL_QUADS);
         glVertex3f(-0.8f, 0, -0.8f);
@@ -398,16 +388,13 @@ public:
         glVertex3f(-0.8f, 0.3f, -0.8f);
         glEnd();
 
-        // ===== МАЧТА =====
         glTranslatef(0, 0.3f, 0);
         glColor3f(0.6f, 0.6f, 0.6f);
         DrawCylinder(0.12f, 1.4f, 16);
 
-        // ===== АНТЕННА (ВРАЩАЕТСЯ) =====
         glTranslatef(0, 1.5f, 0);
         glRotatef(angle, 0, 1, 0);
 
-        // рамка
         glColor3f(0.1f, 0.8f, 0.1f);
         glBegin(GL_LINE_LOOP);
         for (int i = 0; i < 32; i++) {
@@ -416,12 +403,10 @@ public:
         }
         glEnd();
 
-        // тарелка
         glTranslatef(0, 0, -0.05f);
         glColor3f(0.0f, 0.6f, 0.0f);
         DrawDish(1.0f, 0.3f);
 
-        // излучатель
         glColor3f(0.9f, 0.9f, 0.2f);
         glBegin(GL_QUADS);
         glVertex3f(-0.05f, -0.05f, 0.1f);
@@ -432,7 +417,6 @@ public:
 
         glPopMatrix();
     }
-
     void UpdateVertices() override {
         vertices = {
             {position[0] - 1.0f, position[1], position[2] - 1.0f},
@@ -442,7 +426,7 @@ public:
 };
 class ApartmentBuilding : public Enemy {
 public:
-    int floors = 5;          // количество этажей
+    int floors = 5;         
     float floorHeight = 0.6f;
     float width = 4.0f;
     float depth = 2.0f;
@@ -460,7 +444,7 @@ public:
 
         float totalH = floors * floorHeight;
 
-        // ===== ОСНОВНОЙ КОРПУС =====
+        // BODY
         glColor3f(0.75f, 0.75f, 0.7f);
 
         glBegin(GL_QUADS);
@@ -496,7 +480,7 @@ public:
         glVertex3f(width, totalH, -depth);
         glEnd();
 
-        // ===== ОКНА =====
+        // WINDOWS
         glColor3f(0.2f, 0.4f, 0.8f);
 
         for (int f = 0; f < floors; f++) {
@@ -512,7 +496,7 @@ public:
             }
         }
 
-        // ===== ПОДЪЕЗД =====
+        // DOORS
         glColor3f(0.3f, 0.2f, 0.1f);
         glBegin(GL_QUADS);
         glVertex3f(-0.5f, 0, depth + 0.02f);

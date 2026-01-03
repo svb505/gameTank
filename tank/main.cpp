@@ -43,16 +43,21 @@ void processTankInput(GLFWwindow* window, float dt,ProjectileSystem& projectileS
     float turretSpeed = 60.0f * dt;
     float gunSpeed = 40.0f * dt;
 
-    if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS)
+    if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS){
         playerTank.selectedShell = shellType::APFSDS;
-    if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS)
+        playerTank.shellSpeed = 400;
+    }
+    if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS){
         playerTank.selectedShell = shellType::HE;
-
-    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-        playerTank.bodyYaw += rotateSpeed;
-
-    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+        playerTank.shellSpeed = 100;
+    }
+    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
+       playerTank.bodyYaw += rotateSpeed;
+    }
+    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
         playerTank.bodyYaw -= rotateSpeed;
+    }
+        
 
     float bodyRad = (playerTank.bodyYaw + 90.0f) * 3.1415926f / 180.0f;
     float dirX = -sin(bodyRad);
@@ -62,29 +67,29 @@ void processTankInput(GLFWwindow* window, float dt,ProjectileSystem& projectileS
         playerTank.x += dirX * moveSpeed;
         playerTank.z += dirZ * moveSpeed;
     }
-
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
         playerTank.x -= dirX * moveSpeed;
         playerTank.z -= dirZ * moveSpeed;
     }
-
-    if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
+    if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS){
         playerTank.turretYaw += turretSpeed;
-
-    if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
+    }
+    if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS){
         playerTank.turretYaw -= turretSpeed;
-
-    if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
+    }
+    if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
         playerTank.gunPitch = std::max(playerTank.gunPitch - gunSpeed, -10.0f);
-
-    if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
+    }
+    if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
         playerTank.gunPitch = std::min(playerTank.gunPitch + gunSpeed, 10.0f);
-
-    if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
+    }
+    if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS) {
         cam.cameraYaw += 45.0f * dt;
-
-    if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
+    }
+    if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS){
         cam.cameraYaw -= 45.0f * dt;
+    }
+        
 
     static bool lastShift = false;
     bool shift = glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS;
@@ -98,13 +103,8 @@ void processTankInput(GLFWwindow* window, float dt,ProjectileSystem& projectileS
     if (fire && !lastFire && playerTank.finishReload <= 0.0f && playerTank.totalShells > 0) {
         float yaw = playerTank.bodyYaw + playerTank.turretYaw;
 
-        projectileSystem.spawnShell(
-            playerTank.x,
-            playerTank.y + 1.6f,
-            playerTank.z,
-            yaw,
-            playerTank.gunPitch,
-            playerTank.selectedShell);
+        projectileSystem.spawnShell(playerTank.x,playerTank.y + 1.6f,playerTank.z,
+            yaw,playerTank.gunPitch,playerTank.selectedShell,playerTank.shellSpeed);
 
         alSourceStop(sound.shootSource);
         alSourcePlay(sound.shootSource);

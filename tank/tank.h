@@ -22,6 +22,7 @@ public:
     bool aimMode = false;
 
     shellType selectedShell;
+    int shellSpeed = 400;
 
     void Draw() {
         glPushMatrix();

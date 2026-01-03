@@ -15,7 +15,7 @@ class ProjectileSystem {
 public:
     std::vector<Projectile> projectiles;
 
-    void spawnShell(float x, float y, float z,float yawDeg, float pitchDeg,shellType _shellType)
+    void spawnShell(float x, float y, float z,float yawDeg, float pitchDeg,shellType _shellType,int shellSpeed)
     {
         Projectile p;
         p.type = ProjectileType::Shell;
@@ -23,7 +23,7 @@ public:
         p.selectedShellType = _shellType;
         
         p.x = x; p.y = y; p.z = z;
-        p.speed = 200.0f;
+        p.speed = shellSpeed;
         p.damage = (p.selectedShellType == shellType::APFSDS) ? 100 : 40;
 
         float yaw = yawDeg * 3.1415926f / 180.0f;
