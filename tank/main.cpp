@@ -51,6 +51,10 @@ void processTankInput(GLFWwindow* window, float dt,ProjectileSystem& projectileS
         playerTank.selectedShell = shellType::HE;
         playerTank.shellSpeed = 100;
     }
+    if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS) {
+        playerTank.selectedShell = shellType::SMOKE;
+        playerTank.shellSpeed = 100;
+    }
     if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
        playerTank.bodyYaw += rotateSpeed;
     }
@@ -120,7 +124,7 @@ void processTankInput(GLFWwindow* window, float dt,ProjectileSystem& projectileS
 
         projectileSystem.spawnBullet(
             playerTank.x,
-            playerTank.y + 1.5f,
+            playerTank.y + 1.0f,
             playerTank.z,
             yaw
         );

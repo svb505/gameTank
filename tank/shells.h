@@ -23,6 +23,6 @@ void drawShell() {
 void drawBullet() {
     glPointSize(1.0f);
     glBegin(GL_POINTS);
-    glVertex3f(255.0f, 128.0f, 0.0f);
+    glVertex3f(0.0f,0.0f,0.0f);
     glEnd();
 };

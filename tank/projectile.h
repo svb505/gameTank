@@ -7,7 +7,8 @@ enum class ProjectileType {
 };
 enum class shellType {
     APFSDS,
-    HE
+    HE,
+    SMOKE
 };
 
 struct Projectile {

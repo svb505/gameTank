@@ -68,7 +68,8 @@ public:
                     break;
                 }
                 if (p.y <= 0) {
-                    onHit(p, en, explosions, smokes, explosionSource,true);
+                    onHit(p, en, explosions, smokes, explosionSource,true,
+                        (p.selectedShellType == shellType::SMOKE));
                     p.alive = false;
                     break;
                 }
@@ -100,7 +101,7 @@ private:
             p.z >= minZ && p.z <= maxZ;
     }
     void onHit(Projectile& p, std::pair<const int, Info>& en, std::vector<ExplosionEffect*>& explosions,
-        std::vector<SmokeEffect*>& smokes, ALuint explosionSource, bool hitGround = false)
+        std::vector<SmokeEffect*>& smokes, ALuint explosionSource, bool hitGround = false,bool smokeShell = false)
     {
         alSourceStop(explosionSource);
         alSourcePlay(explosionSource);
@@ -121,13 +122,20 @@ private:
             int count,radius = 0;
             float height = 0.0f;
 
-            if (p.selectedShellType == shellType::APFSDS) { count = 300; radius = 4; height = 1.5f; }
-            else { count = 500; radius = 6; height = 2.0f; }
+            if (!smokeShell) {
+                if (p.selectedShellType == shellType::APFSDS) { count = 300; radius = 4; height = 1.5f; }
+                else { count = 500; radius = 6; height = 2.0f; }
 
-            explosions.push_back(
-                new ExplosionEffect(x, y, z, count,radius,height, 1.8f));
-            smokes.push_back(
-                new SmokeEffect(x, y, z, 300, 3));
+                explosions.push_back(
+                    new ExplosionEffect(x, y, z, count, radius, height, 1.8f));
+                smokes.push_back(
+                    new SmokeEffect(x, y, z, 300, 3));
+            }
+            else {
+                smokes.push_back(
+                    new SmokeEffect(x, y, z, 5500, 6,{1.0f,1.0f,1.0f,1.0f},3.0f,0.01f,6.0f));
+            }
+            
         }
 
         

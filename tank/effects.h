@@ -116,23 +116,31 @@ private:
     int maxParticles;
     float centerX, centerY, centerZ;
     float radius;
+    float size;
+    float speed;
+    float heightRadius;
+    std::vector<float> colors = { 0.2f, 0.2f, 0.2f, 0.5f };
 
 public:
-    SmokeEffect(float x, float y, float z, int count = 100, float r = 1.0f)
-        : centerX(x), centerY(y), centerZ(z), radius(r), maxParticles(count)
+    SmokeEffect(float x, float y, float z, int count = 100, float r = 1.0f,
+        const std::vector<float>& _colors = { 0.2f, 0.2f, 0.2f, 0.5f }, float _size = 1.0f,float _speed = 0.5f,
+        float hRadius = 0.5f)
+        : centerX(x), centerY(y), centerZ(z), radius(r), maxParticles(count), colors(_colors), size(_size),
+        speed(_speed),heightRadius(hRadius)
     {
+
         particles.reserve(maxParticles);
         for (int i = 0; i < maxParticles; i++) {
             float angle = ((float)rand() / RAND_MAX) * 2.0f * 3.1415926f;
             float dist = ((float)rand() / RAND_MAX) * radius;
-            float height = ((float)rand() / RAND_MAX) * 0.5f;
+            float height = ((float)rand() / RAND_MAX) * heightRadius;
 
             particles.push_back({
                 dist * cos(angle),
                 height,
                 dist * sin(angle),
                 0.05f + ((float)rand() / RAND_MAX) * 0.05f,
-                0.2f + ((float)rand() / RAND_MAX) * 0.5f
+                0.2f + ((float)rand() / RAND_MAX) * speed
                 });
         }
     }
@@ -148,8 +156,8 @@ public:
     void Draw() {
         glPushMatrix();
         glTranslatef(centerX, centerY, centerZ);
-        glColor4f(0.2f, 0.2f, 0.2f, 0.5f);
-
+        glColor4f(colors[0],colors[1],colors[2],colors[3]);
+        glPointSize(size);
         glBegin(GL_POINTS);
         for (auto& p : particles) {
             glVertex3f(p.x, p.y, p.z);
