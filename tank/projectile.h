@@ -18,6 +18,7 @@ struct Projectile {
     float x, y, z;
     float vx, vy, vz;
 
+    float gravity = 9.8f;
     float speed;
     int damage;
 
@@ -25,10 +26,14 @@ struct Projectile {
     bool alive = true;
 
     void update(float dt) {
+        vy -= gravity * dt;
+
         x += vx * dt;
         y += vy * dt;
         z += vz * dt;
+
         lifeTime -= dt;
+
         if (lifeTime <= 0.0f)
             alive = false;
     }
