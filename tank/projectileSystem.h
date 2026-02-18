@@ -51,58 +51,54 @@ public:
 
         projectiles.push_back(p);
     }
-    void update(float dt,std::map<int, Info>& enemyes,std::vector<ExplosionEffect*>& explosions,
-        std::vector<SmokeEffect*>& smokes,ALuint explosionSource)
-    {
+    void update(float dt,std::unordered_map<int, Entity>& enemies,std::unordered_map<Entity, Health>& healths,
+        std::unordered_map<Entity, Bounds>& bounds,std::vector<ExplosionEffect*>& explosions,
+        std::vector<SmokeEffect*>& smokes,ALuint explosionSource){
+        
         for (auto& p : projectiles) {
             if (!p.alive) continue;
+
             p.update(dt);
 
-            for (auto& en : enemyes) {
-                Enemy* enemy = en.second.enemy;
-                if (!enemy || enemy->IsDestroyed()) continue;
+            for (auto& [id, en] : enemies) {
+                if (!healths.contains(id)) continue;
+                if (healths[id].destroyed) continue;
+                if (!bounds.contains(id)) continue;
 
-                if (checkCollision(enemy, p)) {
-                    onHit(p, en, explosions, smokes, explosionSource);
+                if (checkCollision(bounds[id], p)) { 
+                    healths[id].current -= p.damage;
+                    if (healths[id].current <= 0) healths[id].destroyed = true;
+
+                    explosions.push_back(new ExplosionEffect(p.x, p.y, p.z));
+                    if (p.selectedShellType == shellType::SMOKE) smokes.push_back(new SmokeEffect(p.x, p.y, p.z));
+
                     p.alive = false;
                     break;
                 }
-                if (p.y <= 0) {
-                    onHit(p, en, explosions, smokes, explosionSource,true,
-                        (p.selectedShellType == shellType::SMOKE));
+                if (p.alive && p.y <= 0.0f) {
+                    onHit(p, en, healths[id], explosions, smokes, explosionSource, false,
+                        p.selectedShellType == shellType::SMOKE);
+
+                    if (p.selectedShellType == shellType::SMOKE) smokes.push_back(new SmokeEffect(p.x, p.y, p.z));
+
+                    explosions.push_back(new ExplosionEffect(p.x, p.y, p.z));
+
                     p.alive = false;
-                    break;
                 }
             }
+            
         }
-
-        std::erase_if(projectiles,
-            [](const Projectile& p) { return !p.alive; });
+        std::erase_if(projectiles, [](const Projectile& p) { return !p.alive; });
     }
 
 private:
-    bool checkCollision(Enemy* enemy, const Projectile& p)
-    {
-        float minX = enemy->vertices[0][0], maxX = minX;
-        float minY = enemy->vertices[0][1], maxY = minY;
-        float minZ = enemy->vertices[0][2], maxZ = minZ;
-
-        for (auto& v : enemy->vertices) {
-            minX = std::min(minX, v[0]);
-            maxX = std::max(maxX, v[0]);
-            minY = std::min(minY, v[1]);
-            maxY = std::max(maxY, v[1]);
-            minZ = std::min(minZ, v[2]);
-            maxZ = std::max(maxZ, v[2]);
-        }
-
-        return p.x >= minX && p.x <= maxX &&
-            p.y >= minY && p.y <= maxY &&
-            p.z >= minZ && p.z <= maxZ;
+    bool checkCollision(const Bounds& bounds, const Projectile& p){
+        return p.x >= bounds.minX && p.x <= bounds.maxX &&
+            p.y >= bounds.minY && p.y <= bounds.maxY &&
+            p.z >= bounds.minZ && p.z <= bounds.maxZ;
     }
-    void onHit(Projectile& p, std::pair<const int, Info>& en, std::vector<ExplosionEffect*>& explosions,
-        std::vector<SmokeEffect*>& smokes, ALuint explosionSource, bool hitGround = false,bool smokeShell = false)
-    {
+    void onHit(Projectile& p,Entity& en,Health& health,std::vector<ExplosionEffect*>& explosions,
+        std::vector<SmokeEffect*>& smokes,ALuint explosionSource,bool hitGround = false,bool smokeShell = false){
         alSourceStop(explosionSource);
         alSourcePlay(explosionSource);
 
@@ -111,11 +107,8 @@ private:
         float z = p.z;
 
         if (!hitGround) {
-            Enemy* enemy = en.second.enemy;
-            enemy->health -= p.damage;
-            if (enemy->health <= 0) {
-                enemy->SetDestroyed(true);
-            }
+            health.current -= p.damage;
+            if (health.current <= 0) health.destroyed = true;
         }
 
         if (p.type == ProjectileType::Shell) {

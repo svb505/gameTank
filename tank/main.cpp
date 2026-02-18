@@ -41,7 +41,7 @@ void processTankInput(GLFWwindow* window, float dt,ProjectileSystem& projectileS
     float moveSpeed = 6.0f * dt;
     float rotateSpeed = 60.0f * dt;
     float turretSpeed = 60.0f * dt;
-    float gunSpeed = 40.0f * dt;
+    float gunSpeed = 30.0f * dt;
 
     if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS){
         playerTank.selectedShell = shellType::APFSDS;
@@ -173,7 +173,7 @@ int main(){
 
     glMatrixMode(GL_MODELVIEW);
 
-    std::map<int, Info> enemyes;
+    std::unordered_map<int, Entity> enemyes;
     std::vector<int> toDelete;
     std::vector<ExplosionEffect*> explosions;
     std::vector<SmokeEffect*> smokes;
@@ -200,24 +200,10 @@ int main(){
         drawGround(cam.cameraX, cam.cameraZ);
         playerTank.Draw();
 
-        for (auto& en : enemyes) {
-            Enemy* e = en.second.enemy;
-            if (!e) continue;
+        Update(deltaTime);
+        Render();
 
-            e->UpdateVertices();
-            e->Update(deltaTime);
-            e->Draw();
-
-            if (!e->IsDestroyed()) {
-                auto& p = e->position;
-                RenderTextWorld(p[0], p[1] + 2.0f, p[2],
-                    1, 0, 0,
-                    std::format("{}/{}",
-                        e->health, e->maxHealth).c_str());
-            }
-        }
-
-        projectileSystem.update((float)deltaTime,enemyes,explosions,smokes,sound.explosionSource);
+        projectileSystem.update((float)deltaTime,enemyes,healths, bounds,explosions,smokes,sound.explosionSource);
 
         for (auto& p : projectileSystem.projectiles) {
             if (!p.alive) continue;
