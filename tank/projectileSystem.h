@@ -67,6 +67,7 @@ public:
 
                 if (checkCollision(bounds[id], p)) {
                     healths[id].current -= p.damage;
+                    if (healths[id].current <= healths[id].max / 2) apartments[id].LOD = 2;
                     if (healths[id].current <= 0) healths[id].destroyed = true;
 
                     if (p.type != ProjectileType::Bullet) explosions.push_back(new ExplosionEffect(p.x, p.y, p.z));
