@@ -122,12 +122,7 @@ void processTankInput(GLFWwindow* window, float dt,ProjectileSystem& projectileS
     if (glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_PRESS) {
         float yaw = playerTank.bodyYaw + playerTank.turretYaw;
 
-        projectileSystem.spawnBullet(
-            playerTank.x,
-            playerTank.y + 1.0f,
-            playerTank.z,
-            yaw
-        );
+        projectileSystem.spawnBullet(playerTank.x,playerTank.y + 1.0f,playerTank.z,yaw);
 
         alSourceStop(sound.mgunSource);
         alSourcePlay(sound.mgunSource);

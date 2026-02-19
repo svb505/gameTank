@@ -65,17 +65,17 @@ public:
                 if (healths[id].destroyed) continue;
                 if (!bounds.contains(id)) continue;
 
-                if (checkCollision(bounds[id], p)) { 
+                if (checkCollision(bounds[id], p)) {
                     healths[id].current -= p.damage;
                     if (healths[id].current <= 0) healths[id].destroyed = true;
 
-                    explosions.push_back(new ExplosionEffect(p.x, p.y, p.z));
+                    if (p.type != ProjectileType::Bullet) explosions.push_back(new ExplosionEffect(p.x, p.y, p.z));
                     if (p.selectedShellType == shellType::SMOKE) smokes.push_back(new SmokeEffect(p.x, p.y, p.z));
 
                     p.alive = false;
                     break;
                 }
-                if (p.alive && p.y <= 0.0f) {
+                if (p.alive && p.y <= 0.0f && p.type != ProjectileType::Bullet) {
                     onHit(p, en, healths[id], explosions, smokes, explosionSource, false,
                         p.selectedShellType == shellType::SMOKE);
 

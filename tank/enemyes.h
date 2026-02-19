@@ -65,6 +65,209 @@ Entity CreateEntity(){
     return e;
 }
 
+void drawAppartament(ApartmentComponent& ap,float totalH) {
+    glPushMatrix();
+    glRotatef(1, 0, 1, 0);
+
+    // ================= BODY =================
+    glColor3f(0.75f, 0.75f, 0.7f);
+    glBegin(GL_QUADS);
+    // Front
+    glVertex3f(-ap.width, 0, ap.depth);
+    glVertex3f(ap.width, 0, ap.depth);
+    glVertex3f(ap.width, totalH, ap.depth);
+    glVertex3f(-ap.width, totalH, ap.depth);
+
+    // Back
+    glVertex3f(-ap.width, 0, -ap.depth);
+    glVertex3f(-ap.width, totalH, -ap.depth);
+    glVertex3f(ap.width, totalH, -ap.depth);
+    glVertex3f(ap.width, 0, -ap.depth);
+
+    // Left
+    glVertex3f(-ap.width, 0, -ap.depth);
+    glVertex3f(-ap.width, 0, ap.depth);
+    glVertex3f(-ap.width, totalH, ap.depth);
+    glVertex3f(-ap.width, totalH, -ap.depth);
+
+    // Right
+    glVertex3f(ap.width, 0, -ap.depth);
+    glVertex3f(ap.width, totalH, -ap.depth);
+    glVertex3f(ap.width, totalH, ap.depth);
+    glVertex3f(ap.width, 0, ap.depth);
+
+    // Roof
+    glColor3f(0.5f, 0.5f, 0.5f);
+    glVertex3f(-ap.width, totalH, -ap.depth);
+    glVertex3f(-ap.width, totalH, ap.depth);
+    glVertex3f(ap.width, totalH, ap.depth);
+    glVertex3f(ap.width, totalH, -ap.depth);
+
+    glEnd();
+
+    // ================= WINDOWS =================
+    glColor3f(0.2f, 0.4f, 0.8f);
+    for (int f = 0; f < ap.floors; f++) {
+        float y = f * ap.floorHeight + 0.15f;
+        for (int i = -3; i <= 3; i += 2) {
+            glBegin(GL_QUADS);
+            glVertex3f(i * 0.6f - 0.2f, y, ap.depth + 0.01f);
+            glVertex3f(i * 0.6f + 0.2f, y, ap.depth + 0.01f);
+            glVertex3f(i * 0.6f + 0.2f, y + 0.25f, ap.depth + 0.01f);
+            glVertex3f(i * 0.6f - 0.2f, y + 0.25f, ap.depth + 0.01f);
+            glEnd();
+        }
+    }
+
+    // ================= DOORS =================
+    glColor3f(0.3f, 0.2f, 0.1f);
+    glBegin(GL_QUADS);
+    glVertex3f(-0.5f, 0, ap.depth + 0.02f);
+    glVertex3f(0.5f, 0, ap.depth + 0.02f);
+    glVertex3f(0.5f, 0.8f, ap.depth + 0.02f);
+    glVertex3f(-0.5f, 0.8f, ap.depth + 0.02f);
+    glEnd();
+
+    glPopMatrix();
+}
+void drawTank(TankComponent& tank,float bodyH) {
+    glPushMatrix();
+    glRotatef(1, 0, 1, 0);
+    glColor3f(0, 0.8f, 0);
+
+    glBegin(GL_QUADS);
+    // Front
+    glVertex3f(-1, -bodyH, 1);
+    glVertex3f(1, -bodyH, 1);
+    glVertex3f(1, bodyH, 1);
+    glVertex3f(-1, bodyH, 1);
+
+    // Back
+    glVertex3f(-1, -bodyH, -1);
+    glVertex3f(-1, bodyH, -1);
+    glVertex3f(1, bodyH, -1);
+    glVertex3f(1, -bodyH, -1);
+
+    // Left
+    glVertex3f(-1, -bodyH, -1);
+    glVertex3f(-1, -bodyH, 1);
+    glVertex3f(-1, bodyH, 1);
+    glVertex3f(-1, bodyH, -1);
+
+    // Right
+    glVertex3f(1, -bodyH, -1);
+    glVertex3f(1, bodyH, -1);
+    glVertex3f(1, bodyH, 1);
+    glVertex3f(1, -bodyH, 1);
+
+    // Top
+    glVertex3f(-1, bodyH, -1);
+    glVertex3f(-1, bodyH, 1);
+    glVertex3f(1, bodyH, 1);
+    glVertex3f(1, bodyH, -1);
+
+    // Bottom
+    glVertex3f(-1, -bodyH, -1);
+    glVertex3f(1, -bodyH, -1);
+    glVertex3f(1, -bodyH, 1);
+    glVertex3f(-1, -bodyH, 1);
+
+    glEnd();
+
+    // ================= TURRET =================
+    glPushMatrix();
+    glTranslatef(0.0f, bodyH + 0.4f, 0.0f);
+    glRotatef(tank.turretAngle, 0, 1, 0);
+
+    float t = 0.5f;
+    glColor3f(0, 0.6f, 0.2f);
+
+    glBegin(GL_QUADS);
+    // Front
+    glVertex3f(-t, -t, t);
+    glVertex3f(t, -t, t);
+    glVertex3f(t, t, t);
+    glVertex3f(-t, t, t);
+
+    // Back
+    glVertex3f(-t, -t, -t);
+    glVertex3f(-t, t, -t);
+    glVertex3f(t, t, -t);
+    glVertex3f(t, -t, -t);
+
+    // Left
+    glVertex3f(-t, -t, -t);
+    glVertex3f(-t, -t, t);
+    glVertex3f(-t, t, t);
+    glVertex3f(-t, t, -t);
+
+    // Right
+    glVertex3f(t, -t, -t);
+    glVertex3f(t, t, -t);
+    glVertex3f(t, t, t);
+    glVertex3f(t, -t, t);
+
+    // Top
+    glVertex3f(-t, t, -t);
+    glVertex3f(-t, t, t);
+    glVertex3f(t, t, t);
+    glVertex3f(t, t, -t);
+
+    // Bottom
+    glVertex3f(-t, -t, -t);
+    glVertex3f(t, -t, -t);
+    glVertex3f(t, -t, t);
+    glVertex3f(-t, -t, t);
+
+    glEnd();
+
+    // ================= GUN =================
+    glPushMatrix();
+    glTranslatef(0.0f, 0.0f, t);
+    glRotatef(tank.gunAngle, 1, 0, 0);
+
+    float w = 0.12f;
+    float h = 0.12f;
+    float len = 1.8f;
+    glColor3f(0.2f, 0.2f, 0.2f);
+
+    glBegin(GL_QUADS);
+    // Front
+    glVertex3f(-w, -h, len);
+    glVertex3f(w, -h, len);
+    glVertex3f(w, h, len);
+    glVertex3f(-w, h, len);
+
+    // Top
+    glVertex3f(-w, h, 0);
+    glVertex3f(-w, h, len);
+    glVertex3f(w, h, len);
+    glVertex3f(w, h, 0);
+
+    // Bottom
+    glVertex3f(-w, -h, 0);
+    glVertex3f(w, -h, 0);
+    glVertex3f(w, -h, len);
+    glVertex3f(-w, -h, len);
+
+    // Left
+    glVertex3f(-w, -h, 0);
+    glVertex3f(-w, -h, len);
+    glVertex3f(-w, h, len);
+    glVertex3f(-w, h, 0);
+
+    // Right
+    glVertex3f(w, -h, 0);
+    glVertex3f(w, h, 0);
+    glVertex3f(w, h, len);
+    glVertex3f(w, -h, len);
+
+    glEnd();
+
+    glPopMatrix(); // gun
+    glPopMatrix(); // turret
+    glPopMatrix(); // tank
+}
 void DrawCube(float w, float h, float d){
     glBegin(GL_QUADS);
 
@@ -130,146 +333,9 @@ void RenderSystem(){
 
         case RenderType::Tank:{
             auto& tank = tanks[e];
-
             float bodyH = 0.6f;
 
-            glPushMatrix();
-            glRotatef(1, 0, 1, 0);
-            glColor3f(0, 0.8f, 0);
-
-            glBegin(GL_QUADS);
-            // Front
-            glVertex3f(-1, -bodyH, 1);
-            glVertex3f(1, -bodyH, 1);
-            glVertex3f(1, bodyH, 1);
-            glVertex3f(-1, bodyH, 1);
-
-            // Back
-            glVertex3f(-1, -bodyH, -1);
-            glVertex3f(-1, bodyH, -1);
-            glVertex3f(1, bodyH, -1);
-            glVertex3f(1, -bodyH, -1);
-
-            // Left
-            glVertex3f(-1, -bodyH, -1);
-            glVertex3f(-1, -bodyH, 1);
-            glVertex3f(-1, bodyH, 1);
-            glVertex3f(-1, bodyH, -1);
-
-            // Right
-            glVertex3f(1, -bodyH, -1);
-            glVertex3f(1, bodyH, -1);
-            glVertex3f(1, bodyH, 1);
-            glVertex3f(1, -bodyH, 1);
-
-            // Top
-            glVertex3f(-1, bodyH, -1);
-            glVertex3f(-1, bodyH, 1);
-            glVertex3f(1, bodyH, 1);
-            glVertex3f(1, bodyH, -1);
-
-            // Bottom
-            glVertex3f(-1, -bodyH, -1);
-            glVertex3f(1, -bodyH, -1);
-            glVertex3f(1, -bodyH, 1);
-            glVertex3f(-1, -bodyH, 1);
-
-            glEnd();
-
-            // ================= TURRET =================
-            glPushMatrix();
-            glTranslatef(0.0f, bodyH + 0.4f, 0.0f);
-            glRotatef(tank.turretAngle, 0, 1, 0);
-
-            float t = 0.5f;
-            glColor3f(0, 0.6f, 0.2f);
-
-            glBegin(GL_QUADS);
-            // Front
-            glVertex3f(-t, -t, t);
-            glVertex3f(t, -t, t);
-            glVertex3f(t, t, t);
-            glVertex3f(-t, t, t);
-
-            // Back
-            glVertex3f(-t, -t, -t);
-            glVertex3f(-t, t, -t);
-            glVertex3f(t, t, -t);
-            glVertex3f(t, -t, -t);
-
-            // Left
-            glVertex3f(-t, -t, -t);
-            glVertex3f(-t, -t, t);
-            glVertex3f(-t, t, t);
-            glVertex3f(-t, t, -t);
-
-            // Right
-            glVertex3f(t, -t, -t);
-            glVertex3f(t, t, -t);
-            glVertex3f(t, t, t);
-            glVertex3f(t, -t, t);
-
-            // Top
-            glVertex3f(-t, t, -t);
-            glVertex3f(-t, t, t);
-            glVertex3f(t, t, t);
-            glVertex3f(t, t, -t);
-
-            // Bottom
-            glVertex3f(-t, -t, -t);
-            glVertex3f(t, -t, -t);
-            glVertex3f(t, -t, t);
-            glVertex3f(-t, -t, t);
-
-            glEnd();
-
-            // ================= GUN =================
-            glPushMatrix();
-            glTranslatef(0.0f, 0.0f, t);
-            glRotatef(tank.gunAngle, 1, 0, 0);
-
-            float w = 0.12f;
-            float h = 0.12f;
-            float len = 1.8f;
-            glColor3f(0.2f, 0.2f, 0.2f);
-
-            glBegin(GL_QUADS);
-            // Front
-            glVertex3f(-w, -h, len);
-            glVertex3f(w, -h, len);
-            glVertex3f(w, h, len);
-            glVertex3f(-w, h, len);
-
-            // Top
-            glVertex3f(-w, h, 0);
-            glVertex3f(-w, h, len);
-            glVertex3f(w, h, len);
-            glVertex3f(w, h, 0);
-
-            // Bottom
-            glVertex3f(-w, -h, 0);
-            glVertex3f(w, -h, 0);
-            glVertex3f(w, -h, len);
-            glVertex3f(-w, -h, len);
-
-            // Left
-            glVertex3f(-w, -h, 0);
-            glVertex3f(-w, -h, len);
-            glVertex3f(-w, h, len);
-            glVertex3f(-w, h, 0);
-
-            // Right
-            glVertex3f(w, -h, 0);
-            glVertex3f(w, h, 0);
-            glVertex3f(w, h, len);
-            glVertex3f(w, -h, len);
-
-            glEnd();
-
-            glPopMatrix(); // gun
-            glPopMatrix(); // turret
-            glPopMatrix(); // tank
-
+            drawTank(tank, bodyH);
         }
         break;
 
@@ -282,70 +348,7 @@ void RenderSystem(){
             auto& ap = apartments[e];
             float totalH = ap.floors * ap.floorHeight;
 
-            glPushMatrix();
-            glRotatef(1, 0, 1, 0);
-
-            // ================= BODY =================
-            glColor3f(0.75f, 0.75f, 0.7f);
-            glBegin(GL_QUADS);
-            // Front
-            glVertex3f(-ap.width, 0, ap.depth);
-            glVertex3f(ap.width, 0, ap.depth);
-            glVertex3f(ap.width, totalH, ap.depth);
-            glVertex3f(-ap.width, totalH, ap.depth);
-
-            // Back
-            glVertex3f(-ap.width, 0, -ap.depth);
-            glVertex3f(-ap.width, totalH, -ap.depth);
-            glVertex3f(ap.width, totalH, -ap.depth);
-            glVertex3f(ap.width, 0, -ap.depth);
-
-            // Left
-            glVertex3f(-ap.width, 0, -ap.depth);
-            glVertex3f(-ap.width, 0, ap.depth);
-            glVertex3f(-ap.width, totalH, ap.depth);
-            glVertex3f(-ap.width, totalH, -ap.depth);
-
-            // Right
-            glVertex3f(ap.width, 0, -ap.depth);
-            glVertex3f(ap.width, totalH, -ap.depth);
-            glVertex3f(ap.width, totalH, ap.depth);
-            glVertex3f(ap.width, 0, ap.depth);
-
-            // Roof
-            glColor3f(0.5f, 0.5f, 0.5f);
-            glVertex3f(-ap.width, totalH, -ap.depth);
-            glVertex3f(-ap.width, totalH, ap.depth);
-            glVertex3f(ap.width, totalH, ap.depth);
-            glVertex3f(ap.width, totalH, -ap.depth);
-
-            glEnd();
-
-            // ================= WINDOWS =================
-            glColor3f(0.2f, 0.4f, 0.8f);
-            for (int f = 0; f < ap.floors; f++) {
-                float y = f * ap.floorHeight + 0.15f;
-                for (int i = -3; i <= 3; i += 2) {
-                    glBegin(GL_QUADS);
-                    glVertex3f(i * 0.6f - 0.2f, y, ap.depth + 0.01f);
-                    glVertex3f(i * 0.6f + 0.2f, y, ap.depth + 0.01f);
-                    glVertex3f(i * 0.6f + 0.2f, y + 0.25f, ap.depth + 0.01f);
-                    glVertex3f(i * 0.6f - 0.2f, y + 0.25f, ap.depth + 0.01f);
-                    glEnd();
-                }
-            }
-
-            // ================= DOORS =================
-            glColor3f(0.3f, 0.2f, 0.1f);
-            glBegin(GL_QUADS);
-            glVertex3f(-0.5f, 0, ap.depth + 0.02f);
-            glVertex3f(0.5f, 0, ap.depth + 0.02f);
-            glVertex3f(0.5f, 0.8f, ap.depth + 0.02f);
-            glVertex3f(-0.5f, 0.8f, ap.depth + 0.02f);
-            glEnd();
-
-            glPopMatrix();
-
+            drawAppartament(ap,totalH);
         }
         break;
         }
@@ -353,12 +356,9 @@ void RenderSystem(){
         glPopMatrix();
     }
 }
-void BoundsSystem()
-{
-    for (auto e : entities)
-    {
-        if (!transforms.contains(e) || !renders.contains(e))
-            continue;
+void BoundsSystem(){
+    for (auto e : entities){
+        if (!transforms.contains(e) || !renders.contains(e)) continue;
 
         auto& t = transforms[e];
         auto& r = renders[e];
