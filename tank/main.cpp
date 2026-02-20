@@ -235,15 +235,25 @@ int main(){
             else ++it;
         }
         for (auto it = smokes.begin(); it != smokes.end(); ){
-            if ((*it)->getCoordinates()[1] > 5.0f){
-                delete* it;                  
-                it = smokes.erase(it);
+            SmokeEffect* smoke = *it;
+
+            bool alive = false;
+            for (auto& p : smoke->getCoordinates()) {
+                if (p.y <= 5.0f) {
+                    alive = true;
+                    break; 
+                }
             }
-            else{
-                (*it)->Update(deltaTime);
-                (*it)->Draw();
+            if (!alive) {
+                delete smoke;        
+                it = smokes.erase(it); 
+            }
+            else {
+                smoke->Update(deltaTime);
+                smoke->Draw();
                 ++it;
             }
+            
         }
 
 

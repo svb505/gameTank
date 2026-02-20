@@ -11,8 +11,8 @@ class Tank {
 public:
     float x = 0, y = 0, z = 0;
 
-    float bodyYaw = 90.0f;
-    float turretYaw = 90.0f; 
+    float bodyYaw = -90.0f;
+    float turretYaw = -90.0f; 
     float gunPitch = 0.0f;  
 
     int totalShells = 26;

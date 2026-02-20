@@ -140,7 +140,14 @@ public:
         }
     }
 
-    std::vector<float> getCoordinates() { return { centerX,centerY,centerZ }; }
+    std::vector<Particle> getCoordinates() const {
+        std::vector<Particle> coords;
+        coords.reserve(particles.size());
+        for (auto& p : particles) {
+            coords.push_back({ p.x, p.y, p.z });
+        }
+        return coords;
+    }
     void Update(float dt) {
         for (auto& p : particles) {
             p.y += p.riseSpeed * dt;
