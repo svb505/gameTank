@@ -46,14 +46,17 @@ void processTankInput(GLFWwindow* window, float dt,ProjectileSystem& projectileS
     if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS){
         playerTank.selectedShell = shellType::APFSDS;
         playerTank.shellSpeed = 400;
+        playerTank.finishReload = playerTank.reloadTime;
     }
     if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS){
         playerTank.selectedShell = shellType::HE;
         playerTank.shellSpeed = 100;
+        playerTank.finishReload = playerTank.reloadTime;
     }
     if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS) {
         playerTank.selectedShell = shellType::SMOKE;
         playerTank.shellSpeed = 100;
+        playerTank.finishReload = playerTank.reloadTime;
     }
     if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
        playerTank.bodyYaw += rotateSpeed;
@@ -97,8 +100,7 @@ void processTankInput(GLFWwindow* window, float dt,ProjectileSystem& projectileS
 
     static bool lastShift = false;
     bool shift = glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS;
-    if (shift && !lastShift)
-        playerTank.aimMode = !playerTank.aimMode;
+    if (shift && !lastShift) playerTank.aimMode = !playerTank.aimMode;
     lastShift = shift;
 
     static bool lastFire = false;
@@ -107,8 +109,8 @@ void processTankInput(GLFWwindow* window, float dt,ProjectileSystem& projectileS
     if (fire && !lastFire && playerTank.finishReload <= 0.0f && playerTank.totalShells > 0) {
         float yaw = playerTank.bodyYaw + playerTank.turretYaw;
 
-        projectileSystem.spawnShell(playerTank.x,playerTank.y + 1.6f,playerTank.z,
-            yaw,playerTank.gunPitch,playerTank.selectedShell,playerTank.shellSpeed);
+        projectileSystem.spawnShell(playerTank.x,playerTank.y + 1.6f,playerTank.z,yaw,playerTank.gunPitch,
+            playerTank.selectedShell,playerTank.shellSpeed);
 
         alSourceStop(sound.shootSource);
         alSourcePlay(sound.shootSource);
