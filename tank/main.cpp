@@ -234,7 +234,17 @@ int main(){
             }
             else ++it;
         }
-        for (auto& smoke : smokes) { smoke->Update(deltaTime); smoke->Draw();}
+        for (auto it = smokes.begin(); it != smokes.end(); ){
+            if ((*it)->getCoordinates()[1] > 5.0f){
+                delete* it;                  
+                it = smokes.erase(it);
+            }
+            else{
+                (*it)->Update(deltaTime);
+                (*it)->Draw();
+                ++it;
+            }
+        }
 
 
         hud.Draw3DAim(playerTank);

@@ -43,6 +43,7 @@ struct ApartmentComponent {
     float width;
     float depth;
     bool destroyed = false;
+    bool smokeEnabled = false;
     int LOD = 1;
 };
 struct Bounds {
@@ -637,7 +638,7 @@ void RenderSystem(std::vector<SmokeEffect*>& smokes){
 
             if (ap.destroyed) {
                 drawDestroyedAppartament(ap, totalH);
-                smokes.push_back(new SmokeEffect(x, y, z,300,3.0f));
+                if (!ap.smokeEnabled) { smokes.push_back(new SmokeEffect(x, y, z, 2000, 3.0f)); ap.smokeEnabled = true; }
             }
             else drawAppartament(ap, totalH); 
             

@@ -135,16 +135,12 @@ public:
             float dist = ((float)rand() / RAND_MAX) * radius;
             float height = ((float)rand() / RAND_MAX) * heightRadius;
 
-            particles.push_back({
-                dist * cos(angle),
-                height,
-                dist * sin(angle),
-                0.05f + ((float)rand() / RAND_MAX) * 0.05f,
-                0.2f + ((float)rand() / RAND_MAX) * speed
-                });
+            particles.push_back({dist * cos(angle),height, dist * sin(angle),0.05f + ((float)rand() / RAND_MAX) * 0.05f,
+                0.2f + ((float)rand() / RAND_MAX) * speed});
         }
     }
 
+    std::vector<float> getCoordinates() { return { centerX,centerY,centerZ }; }
     void Update(float dt) {
         for (auto& p : particles) {
             p.y += p.riseSpeed * dt;
@@ -152,7 +148,6 @@ public:
             p.z += ((float)rand() / RAND_MAX - 0.5f) * 0.01f;
         }
     }
-
     void Draw() {
         glPushMatrix();
         glTranslatef(centerX, centerY, centerZ);
