@@ -6,6 +6,7 @@
 #include <GLFW/glfw3.h>
 #include "Info.h"
 #include <unordered_map>
+#include "effects.h"
 #include "text.h"
 
 using Entity = uint32_t;
@@ -41,6 +42,7 @@ struct ApartmentComponent {
     float floorHeight;
     float width;
     float depth;
+    bool destroyed = false;
     int LOD = 1;
 };
 struct Bounds {
@@ -66,227 +68,7 @@ Entity CreateEntity(){
     return e;
 }
 
-void drawAppartament(ApartmentComponent& ap,float totalH) {
-    if (ap.LOD == 1) {
-        glPushMatrix();
-        glRotatef(1, 0, 1, 0);
 
-        // ================= BODY =================
-        glColor3f(0.75f, 0.75f, 0.7f);
-        glBegin(GL_QUADS);
-        // Front
-        glVertex3f(-ap.width, 0, ap.depth);
-        glVertex3f(ap.width, 0, ap.depth);
-        glVertex3f(ap.width, totalH, ap.depth);
-        glVertex3f(-ap.width, totalH, ap.depth);
-
-        // Back
-        glVertex3f(-ap.width, 0, -ap.depth);
-        glVertex3f(-ap.width, totalH, -ap.depth);
-        glVertex3f(ap.width, totalH, -ap.depth);
-        glVertex3f(ap.width, 0, -ap.depth);
-
-        // Left
-        glVertex3f(-ap.width, 0, -ap.depth);
-        glVertex3f(-ap.width, 0, ap.depth);
-        glVertex3f(-ap.width, totalH, ap.depth);
-        glVertex3f(-ap.width, totalH, -ap.depth);
-
-        // Right
-        glVertex3f(ap.width, 0, -ap.depth);
-        glVertex3f(ap.width, totalH, -ap.depth);
-        glVertex3f(ap.width, totalH, ap.depth);
-        glVertex3f(ap.width, 0, ap.depth);
-
-        // Roof
-        glColor3f(0.5f, 0.5f, 0.5f);
-        glVertex3f(-ap.width, totalH, -ap.depth);
-        glVertex3f(-ap.width, totalH, ap.depth);
-        glVertex3f(ap.width, totalH, ap.depth);
-        glVertex3f(ap.width, totalH, -ap.depth);
-
-        glEnd();
-
-        // ================= WINDOWS =================
-        glColor3f(0.2f, 0.4f, 0.8f);
-        for (int f = 0; f < ap.floors; f++) {
-            float y = f * ap.floorHeight + 0.15f;
-            for (int i = -3; i <= 3; i += 2) {
-                glBegin(GL_QUADS);
-                glVertex3f(i * 0.6f - 0.2f, y, ap.depth + 0.01f);
-                glVertex3f(i * 0.6f + 0.2f, y, ap.depth + 0.01f);
-                glVertex3f(i * 0.6f + 0.2f, y + 0.25f, ap.depth + 0.01f);
-                glVertex3f(i * 0.6f - 0.2f, y + 0.25f, ap.depth + 0.01f);
-                glEnd();
-            }
-        }
-
-        // ================= DOORS =================
-        glColor3f(0.3f, 0.2f, 0.1f);
-        glBegin(GL_QUADS);
-        glVertex3f(-0.5f, 0, ap.depth + 0.02f);
-        glVertex3f(0.5f, 0, ap.depth + 0.02f);
-        glVertex3f(0.5f, 0.8f, ap.depth + 0.02f);
-        glVertex3f(-0.5f, 0.8f, ap.depth + 0.02f);
-        glEnd();
-
-        glPopMatrix();
-    }
-    else {
-        glPushMatrix();
-        glRotatef(1, 0, 1, 0);
-
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-        float totalH = ap.floors * ap.floorHeight;
-
-        // ================= BODY =================
-        glColor3f(0.75f, 0.7f, 0.65f);
-        glBegin(GL_QUADS);
-
-        // Front
-        glVertex3f(-ap.width, 0, ap.depth);
-        glVertex3f(ap.width, 0, ap.depth);
-        glVertex3f(ap.width, totalH, ap.depth);
-        glVertex3f(-ap.width, totalH, ap.depth);
-
-        // Back
-        glVertex3f(-ap.width, 0, -ap.depth);
-        glVertex3f(-ap.width, totalH, -ap.depth);
-        glVertex3f(ap.width, totalH, -ap.depth);
-        glVertex3f(ap.width, 0, -ap.depth);
-
-        // Left
-        glVertex3f(-ap.width, 0, -ap.depth);
-        glVertex3f(-ap.width, 0, ap.depth);
-        glVertex3f(-ap.width, totalH, ap.depth);
-        glVertex3f(-ap.width, totalH, -ap.depth);
-
-        // Right
-        glVertex3f(ap.width, 0, -ap.depth);
-        glVertex3f(ap.width, totalH, -ap.depth);
-        glVertex3f(ap.width, totalH, ap.depth);
-        glVertex3f(ap.width, 0, ap.depth);
-
-        // Roof
-        glColor3f(0.5f, 0.45f, 0.45f);
-        glVertex3f(-ap.width, totalH, -ap.depth);
-        glVertex3f(-ap.width, totalH, ap.depth);
-        glVertex3f(ap.width, totalH, ap.depth);
-        glVertex3f(ap.width, totalH, -ap.depth);
-
-        glEnd();
-
-
-        // ================= WINDOWS =================
-        for (int f = 0; f < ap.floors; f++) {
-            float y = f * ap.floorHeight + 0.15f;
-
-            for (int i = -3; i <= 3; i += 2) {
-
-                float x1 = i * 0.6f - 0.2f;
-                float x2 = i * 0.6f + 0.2f;
-                float y2 = y + 0.25f;
-
-                int state = rand() % 3;
-
-                if (state == 0) {
-                    // нормальное окно
-                    glColor3f(0.2f, 0.4f, 0.8f);
-                    glBegin(GL_QUADS);
-                    glVertex3f(x1, y, ap.depth + 0.01f);
-                    glVertex3f(x2, y, ap.depth + 0.01f);
-                    glVertex3f(x2, y2, ap.depth + 0.01f);
-                    glVertex3f(x1, y2, ap.depth + 0.01f);
-                    glEnd();
-                }
-                else if (state == 1) {
-                    // выбитое окно (черная дыра)
-                    glColor3f(0.05f, 0.05f, 0.05f);
-                    glBegin(GL_QUADS);
-                    glVertex3f(x1, y, ap.depth + 0.01f);
-                    glVertex3f(x2, y, ap.depth + 0.01f);
-                    glVertex3f(x2, y2, ap.depth + 0.01f);
-                    glVertex3f(x1, y2, ap.depth + 0.01f);
-                    glEnd();
-                }
-                else {
-                    // разбитое стекло (осколок)
-                    glColor3f(0.2f, 0.4f, 0.8f);
-                    glBegin(GL_TRIANGLES);
-                    glVertex3f(x1, y, ap.depth + 0.01f);
-                    glVertex3f(x2, y, ap.depth + 0.01f);
-                    glVertex3f(x1, y2, ap.depth + 0.01f);
-                    glEnd();
-
-                    glColor3f(0.05f, 0.05f, 0.05f);
-                    glBegin(GL_TRIANGLES);
-                    glVertex3f(x2, y, ap.depth + 0.01f);
-                    glVertex3f(x2, y2, ap.depth + 0.01f);
-                    glVertex3f(x1, y2, ap.depth + 0.01f);
-                    glEnd();
-                }
-            }
-        }
-
-
-        // ================= DOOR =================
-        glColor3f(0.3f, 0.2f, 0.1f);
-        glBegin(GL_QUADS);
-        glVertex3f(-0.5f, 0, ap.depth + 0.02f);
-        glVertex3f(0.5f, 0, ap.depth + 0.02f);
-        glVertex3f(0.5f, 0.8f, ap.depth + 0.02f);
-        glVertex3f(-0.5f, 0.8f, ap.depth + 0.02f);
-        glEnd();
-
-
-        // ================= FIRE MARKS =================
-
-        // копоть над дверью
-        glColor4f(0.05f, 0.05f, 0.05f, 0.6f);
-        glBegin(GL_QUADS);
-        glVertex3f(-0.8f, 0.8f, ap.depth + 0.03f);
-        glVertex3f(0.8f, 0.8f, ap.depth + 0.03f);
-        glVertex3f(0.6f, 1.8f, ap.depth + 0.03f);
-        glVertex3f(-0.6f, 1.8f, ap.depth + 0.03f);
-        glEnd();
-
-        // случайные пятна копоти
-        for (int i = 0; i < 6; i++) {
-
-            float x = ((rand() % 100) / 100.0f - 0.5f) * ap.width * 1.5f;
-            float y = ((rand() % 100) / 100.0f) * totalH;
-            float size = 0.2f + (rand() % 100) / 400.0f;
-
-            glColor4f(0.0f, 0.0f, 0.0f, 0.4f);
-
-            glBegin(GL_QUADS);
-            glVertex3f(x - size, y - size, ap.depth + 0.03f);
-            glVertex3f(x + size, y - size, ap.depth + 0.03f);
-            glVertex3f(x + size, y + size, ap.depth + 0.03f);
-            glVertex3f(x - size, y + size, ap.depth + 0.03f);
-            glEnd();
-        }
-
-
-        // ================= DARK OVERLAY =================
-        glColor4f(0.0f, 0.0f, 0.0f, 0.2f);
-        glBegin(GL_QUADS);
-        glVertex3f(-ap.width, 0, ap.depth + 0.02f);
-        glVertex3f(ap.width, 0, ap.depth + 0.02f);
-        glVertex3f(ap.width, totalH, ap.depth + 0.02f);
-        glVertex3f(-ap.width, totalH, ap.depth + 0.02f);
-        glEnd();
-
-        glDisable(GL_BLEND);
-
-        glPopMatrix();
-
-
-    }
-    
-}
 void drawTank(TankComponent& tank,float bodyH) {
     glPushMatrix();
     glRotatef(1, 0, 1, 0);
@@ -466,9 +248,354 @@ void RadarSystem(float dt){
         if (transforms[entity].angle >= 360.0f) transforms[entity].angle -= 360.0f;
     }
 }
-void RenderSystem(){
+void drawDestroyedAppartament(ApartmentComponent& ap, float totalH){
+    float halfW = ap.width;
+    float halfD = ap.depth;
+
+    float leftTop = totalH;             
+    float rightTop = totalH * 0.5f;    
+
+    glPushMatrix();
+
+    // ================= FRONT =================
+    glColor3f(0.55f, 0.55f, 0.55f);
+
+    // Левая часть
+    glBegin(GL_QUADS);
+    glVertex3f(-halfW, 0, halfD);
+    glVertex3f(0.0f, 0, halfD);
+    glVertex3f(0.0f, leftTop, halfD);
+    glVertex3f(-halfW, leftTop, halfD);
+    glEnd();
+
+    // Правая разрушенная часть
+    glBegin(GL_QUADS);
+    glVertex3f(0.0f, 0, halfD);
+    glVertex3f(halfW, 0, halfD);
+    glVertex3f(halfW, rightTop, halfD);
+    glVertex3f(0.0f, rightTop, halfD);
+    glEnd();
+
+
+    // ================= BACK =================
+    glBegin(GL_QUADS);
+    glVertex3f(-halfW, 0, -halfD);
+    glVertex3f(halfW, 0, -halfD);
+    glVertex3f(halfW, rightTop, -halfD);
+    glVertex3f(-halfW, leftTop, -halfD);
+    glEnd();
+
+
+    // ================= LEFT WALL =================
+    glBegin(GL_QUADS);
+    glVertex3f(-halfW, 0, -halfD);
+    glVertex3f(-halfW, 0, halfD);
+    glVertex3f(-halfW, leftTop, halfD);
+    glVertex3f(-halfW, leftTop, -halfD);
+    glEnd();
+
+
+    // ================= RIGHT WALL =================
+    glBegin(GL_QUADS);
+    glVertex3f(halfW, 0, -halfD);
+    glVertex3f(halfW, 0, halfD);
+    glVertex3f(halfW, rightTop, halfD);
+    glVertex3f(halfW, rightTop, -halfD);
+    glEnd();
+
+
+    // ================= BROKEN TOP =================
+    glColor3f(0.35f, 0.35f, 0.35f);
+
+    glBegin(GL_TRIANGLES);
+
+    // Верхняя наклонная поверхность
+    glVertex3f(-halfW, leftTop, halfD);
+    glVertex3f(-halfW, leftTop, -halfD);
+    glVertex3f(halfW, rightTop, -halfD);
+
+    glVertex3f(-halfW, leftTop, halfD);
+    glVertex3f(halfW, rightTop, -halfD);
+    glVertex3f(halfW, rightTop, halfD);
+
+    glEnd();
+
+
+    // ================= WINDOWS (стабильные) =================
+    glColor3f(0.1f, 0.1f, 0.1f);
+
+    for (int f = 0; f < ap.floors; f++)
+    {
+        float y = f * ap.floorHeight + 0.2f;
+        if (y > rightTop) break; // окна только на целой части
+
+        for (int i = -2; i <= 0; i++)
+        {
+            float x = i * 0.7f;
+
+            glBegin(GL_QUADS);
+            glVertex3f(x - 0.2f, y, halfD + 0.01f);
+            glVertex3f(x + 0.2f, y, halfD + 0.01f);
+            glVertex3f(x + 0.2f, y + 0.3f, halfD + 0.01f);
+            glVertex3f(x - 0.2f, y + 0.3f, halfD + 0.01f);
+            glEnd();
+        }
+    }
+
+
+    // ================= CROOKED DOOR =================
+    glPushMatrix();
+    glTranslatef(-0.5f, 0, halfD + 0.02f);
+    glRotatef(-10, 0, 0, 1);
+
+    glColor3f(0.25f, 0.15f, 0.08f);
+    glBegin(GL_QUADS);
+    glVertex3f(0, 0, 0);
+    glVertex3f(1.0f, 0, 0);
+    glVertex3f(1.0f, 1.0f, 0);
+    glVertex3f(0, 1.0f, 0);
+    glEnd();
+
+    glPopMatrix();
+
+
+    // ================= RUBBLE (стабильная позиция) =================
+    glColor3f(0.4f, 0.4f, 0.4f);
+
+    for (int i = 0; i < 15; i++)
+    {
+        float x = -halfW + (i % 5) * 0.4f;
+        float z = halfD + (i / 5) * 0.3f;
+
+        glPushMatrix();
+        glTranslatef(x, 0.05f, z);
+        DrawCube(0.15f, 0.15f, 0.15f);
+        glPopMatrix();
+    }
+
+    glPopMatrix();
+}
+void drawAppartament(ApartmentComponent& ap, float totalH) {
+    if (ap.LOD == 1) {
+        glPushMatrix();
+        glRotatef(1, 0, 1, 0);
+
+        // ================= BODY =================
+        glColor3f(0.75f, 0.75f, 0.7f);
+        glBegin(GL_QUADS);
+        // Front
+        glVertex3f(-ap.width, 0, ap.depth);
+        glVertex3f(ap.width, 0, ap.depth);
+        glVertex3f(ap.width, totalH, ap.depth);
+        glVertex3f(-ap.width, totalH, ap.depth);
+
+        // Back
+        glVertex3f(-ap.width, 0, -ap.depth);
+        glVertex3f(-ap.width, totalH, -ap.depth);
+        glVertex3f(ap.width, totalH, -ap.depth);
+        glVertex3f(ap.width, 0, -ap.depth);
+
+        // Left
+        glVertex3f(-ap.width, 0, -ap.depth);
+        glVertex3f(-ap.width, 0, ap.depth);
+        glVertex3f(-ap.width, totalH, ap.depth);
+        glVertex3f(-ap.width, totalH, -ap.depth);
+
+        // Right
+        glVertex3f(ap.width, 0, -ap.depth);
+        glVertex3f(ap.width, totalH, -ap.depth);
+        glVertex3f(ap.width, totalH, ap.depth);
+        glVertex3f(ap.width, 0, ap.depth);
+
+        // Roof
+        glColor3f(0.5f, 0.5f, 0.5f);
+        glVertex3f(-ap.width, totalH, -ap.depth);
+        glVertex3f(-ap.width, totalH, ap.depth);
+        glVertex3f(ap.width, totalH, ap.depth);
+        glVertex3f(ap.width, totalH, -ap.depth);
+
+        glEnd();
+
+        // ================= WINDOWS =================
+        glColor3f(0.2f, 0.4f, 0.8f);
+        for (int f = 0; f < ap.floors; f++) {
+            float y = f * ap.floorHeight + 0.15f;
+            for (int i = -3; i <= 3; i += 2) {
+                glBegin(GL_QUADS);
+                glVertex3f(i * 0.6f - 0.2f, y, ap.depth + 0.01f);
+                glVertex3f(i * 0.6f + 0.2f, y, ap.depth + 0.01f);
+                glVertex3f(i * 0.6f + 0.2f, y + 0.25f, ap.depth + 0.01f);
+                glVertex3f(i * 0.6f - 0.2f, y + 0.25f, ap.depth + 0.01f);
+                glEnd();
+            }
+        }
+
+        // ================= DOORS =================
+        glColor3f(0.3f, 0.2f, 0.1f);
+        glBegin(GL_QUADS);
+        glVertex3f(-0.5f, 0, ap.depth + 0.02f);
+        glVertex3f(0.5f, 0, ap.depth + 0.02f);
+        glVertex3f(0.5f, 0.8f, ap.depth + 0.02f);
+        glVertex3f(-0.5f, 0.8f, ap.depth + 0.02f);
+        glEnd();
+
+        glPopMatrix();
+    }
+    if (ap.LOD == 2) {
+        glPushMatrix();
+        glRotatef(1, 0, 1, 0);
+
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+        float totalH = ap.floors * ap.floorHeight;
+
+        // ================= BODY =================
+        glColor3f(0.75f, 0.7f, 0.65f);
+        glBegin(GL_QUADS);
+
+        // Front
+        glVertex3f(-ap.width, 0, ap.depth);
+        glVertex3f(ap.width, 0, ap.depth);
+        glVertex3f(ap.width, totalH, ap.depth);
+        glVertex3f(-ap.width, totalH, ap.depth);
+
+        // Back
+        glVertex3f(-ap.width, 0, -ap.depth);
+        glVertex3f(-ap.width, totalH, -ap.depth);
+        glVertex3f(ap.width, totalH, -ap.depth);
+        glVertex3f(ap.width, 0, -ap.depth);
+
+        // Left
+        glVertex3f(-ap.width, 0, -ap.depth);
+        glVertex3f(-ap.width, 0, ap.depth);
+        glVertex3f(-ap.width, totalH, ap.depth);
+        glVertex3f(-ap.width, totalH, -ap.depth);
+
+        // Right
+        glVertex3f(ap.width, 0, -ap.depth);
+        glVertex3f(ap.width, totalH, -ap.depth);
+        glVertex3f(ap.width, totalH, ap.depth);
+        glVertex3f(ap.width, 0, ap.depth);
+
+        // Roof
+        glColor3f(0.5f, 0.45f, 0.45f);
+        glVertex3f(-ap.width, totalH, -ap.depth);
+        glVertex3f(-ap.width, totalH, ap.depth);
+        glVertex3f(ap.width, totalH, ap.depth);
+        glVertex3f(ap.width, totalH, -ap.depth);
+
+        glEnd();
+
+
+        // ================= WINDOWS =================
+        for (int f = 0; f < ap.floors; f++) {
+            float y = f * ap.floorHeight + 0.15f;
+
+            for (int i = -3; i <= 3; i += 2) {
+
+                float x1 = i * 0.6f - 0.2f;
+                float x2 = i * 0.6f + 0.2f;
+                float y2 = y + 0.25f;
+
+                int state = rand() % 3;
+
+                if (state == 0) {
+                    // нормальное окно
+                    glColor3f(0.2f, 0.4f, 0.8f);
+                    glBegin(GL_QUADS);
+                    glVertex3f(x1, y, ap.depth + 0.01f);
+                    glVertex3f(x2, y, ap.depth + 0.01f);
+                    glVertex3f(x2, y2, ap.depth + 0.01f);
+                    glVertex3f(x1, y2, ap.depth + 0.01f);
+                    glEnd();
+                }
+                else if (state == 1) {
+                    // выбитое окно (черная дыра)
+                    glColor3f(0.05f, 0.05f, 0.05f);
+                    glBegin(GL_QUADS);
+                    glVertex3f(x1, y, ap.depth + 0.01f);
+                    glVertex3f(x2, y, ap.depth + 0.01f);
+                    glVertex3f(x2, y2, ap.depth + 0.01f);
+                    glVertex3f(x1, y2, ap.depth + 0.01f);
+                    glEnd();
+                }
+                else {
+                    // разбитое стекло (осколок)
+                    glColor3f(0.2f, 0.4f, 0.8f);
+                    glBegin(GL_TRIANGLES);
+                    glVertex3f(x1, y, ap.depth + 0.01f);
+                    glVertex3f(x2, y, ap.depth + 0.01f);
+                    glVertex3f(x1, y2, ap.depth + 0.01f);
+                    glEnd();
+
+                    glColor3f(0.05f, 0.05f, 0.05f);
+                    glBegin(GL_TRIANGLES);
+                    glVertex3f(x2, y, ap.depth + 0.01f);
+                    glVertex3f(x2, y2, ap.depth + 0.01f);
+                    glVertex3f(x1, y2, ap.depth + 0.01f);
+                    glEnd();
+                }
+            }
+        }
+
+
+        // ================= DOOR =================
+        glColor3f(0.3f, 0.2f, 0.1f);
+        glBegin(GL_QUADS);
+        glVertex3f(-0.5f, 0, ap.depth + 0.02f);
+        glVertex3f(0.5f, 0, ap.depth + 0.02f);
+        glVertex3f(0.5f, 0.8f, ap.depth + 0.02f);
+        glVertex3f(-0.5f, 0.8f, ap.depth + 0.02f);
+        glEnd();
+
+
+        // ================= FIRE MARKS =================
+
+        // копоть над дверью
+        glColor4f(0.05f, 0.05f, 0.05f, 0.6f);
+        glBegin(GL_QUADS);
+        glVertex3f(-0.8f, 0.8f, ap.depth + 0.03f);
+        glVertex3f(0.8f, 0.8f, ap.depth + 0.03f);
+        glVertex3f(0.6f, 1.8f, ap.depth + 0.03f);
+        glVertex3f(-0.6f, 1.8f, ap.depth + 0.03f);
+        glEnd();
+
+        // случайные пятна копоти
+        for (int i = 0; i < 6; i++) {
+
+            float x = ((rand() % 100) / 100.0f - 0.5f) * ap.width * 1.5f;
+            float y = ((rand() % 100) / 100.0f) * totalH;
+            float size = 0.2f + (rand() % 100) / 400.0f;
+
+            glColor4f(0.0f, 0.0f, 0.0f, 0.4f);
+
+            glBegin(GL_QUADS);
+            glVertex3f(x - size, y - size, ap.depth + 0.03f);
+            glVertex3f(x + size, y - size, ap.depth + 0.03f);
+            glVertex3f(x + size, y + size, ap.depth + 0.03f);
+            glVertex3f(x - size, y + size, ap.depth + 0.03f);
+            glEnd();
+        }
+
+
+        // ================= DARK OVERLAY =================
+        glColor4f(0.0f, 0.0f, 0.0f, 0.2f);
+        glBegin(GL_QUADS);
+        glVertex3f(-ap.width, 0, ap.depth + 0.02f);
+        glVertex3f(ap.width, 0, ap.depth + 0.02f);
+        glVertex3f(ap.width, totalH, ap.depth + 0.02f);
+        glVertex3f(-ap.width, totalH, ap.depth + 0.02f);
+        glEnd();
+
+        glDisable(GL_BLEND);
+
+        glPopMatrix();
+    }
+}
+void RenderSystem(std::vector<SmokeEffect*>& smokes){
     for (auto e : entities){
-        if (healths[e].destroyed) continue;
+        if (healths[e].destroyed && renders[e].type != RenderType::Apartment) continue;
 
         auto& t = transforms[e];
         auto& r = renders[e];
@@ -504,8 +631,16 @@ void RenderSystem(){
         case RenderType::Apartment:{
             auto& ap = apartments[e];
             float totalH = ap.floors * ap.floorHeight;
+            float x = transforms[e].x;
+            float y = transforms[e].y; 
+            float z = transforms[e].z;
 
-            drawAppartament(ap,totalH);
+            if (ap.destroyed) {
+                drawDestroyedAppartament(ap, totalH);
+                smokes.push_back(new SmokeEffect(x, y, z,300,3.0f));
+            }
+            else drawAppartament(ap, totalH); 
+            
         }
         break;
         }
@@ -567,15 +702,18 @@ void HealthBarSystem(){
     }
 }
 void DeathSystem(){
-    for (auto& [entity, hp] : healths) if (hp.current <= 0) hp.destroyed = true;
+    for (auto& [entity, hp] : healths) if (hp.current <= 0) { 
+        hp.destroyed = true; 
+        if (apartments.contains(entity)) apartments[entity].destroyed = true;
+    }
 }
 void Update(float dt){
     RadarSystem(dt);
     BoundsSystem();
     DeathSystem();
 }
-void Render(){
-    RenderSystem();
+void Render(std::vector<SmokeEffect*>& smokes){
+    RenderSystem(smokes);
     HealthBarSystem();
 }
 

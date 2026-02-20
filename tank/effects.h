@@ -119,7 +119,7 @@ private:
     float size;
     float speed;
     float heightRadius;
-    std::vector<float> colors = { 0.2f, 0.2f, 0.2f, 0.5f };
+    std::vector<float> colors = { 0.2f, 0.2f, 0.2f, 0.2f };
 
 public:
     SmokeEffect(float x, float y, float z, int count = 100, float r = 1.0f,

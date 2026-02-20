@@ -62,13 +62,14 @@ public:
 
             for (auto& [id, en] : enemies) {
                 if (!healths.contains(id)) continue;
-                if (healths[id].destroyed) continue;
+                if (healths[id].destroyed && renders[id].type != RenderType::Apartment) continue;
                 if (!bounds.contains(id)) continue;
 
                 if (checkCollision(bounds[id], p)) {
                     healths[id].current -= p.damage;
-                    if (healths[id].current <= healths[id].max / 2) apartments[id].LOD = 2;
-                    if (healths[id].current <= 0) healths[id].destroyed = true;
+                    if (healths[id].current <= healths[id].max / 2) {
+                        if (apartments.contains(id)) apartments[id].LOD = 2;
+                    }
 
                     if (p.type != ProjectileType::Bullet) explosions.push_back(new ExplosionEffect(p.x, p.y, p.z));
                     if (p.selectedShellType == shellType::SMOKE) smokes.push_back(new SmokeEffect(p.x, p.y, p.z));
@@ -77,8 +78,7 @@ public:
                     break;
                 }
                 if (p.alive && p.y <= 0.0f && p.type != ProjectileType::Bullet) {
-                    onHit(p, en, healths[id], explosions, smokes, explosionSource, false,
-                        p.selectedShellType == shellType::SMOKE);
+                    onHit(p, en, healths[id], explosions, smokes, explosionSource, false,p.selectedShellType == shellType::SMOKE);
 
                     if (p.selectedShellType == shellType::SMOKE) smokes.push_back(new SmokeEffect(p.x, p.y, p.z));
 
@@ -127,7 +127,7 @@ private:
             }
             else {
                 smokes.push_back(
-                    new SmokeEffect(x, y, z, 5500, 6,{1.0f,1.0f,1.0f,1.0f},3.0f,0.01f,6.0f));
+                    new SmokeEffect(x, y, z, 5500, 6,{1.0f,1.0f,1.0f,0.3f},3.0f,0.01f,6.0f));
             }
             
         }

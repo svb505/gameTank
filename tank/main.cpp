@@ -184,8 +184,7 @@ int main(){
         double currentTime = glfwGetTime();
         deltaTime = currentTime - lastTime;
         lastTime = currentTime;
-        if (playerTank.finishReload > 0.0f)
-            playerTank.finishReload -= deltaTime;
+        if (playerTank.finishReload > 0.0f) playerTank.finishReload -= deltaTime;
 
         processTankInput(window, (float)deltaTime, projectileSystem);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -196,7 +195,7 @@ int main(){
         playerTank.Draw();
 
         Update(deltaTime);
-        Render();
+        Render(smokes);
 
         projectileSystem.update((float)deltaTime,enemyes,healths, bounds,explosions,smokes,sound.explosionSource);
 
