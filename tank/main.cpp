@@ -176,6 +176,9 @@ int main(){
     
     double lastTime = glfwGetTime();
     double deltaTime = 0.0;
+    float fpsTimer = 0.0f;
+    int frames = 0;
+    float fps = 0.0f;
 
     generateEnemyes(enemyes,COUNT);
 
@@ -184,6 +187,17 @@ int main(){
         double currentTime = glfwGetTime();
         deltaTime = currentTime - lastTime;
         lastTime = currentTime;
+
+        fpsTimer += deltaTime;
+        frames++;
+
+        if (fpsTimer >= 1.0f) {
+            fps = frames / fpsTimer;
+            frames = 0;
+            fpsTimer = 0.0f;
+        }
+
+
         if (playerTank.finishReload > 0.0f) playerTank.finishReload -= deltaTime;
 
         processTankInput(window, (float)deltaTime, projectileSystem);
@@ -210,7 +224,6 @@ int main(){
                
             glPopMatrix();
         }
-
         for (auto it = explosions.begin(); it != explosions.end();) {
             (*it)->Update(deltaTime);
             (*it)->Draw();
@@ -221,15 +234,13 @@ int main(){
             }
             else ++it;
         }
-
-
         for (auto& smoke : smokes) { smoke->Update(deltaTime); smoke->Draw();}
 
 
         hud.Draw3DAim(playerTank);
 
         glDisable(GL_DEPTH_TEST);
-        hud.drawHud(ECRANW, ECRANH, playerTank,55);
+        hud.drawHud(ECRANW, ECRANH, playerTank,55,fps);
         glEnable(GL_DEPTH_TEST);
 
         glfwSwapBuffers(window);
