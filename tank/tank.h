@@ -15,6 +15,7 @@ public:
     float turretYaw = -90.0f; 
     float gunPitch = 0.0f;  
 
+    int maxShells = 26;
     int totalShells = 26;
     float reloadTime = 6.5f;
     float finishReload = 0.0f;

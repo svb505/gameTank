@@ -26,6 +26,7 @@
 #include "camera.h"
 #include "sounds.h"
 #include "shells.h"
+#include "replenishmentAmmo.h"
 
 #define COUNT 55
 #define ECRANW 1600
@@ -35,9 +36,9 @@ Camera cam;
 Tank playerTank;
 Sound sound;
 HUD hud;
+Replishment repl;
 
-void processTankInput(GLFWwindow* window, float dt,ProjectileSystem& projectileSystem)
-{
+void processTankInput(GLFWwindow* window, float dt,ProjectileSystem& projectileSystem){
     float moveSpeed = 6.0f * dt;
     float rotateSpeed = 60.0f * dt;
     float turretSpeed = 60.0f * dt;
@@ -131,6 +132,8 @@ void processTankInput(GLFWwindow* window, float dt,ProjectileSystem& projectileS
     }
 }
 int main(){
+    srand(time(NULL));
+
     sound.setupBuffers();
     sound.createSources();
 
@@ -183,6 +186,7 @@ int main(){
     float fps = 0.0f;
 
     generateEnemyes(enemyes,COUNT);
+    repl.setCoordinates(10.0f, static_cast<float>(rand() % 30),static_cast<float>((rand() % 50) - 50));
 
     while (!glfwWindowShouldClose(window))
     {
@@ -198,8 +202,6 @@ int main(){
             frames = 0;
             fpsTimer = 0.0f;
         }
-
-
         if (playerTank.finishReload > 0.0f) playerTank.finishReload -= deltaTime;
 
         processTankInput(window, (float)deltaTime, projectileSystem);
@@ -208,10 +210,14 @@ int main(){
         drawSky();
         cam.setupCamera(playerTank, playerTank.aimMode);
         drawGround(cam.cameraX, cam.cameraZ);
+
         playerTank.Draw();
+        repl.drawReplCircle(30);
 
         Update(deltaTime);
         Render(smokes);
+
+        if (repl.isInCircle(playerTank.x, playerTank.z)) repl.startReplish(deltaTime,playerTank,ECRANH,ECRANW);
 
         projectileSystem.update((float)deltaTime,enemyes,healths, bounds,explosions,smokes,sound.explosionSource);
 
@@ -257,7 +263,6 @@ int main(){
             }
             
         }
-
 
         hud.Draw3DAim(playerTank);
 
