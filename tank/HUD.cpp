@@ -43,6 +43,10 @@ void HUD::drawHud(int screenWidth, int screenHeight, Tank& tank,const int count,
     else if (tank.selectedShell == shellType::SMOKE) selectedShell = "SMOKE";
     else selectedShell = "HE";
     
+    std::string controlString = "Control\nW - Move forward\nA - Move left\nS - Move right\nD - Move back"
+        "\nQ - Camera to left\nE - Camera to right \nShift - Aim mode\n< - Turret to left\n> - Turret ot right\n"
+        "^ - Gun to up\nv - Gun to down\n1/2/3 - Change shell\n(APFSDS,HE,SMOKE)";
+
     glMatrixMode(GL_PROJECTION);
     glPushMatrix();
     glLoadIdentity();
@@ -59,7 +63,9 @@ void HUD::drawHud(int screenWidth, int screenHeight, Tank& tank,const int count,
     RenderTextHUD(10, 80, 1, 1, 1, std::format("Selected shell: {}", selectedShell).c_str(), screenWidth, screenHeight);
     RenderTextHUD(10, 100, 1, 1, 1, "1 - Select APFSDS | 2 - Select HE | 3 - Select SMOKE", screenWidth, screenHeight);
     RenderTextHUD(10, 120, 1, 1, 1, std::format("Kills: {}",tank.kills).c_str(), screenWidth, screenHeight);
+    RenderTextHUD(screenWidth - 200, 15, 1, 1, 1, controlString.c_str(), screenWidth, screenHeight);
     RenderTextHUD(10, screenHeight - 50, 1, 1, 1, std::format("FPS: {:.0f}", fps).c_str(), screenWidth, screenHeight);
+   
     glEnable(GL_DEPTH_TEST);
 
     glMatrixMode(GL_MODELVIEW);

@@ -4,8 +4,7 @@
 
 GLuint fontBase = 0;
 
-void BuildFont()
-{
+void BuildFont(){
     HFONT font;
     HDC hDC = wglGetCurrentDC();
 
@@ -28,8 +27,7 @@ void BuildFont()
 
     DeleteObject(font);
 }
-void PrintText(const char* text)
-{
+void PrintText(const char* text){
     if (!text) return;
 
     glPushAttrib(GL_LIST_BIT);
@@ -37,8 +35,9 @@ void PrintText(const char* text)
     glCallLists((GLsizei)strlen(text), GL_UNSIGNED_BYTE, text);
     glPopAttrib();
 }
-void RenderTextHUD(float x, float y, float r, float g, float b, const char* text, int screenW, int screenH)
-{
+void RenderTextHUD(float x, float y,float r, float g, float b,const char* text,int screenW, int screenH){
+    if (!text) return;
+
     glMatrixMode(GL_PROJECTION);
     glPushMatrix();
     glLoadIdentity();
@@ -51,8 +50,36 @@ void RenderTextHUD(float x, float y, float r, float g, float b, const char* text
     glDisable(GL_DEPTH_TEST);
 
     glColor3f(r, g, b);
-    glRasterPos2f(x, y);
-    PrintText(text);
+
+    const float lineHeight = 16.0f; 
+    float startY = y;
+
+    const char* lineStart = text;
+    const char* p = text;
+
+    while (*p){
+        if (*p == '\n'){
+            int length = p - lineStart;
+
+            glRasterPos2f(x, startY);
+            glPushAttrib(GL_LIST_BIT);
+            glListBase(fontBase);
+            glCallLists(length, GL_UNSIGNED_BYTE, lineStart);
+            glPopAttrib();
+
+            startY += lineHeight;
+            lineStart = p + 1;
+        }
+        p++;
+    }
+
+    if (lineStart != p){
+        glRasterPos2f(x, startY);
+        glPushAttrib(GL_LIST_BIT);
+        glListBase(fontBase);
+        glCallLists(p - lineStart, GL_UNSIGNED_BYTE, lineStart);
+        glPopAttrib();
+    }
 
     glEnable(GL_DEPTH_TEST);
 
@@ -61,8 +88,7 @@ void RenderTextHUD(float x, float y, float r, float g, float b, const char* text
     glPopMatrix();
     glMatrixMode(GL_MODELVIEW);
 }
-void RenderTextWorld(float x, float y, float z, float r, float g, float b, const char* text)
-{
+void RenderTextWorld(float x, float y, float z, float r, float g, float b, const char* text){
     glPushMatrix();
 
     glTranslatef(x, y, z);

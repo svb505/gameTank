@@ -66,7 +66,6 @@ void processTankInput(GLFWwindow* window, float dt,ProjectileSystem& projectileS
         playerTank.bodyYaw -= rotateSpeed;
     }
         
-
     float bodyRad = (playerTank.bodyYaw + 90.0f) * 3.1415926f / 180.0f;
     float dirX = -sin(bodyRad);
     float dirZ = -cos(bodyRad);
