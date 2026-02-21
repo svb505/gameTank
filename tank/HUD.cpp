@@ -58,6 +58,7 @@ void HUD::drawHud(int screenWidth, int screenHeight, Tank& tank,const int count,
     RenderTextHUD(10, 30, 1, 1, 1, std::format("Reload Time: {:.1f}", tank.finishReload).c_str(), screenWidth, screenHeight);
     RenderTextHUD(10, 80, 1, 1, 1, std::format("Selected shell: {}", selectedShell).c_str(), screenWidth, screenHeight);
     RenderTextHUD(10, 100, 1, 1, 1, "1 - Select APFSDS | 2 - Select HE | 3 - Select SMOKE", screenWidth, screenHeight);
+    RenderTextHUD(10, 120, 1, 1, 1, std::format("Kills: {}",tank.kills).c_str(), screenWidth, screenHeight);
     RenderTextHUD(10, screenHeight - 50, 1, 1, 1, std::format("FPS: {:.0f}", fps).c_str(), screenWidth, screenHeight);
     glEnable(GL_DEPTH_TEST);
 

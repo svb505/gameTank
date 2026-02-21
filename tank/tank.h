@@ -22,6 +22,8 @@ public:
 
     bool aimMode = false;
 
+    int kills = 0;
+
     shellType selectedShell;
     int shellSpeed = 400;
 

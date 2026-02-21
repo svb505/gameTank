@@ -214,7 +214,7 @@ int main(){
         playerTank.Draw();
         repl.drawReplCircle(30);
 
-        Update(deltaTime);
+        Update(deltaTime,playerTank);
         Render(smokes);
 
         if (repl.isInCircle(playerTank.x, playerTank.z)) repl.startReplish(deltaTime,playerTank,ECRANH,ECRANW);

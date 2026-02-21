@@ -8,6 +8,7 @@
 #include <unordered_map>
 #include "effects.h"
 #include "text.h"
+#include "tank.h"
 
 using Entity = uint32_t;
 
@@ -68,7 +69,6 @@ Entity CreateEntity(){
     entities.push_back(e);
     return e;
 }
-
 
 void drawTank(TankComponent& tank,float bodyH) {
     glPushMatrix();
@@ -704,16 +704,21 @@ void HealthBarSystem(){
         RenderTextWorld(t.x,t.y + step,t.z,1, 0, 0,text.c_str());
     }
 }
-void DeathSystem(){
+void DeathSystem(Tank& tank){
     for (auto& [entity, hp] : healths) if (hp.current <= 0) { 
-        hp.destroyed = true; 
-        if (apartments.contains(entity)) apartments[entity].destroyed = true;
+        if (hp.current <= 0 && !hp.destroyed) {
+            hp.destroyed = true;
+
+            if (apartments.contains(entity)) apartments[entity].destroyed = true;
+
+            tank.kills++;
+        }
     }
 }
-void Update(float dt){
+void Update(float dt,Tank& tank){
     RadarSystem(dt);
     BoundsSystem();
-    DeathSystem();
+    DeathSystem(tank);
 }
 void Render(std::vector<SmokeEffect*>& smokes){
     RenderSystem(smokes);
