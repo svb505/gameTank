@@ -696,10 +696,12 @@ void HealthBarSystem(){
         if (hp.destroyed) continue;
 
         auto& t = transforms[entity];
+        float step = (apartments.contains(entity)) ? apartments[entity].floorHeight * 
+            apartments[entity].floors + 2.0f : 2.0f;
 
         std::string text = std::format("{}/{}", hp.current, hp.max);
 
-        RenderTextWorld(t.x,t.y + 2.0f,t.z,1, 0, 0,text.c_str());
+        RenderTextWorld(t.x,t.y + step,t.z,1, 0, 0,text.c_str());
     }
 }
 void DeathSystem(){

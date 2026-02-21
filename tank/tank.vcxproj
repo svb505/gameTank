@@ -140,6 +140,7 @@
     <ClInclude Include="Info.h" />
     <ClInclude Include="projectile.h" />
     <ClInclude Include="projectileSystem.h" />
+    <ClInclude Include="replenishmentAmmo.h" />
     <ClInclude Include="shells.h" />
     <ClInclude Include="sounds.h" />
     <ClInclude Include="tank.h" />
