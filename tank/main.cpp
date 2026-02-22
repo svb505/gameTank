@@ -80,9 +80,11 @@ void processTankInput(GLFWwindow* window, float dt,ProjectileSystem& projectileS
     }
     if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS){
         playerTank.turretYaw += turretSpeed;
+        if (!playerTank.aimMode) cam.cameraYaw -= turretSpeed;
     }
     if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS){
         playerTank.turretYaw -= turretSpeed;
+        if (!playerTank.aimMode) cam.cameraYaw += turretSpeed;
     }
     if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
         playerTank.gunPitch = std::max(playerTank.gunPitch - gunSpeed, -10.0f);
