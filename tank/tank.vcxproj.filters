@@ -24,6 +24,18 @@
     <ClCompile Include="HUD.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="minimap.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="enemyes.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="environnement.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="shells.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="tank.h">
@@ -63,6 +75,9 @@
       <Filter>Исходные файлы</Filter>
     </ClInclude>
     <ClInclude Include="replenishmentAmmo.h">
+      <Filter>Исходные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="minimap.h">
       <Filter>Исходные файлы</Filter>
     </ClInclude>
   </ItemGroup>

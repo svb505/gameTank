@@ -127,8 +127,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="enemyes.cpp" />
+    <ClCompile Include="environnement.cpp" />
     <ClCompile Include="HUD.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="minimap.cpp" />
+    <ClCompile Include="shells.cpp" />
     <ClCompile Include="text.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -138,6 +142,7 @@
     <ClInclude Include="environnement.h" />
     <ClInclude Include="HUD.h" />
     <ClInclude Include="Info.h" />
+    <ClInclude Include="minimap.h" />
     <ClInclude Include="projectile.h" />
     <ClInclude Include="projectileSystem.h" />
     <ClInclude Include="replenishmentAmmo.h" />
