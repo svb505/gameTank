@@ -7,7 +7,17 @@ class ExplosionEffect;
 class SmokeEffect;
 class Camera;
 
-void drawMiniMap(int ECRANW, int ECRANH, Tank& playerTank, ProjectileSystem& projectileSystem,
-    std::vector<ExplosionEffect*>& explosions, std::vector<SmokeEffect*>& smokes, Camera& cam,
-    float dt);
+class MiniMap {
+private:
+    float height = 80.0f;
+public:
+    int step = 3;
+
+    void setHeight(float h) { height = h; }
+    float getHeight() { return height; }
+    void draw(int ECRANW, int ECRANH, Tank& playerTank, ProjectileSystem& projectileSystem,
+        std::vector<ExplosionEffect*>& explosions, std::vector<SmokeEffect*>& smokes, Camera& cam,
+        float dt);
+};
+
     

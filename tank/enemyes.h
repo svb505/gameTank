@@ -69,5 +69,5 @@ void BoundsSystem();
 void HealthBarSystem();
 void DeathSystem(Tank& tank);
 void Update(float dt, Tank& tank);
-void Render(std::vector<SmokeEffect*>& smokes);
+void Render(std::vector<SmokeEffect*>& smokes,bool healthBar = true);
 void generateEnemyes(std::unordered_map<int, Entity>& enemyes, int count);

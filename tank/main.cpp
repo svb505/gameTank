@@ -38,12 +38,21 @@ Tank playerTank;
 Sound sound;
 HUD hud;
 Replishment repl;
+MiniMap mnMap;
 
 void processTankInput(GLFWwindow* window, float dt,ProjectileSystem& projectileSystem){
     float moveSpeed = 6.0f * dt;
     float rotateSpeed = 60.0f * dt;
     float turretSpeed = 60.0f * dt;
     float gunSpeed = 30.0f * dt;
+    float bodyRad = (playerTank.bodyYaw + 90.0f) * 3.1415926f / 180.0f;
+    float dirX = -sin(bodyRad);
+    float dirZ = -cos(bodyRad);
+    static bool lastShift = false;
+    static bool lastFire = false;
+    bool fire = glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS;
+
+    bool shift = glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS;
 
     if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS){
         playerTank.selectedShell = shellType::APFSDS;
@@ -66,11 +75,6 @@ void processTankInput(GLFWwindow* window, float dt,ProjectileSystem& projectileS
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
         playerTank.bodyYaw -= rotateSpeed;
     }
-        
-    float bodyRad = (playerTank.bodyYaw + 90.0f) * 3.1415926f / 180.0f;
-    float dirX = -sin(bodyRad);
-    float dirZ = -cos(bodyRad);
-
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
         playerTank.x += dirX * moveSpeed;
         playerTank.z += dirZ * moveSpeed;
@@ -87,11 +91,17 @@ void processTankInput(GLFWwindow* window, float dt,ProjectileSystem& projectileS
         playerTank.turretYaw -= turretSpeed;
         if (!playerTank.aimMode) cam.cameraYaw += turretSpeed;
     }
-    if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
+    if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS && !glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS) {
         playerTank.gunPitch = std::max(playerTank.gunPitch - gunSpeed, -10.0f);
     }
-    if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
+    if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS && !glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS) {
         playerTank.gunPitch = std::min(playerTank.gunPitch + gunSpeed, 10.0f);
+    }
+    if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS) {
+        mnMap.setHeight(mnMap.getHeight() + mnMap.step * dt * 60);
+    }
+    if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS) {
+        mnMap.setHeight(mnMap.getHeight() - mnMap.step * dt * 60);
     }
     if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS) {
         cam.cameraYaw += 45.0f * dt;
@@ -100,14 +110,8 @@ void processTankInput(GLFWwindow* window, float dt,ProjectileSystem& projectileS
         cam.cameraYaw -= 45.0f * dt;
     }
         
-
-    static bool lastShift = false;
-    bool shift = glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS;
     if (shift && !lastShift) playerTank.aimMode = !playerTank.aimMode;
     lastShift = shift;
-
-    static bool lastFire = false;
-    bool fire = glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS;
 
     if (fire && !lastFire && playerTank.finishReload <= 0.0f && playerTank.totalShells > 0) {
         float yaw = playerTank.bodyYaw + playerTank.turretYaw;
@@ -267,7 +271,7 @@ int main(){
         
         hud.Draw3DAim(playerTank);
 
-        drawMiniMap(ECRANW, ECRANH, playerTank, projectileSystem, explosions, smokes, cam, deltaTime);
+        mnMap.draw(ECRANW, ECRANH, playerTank, projectileSystem, explosions, smokes, cam, deltaTime);
 
         glDisable(GL_DEPTH_TEST);
         hud.drawHud(ECRANW, ECRANH, playerTank,55,fps);

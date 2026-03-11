@@ -11,26 +11,24 @@
 #include "enemyes.h"
 #include "minimap.h"
 
-void drawMiniMap(int ECRANW, int ECRANH, Tank& playerTank, ProjectileSystem& projectileSystem,
+void MiniMap::draw(int ECRANW, int ECRANH, Tank& playerTank, ProjectileSystem& projectileSystem,
     std::vector<ExplosionEffect*>& explosions, std::vector<SmokeEffect*>& smokes,Camera& cam,
     float dt) {
+
+    float size = height * 0.6f;
     int miniW = ECRANW / 4;
     int miniH = ECRANH / 4;
 
-    glViewport(ECRANW - miniW, 10, miniW, miniH);
+    glViewport(ECRANW - miniW, 30, miniW, miniH);
 
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    glOrtho(-40, 40, -40, 40, -100, 200);
+    glOrtho(-size, size, -size, size, -500, 500);
 
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
-    gluLookAt(
-        playerTank.x, 80.0f, playerTank.z,
-        playerTank.x, 0.0f, playerTank.z,
-        0, 0, -1
-    );
+    gluLookAt(playerTank.x, height, playerTank.z,playerTank.x, 0.0f, playerTank.z,0, 0, -1);
 
     glClear(GL_DEPTH_BUFFER_BIT);
 
@@ -46,7 +44,7 @@ void drawMiniMap(int ECRANW, int ECRANH, Tank& playerTank, ProjectileSystem& pro
     for (auto it = explosions.begin(); it != explosions.end(); ++it) (*it)->Draw();
     for (auto it = smokes.begin(); it != smokes.end(); ++it) (*it)->Draw();
 
-    Render(smokes);
+    Render(smokes,false);
 
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();

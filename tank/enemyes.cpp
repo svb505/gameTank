@@ -676,9 +676,9 @@ void Update(float dt, Tank& tank) {
     BoundsSystem();
     DeathSystem(tank);
 }
-void Render(std::vector<SmokeEffect*>& smokes) {
+void Render(std::vector<SmokeEffect*>& smokes, bool healthBar) {
     RenderSystem(smokes);
-    HealthBarSystem();
+    if (healthBar) HealthBarSystem();
 }
 
 void generateEnemyes(std::unordered_map<int, Entity>& enemyes, int count) {
