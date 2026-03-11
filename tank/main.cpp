@@ -189,8 +189,7 @@ int main(){
     generateEnemyes(enemyes,COUNT);
     repl.setCoordinates(10.0f, static_cast<float>(rand() % 30),static_cast<float>((rand() % 50) - 50));
 
-    while (!glfwWindowShouldClose(window))
-    {
+    while (!glfwWindowShouldClose(window)){
         double currentTime = glfwGetTime();
         deltaTime = currentTime - lastTime;
         lastTime = currentTime;
@@ -264,8 +263,79 @@ int main(){
             }
             
         }
-
+        
         hud.Draw3DAim(playerTank);
+
+        int miniW = ECRANW / 4;
+        int miniH = ECRANH / 4;
+
+        glViewport(ECRANW - miniW, 10, miniW, miniH);
+
+        glMatrixMode(GL_PROJECTION);
+        glLoadIdentity();
+        glOrtho(-40, 40, -40, 40, -100, 200);
+
+        glMatrixMode(GL_MODELVIEW);
+        glLoadIdentity();
+
+        gluLookAt(
+            playerTank.x, 80.0f, playerTank.z,
+            playerTank.x, 0.0f, playerTank.z,
+            0, 0, -1
+        );
+
+        glClear(GL_DEPTH_BUFFER_BIT);
+
+        drawGround(playerTank.x, playerTank.z);
+        playerTank.Draw();
+        for (auto& p : projectileSystem.projectiles) {
+            if (!p.alive) continue;
+
+            glPushMatrix();
+            glTranslatef(p.x, p.y, p.z);
+
+            if (p.type == ProjectileType::Shell) drawShell();
+            else drawBullet();
+
+            glPopMatrix();
+        }
+        for (auto it = explosions.begin(); it != explosions.end();) {
+            (*it)->Update(deltaTime);
+            (*it)->Draw();
+
+            if ((*it)->IsFinished()) {
+                delete* it;
+                it = explosions.erase(it);
+            }
+            else ++it;
+        }
+        for (auto it = smokes.begin(); it != smokes.end(); ) {
+            SmokeEffect* smoke = *it;
+
+            bool alive = false;
+            for (auto& p : smoke->getCoordinates()) {
+                if (p.y <= 5.0f) {
+                    alive = true;
+                    break;
+                }
+            }
+            if (!alive) {
+                delete smoke;
+                it = smokes.erase(it);
+            }
+            else {
+                smoke->Update(deltaTime);
+                smoke->Draw();
+                ++it;
+            }
+
+        }
+        Render(smokes);
+        glViewport(0, 0, ECRANW, ECRANH);
+
+        glMatrixMode(GL_PROJECTION);
+        glLoadIdentity();
+        gluPerspective(cam.fov, (float)ECRANW / ECRANH, cam.nearPlane, cam.farPlane);
 
         glDisable(GL_DEPTH_TEST);
         hud.drawHud(ECRANW, ECRANH, playerTank,55,fps);

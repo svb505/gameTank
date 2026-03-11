@@ -22,8 +22,7 @@ public:
     float cameraZ = 0.0f;
     float cameraYaw = 0.0f;
 
-    void setupCamera(Tank& playerTank,bool& aimMode)
-    {
+    void setupCamera(Tank& playerTank,bool& aimMode){
         glMatrixMode(GL_MODELVIEW);
         glLoadIdentity();
 
@@ -34,11 +33,7 @@ public:
             cameraY = playerTank.y + camHeight;
             cameraZ = playerTank.z + cos(camRad) * camDistance;
 
-            gluLookAt(
-                cameraX, cameraY, cameraZ,
-                playerTank.x, playerTank.y + 1.0f, playerTank.z,
-                0, 1, 0
-            );
+            gluLookAt(cameraX, cameraY, cameraZ,playerTank.x, playerTank.y + 1.0f, playerTank.z,0, 1, 0);
         }
         else {
             float turretRad = (playerTank.bodyYaw + playerTank.turretYaw) * 3.1415926f / 180.0f;
@@ -55,11 +50,7 @@ public:
             float lookY = cameraY + sin(pitchRad);
             float lookZ = playerTank.z + forwardZ;
 
-            gluLookAt(
-                cameraX, cameraY, cameraZ,
-                lookX, lookY, lookZ,
-                0, 1, 0
-            );
+            gluLookAt(cameraX, cameraY, cameraZ,lookX, lookY, lookZ,0, 1, 0);
         }
     }
 };
