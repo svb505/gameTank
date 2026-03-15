@@ -28,6 +28,7 @@
 #include "shells.h"
 #include "replenishmentAmmo.h"
 #include "minimap.h"
+#include "lightning.h"
 
 #define COUNT 55
 #define ECRANW 1600
@@ -39,6 +40,7 @@ Sound sound;
 HUD hud;
 Replishment repl;
 MiniMap mnMap;
+Light light;
 
 void processTankInput(GLFWwindow* window, float dt,ProjectileSystem& projectileSystem){
     float moveSpeed = 6.0f * dt;
@@ -191,6 +193,8 @@ int main(){
     int frames = 0;
     float fps = 0.0f;
 
+    light.initLighting();
+
     generateEnemyes(enemyes,COUNT);
     repl.setCoordinates(10.0f, static_cast<float>(rand() % 30),static_cast<float>((rand() % 50) - 50));
 
@@ -273,9 +277,11 @@ int main(){
 
         mnMap.draw(ECRANW, ECRANH, playerTank, projectileSystem, explosions, smokes, cam, deltaTime);
 
+        glDisable(GL_LIGHTING);
         glDisable(GL_DEPTH_TEST);
         hud.drawHud(ECRANW, ECRANH, playerTank,55,fps);
         glEnable(GL_DEPTH_TEST);
+        glEnable(GL_LIGHTING);
 
         glfwSwapBuffers(window);
         glfwPollEvents();

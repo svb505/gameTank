@@ -130,6 +130,7 @@
     <ClCompile Include="enemyes.cpp" />
     <ClCompile Include="environnement.cpp" />
     <ClCompile Include="HUD.cpp" />
+    <ClCompile Include="lightning.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="minimap.cpp" />
     <ClCompile Include="shells.cpp" />
@@ -142,6 +143,7 @@
     <ClInclude Include="environnement.h" />
     <ClInclude Include="HUD.h" />
     <ClInclude Include="Info.h" />
+    <ClInclude Include="lightning.h" />
     <ClInclude Include="minimap.h" />
     <ClInclude Include="projectile.h" />
     <ClInclude Include="projectileSystem.h" />

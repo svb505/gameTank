@@ -36,6 +36,9 @@
     <ClCompile Include="shells.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="lightning.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="tank.h">
@@ -78,6 +81,9 @@
       <Filter>Исходные файлы</Filter>
     </ClInclude>
     <ClInclude Include="minimap.h">
+      <Filter>Исходные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="lightning.h">
       <Filter>Исходные файлы</Filter>
     </ClInclude>
   </ItemGroup>
