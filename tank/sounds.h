@@ -12,13 +12,33 @@ public:
 
     ALuint tankBuffer = 0;
     ALuint explosionBuffer = 0;
-    ALuint shootBuffer = 0;
+    ALuint shotBuffer = 0;
     ALuint mgunBuffer = 0;
     ALuint tankSource = 0;
     ALuint explosionSource = 0;
-    ALuint shootSource = 0;
+    ALuint shotSource = 0;
     ALuint mgunSource = 0;
 
+    void setSourcePosition(ALuint source, float x, float y, float z) {
+        ALfloat pos[] = { x, y, z };
+        ALfloat vel[] = { 0.0f, 0.0f, 0.0f };
+
+        alSourcefv(source, AL_POSITION, pos);
+        alSourcefv(source, AL_VELOCITY, vel);
+    }
+    void setListener(float x, float y, float z, float fx, float fy, float fz) {
+        ALfloat pos[] = { x, y, z };
+        ALfloat vel[] = { 0.0f, 0.0f, 0.0f };
+
+        ALfloat ori[] = {
+            fx, fy, fz,
+            0.0f, 1.0f, 0.0f
+        };
+
+        alListenerfv(AL_POSITION, pos);
+        alListenerfv(AL_VELOCITY, vel);
+        alListenerfv(AL_ORIENTATION, ori);
+    }
     ALuint LoadWav(const char* filename)
     {
         SF_INFO info{};
@@ -56,26 +76,44 @@ public:
 
         tankBuffer = LoadWav("sounds/tank.wav");
         explosionBuffer = LoadWav("sounds/explosion.wav");
-        shootBuffer = LoadWav("sounds/shoot.wav");
+        shotBuffer = LoadWav("sounds/shot.wav");
         mgunBuffer = LoadWav("sounds/mgun.wav");
     }
     void createSources() {
+        alDistanceModel(AL_INVERSE_DISTANCE_CLAMPED);
+
         alGenSources(1, &tankSource);
         alSourcei(tankSource, AL_BUFFER, tankBuffer);
         alSourcei(tankSource, AL_LOOPING, AL_TRUE);
-        alSourcef(tankSource, AL_GAIN, 0.7f);
+        alSourcef(tankSource, AL_GAIN, 0.5f);
         alSourcePlay(tankSource);
 
         alGenSources(1, &explosionSource);
         alSourcei(explosionSource, AL_BUFFER, explosionBuffer);
         alSourcef(explosionSource, AL_GAIN, 1.0f);
 
-        alGenSources(1, &shootSource);
-        alSourcei(shootSource, AL_BUFFER, shootBuffer);
-        alSourcef(shootSource, AL_GAIN, 1.0f);
+        alGenSources(1, &shotSource);
+        alSourcei(shotSource, AL_BUFFER, shotBuffer);
+        alSourcef(shotSource, AL_GAIN, 1.0f);
 
         alGenSources(1, &mgunSource);
         alSourcei(mgunSource, AL_BUFFER, mgunBuffer);
-        alSourcef(mgunSource, AL_GAIN, 1.0f);
+        alSourcef(mgunSource, AL_GAIN, 0.8f);
+
+        alSourcef(mgunSource, AL_REFERENCE_DISTANCE, 3.0f);
+        alSourcef(mgunSource, AL_MAX_DISTANCE, 120.0f);
+        alSourcef(mgunSource, AL_ROLLOFF_FACTOR, 1.5f);
+
+        alSourcef(shotSource, AL_REFERENCE_DISTANCE, 10.0f);
+        alSourcef(shotSource, AL_MAX_DISTANCE, 400.0f);
+        alSourcef(shotSource, AL_ROLLOFF_FACTOR, 0.7f);
+
+        alSourcef(explosionSource, AL_REFERENCE_DISTANCE, 15.0f);
+        alSourcef(explosionSource, AL_MAX_DISTANCE, 600.0f);
+        alSourcef(explosionSource, AL_ROLLOFF_FACTOR, 0.6f);
+
+        alSourcef(tankSource, AL_REFERENCE_DISTANCE, 4.0f);
+        alSourcef(tankSource, AL_MAX_DISTANCE, 80.0f);
+        alSourcef(tankSource, AL_ROLLOFF_FACTOR, 2.0f);
     }
 };

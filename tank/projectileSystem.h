@@ -9,6 +9,7 @@
 #include <algorithm>
 #include "effects.h"
 #include "Info.h"
+#include "sounds.h"
 
 struct Info;
 class ProjectileSystem {
@@ -51,7 +52,7 @@ public:
 
         projectiles.push_back(p);
     }
-    void update(float dt,std::unordered_map<int, Entity>& enemies,std::unordered_map<Entity, Health>& healths,
+    void update(float dt,Sound& sound, std::unordered_map<int, Entity>& enemies,std::unordered_map<Entity, Health>& healths,
         std::unordered_map<Entity, Bounds>& bounds,std::vector<ExplosionEffect*>& explosions,
         std::vector<SmokeEffect*>& smokes,ALuint explosionSource){
         
@@ -71,6 +72,10 @@ public:
                         if (apartments.contains(id)) apartments[id].LOD = 2;
                     }
 
+                    sound.setSourcePosition(sound.explosionSource, p.x, p.y, p.z);
+                    alSourceStop(explosionSource);
+                    alSourcePlay(explosionSource);
+
                     if (p.type != ProjectileType::Bullet) explosions.push_back(new ExplosionEffect(p.x, p.y, p.z));
                     if (p.selectedShellType == shellType::SMOKE) smokes.push_back(new SmokeEffect(p.x, p.y, p.z));
 
@@ -78,7 +83,7 @@ public:
                     break;
                 }
                 if (p.alive && p.y <= 0.0f && p.type != ProjectileType::Bullet) {
-                    onHit(p, en, healths[id], explosions, smokes, explosionSource, false,p.selectedShellType == shellType::SMOKE);
+                    onHit(p, en, healths[id], explosions, smokes, explosionSource, sound,false,p.selectedShellType == shellType::SMOKE);
 
                     if (p.selectedShellType == shellType::SMOKE) smokes.push_back(new SmokeEffect(p.x, p.y, p.z));
 
@@ -99,7 +104,9 @@ private:
             p.z >= bounds.minZ && p.z <= bounds.maxZ;
     }
     void onHit(Projectile& p,Entity& en,Health& health,std::vector<ExplosionEffect*>& explosions,
-        std::vector<SmokeEffect*>& smokes,ALuint explosionSource,bool hitGround = false,bool smokeShell = false){
+        std::vector<SmokeEffect*>& smokes,ALuint explosionSource,Sound& sound,bool hitGround = false,bool smokeShell = false){
+        
+        sound.setSourcePosition(sound.explosionSource, p.x, p.y, p.z);
         alSourceStop(explosionSource);
         alSourcePlay(explosionSource);
 
