@@ -32,6 +32,7 @@
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
+#include "GUI.h"
 
 #define COUNT 55
 #define ECRANW 1600
@@ -44,6 +45,7 @@ HUD hud;
 Replishment repl;
 MiniMap mnMap;
 Light light;
+GUI gui;
 
 void processTankInput(GLFWwindow* window, float dt,ProjectileSystem& projectileSystem){
     float moveSpeed = 6.0f * dt;
@@ -234,7 +236,7 @@ int main(){
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        //
+        gui.render(fps, playerTank);
 
         ImGui::Render();
 
@@ -311,12 +313,6 @@ int main(){
         hud.Draw3DAim(playerTank);
 
         mnMap.draw(ECRANW, ECRANH, playerTank, projectileSystem, explosions, smokes, cam, deltaTime);
-
-        glDisable(GL_LIGHTING);
-        glDisable(GL_DEPTH_TEST);
-        hud.drawHud(ECRANW, ECRANH, playerTank,55,fps);
-        glEnable(GL_DEPTH_TEST);
-        glEnable(GL_LIGHTING);
 
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
         glfwSwapBuffers(window);

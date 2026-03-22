@@ -141,6 +141,7 @@
     <ClInclude Include="effects.h" />
     <ClInclude Include="enemyes.h" />
     <ClInclude Include="environnement.h" />
+    <ClInclude Include="GUI.h" />
     <ClInclude Include="HUD.h" />
     <ClInclude Include="Info.h" />
     <ClInclude Include="lightning.h" />
