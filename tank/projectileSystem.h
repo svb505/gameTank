@@ -10,14 +10,14 @@
 #include "effects.h"
 #include "Info.h"
 #include "sounds.h"
+#include "shells.h"
 
 struct Info;
 class ProjectileSystem {
 public:
     std::vector<Projectile> projectiles;
 
-    void spawnShell(float x, float y, float z,float yawDeg, float pitchDeg,shellType _shellType,int shellSpeed)
-    {
+    void spawnShell(float x, float y, float z,float yawDeg, float pitchDeg,shellType _shellType,int shellSpeed){
         Projectile p;
         p.type = ProjectileType::Shell;
 
@@ -36,8 +36,7 @@ public:
 
         projectiles.push_back(p);
     }
-    void spawnBullet(float x, float y, float z,float yawDeg)
-    {
+    void spawnBullet(float x, float y, float z,float yawDeg){
         Projectile p;
         p.type = ProjectileType::Bullet;
         p.x = x; p.y = y; p.z = z;
@@ -96,7 +95,19 @@ public:
         }
         std::erase_if(projectiles, [](const Projectile& p) { return !p.alive; });
     }
+    void updateProjectiles(ProjectileSystem& projectileSystem) {
+        for (auto& p : projectileSystem.projectiles) {
+            if (!p.alive) continue;
 
+            glPushMatrix();
+            glTranslatef(p.x, p.y, p.z);
+
+            if (p.type == ProjectileType::Shell) drawShell();
+            else drawBullet();
+
+            glPopMatrix();
+        }
+    }
 private:
     bool checkCollision(const Bounds& bounds, const Projectile& p){
         return p.x >= bounds.minX && p.x <= bounds.maxX &&

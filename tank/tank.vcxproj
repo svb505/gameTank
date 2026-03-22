@@ -127,6 +127,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="effects.cpp" />
     <ClCompile Include="enemyes.cpp" />
     <ClCompile Include="environnement.cpp" />
     <ClCompile Include="HUD.cpp" />

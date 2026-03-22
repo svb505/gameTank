@@ -25,7 +25,6 @@
 #include "HUD.h"
 #include "camera.h"
 #include "sounds.h"
-#include "shells.h"
 #include "replenishmentAmmo.h"
 #include "minimap.h"
 #include "lightning.h"
@@ -169,15 +168,13 @@ int main(){
     unsigned char* pixels = stbi_load("icon.png", &width, &height, &channels, 4);
 
 
-    if (!glfwInit())
-    {
+    if (!glfwInit()){
         std::cout << "Failed to initialize GLFW\n";
         return -1;
     }
 
     GLFWwindow* window = glfwCreateWindow(ECRANW,ECRANH, "Tank", NULL, NULL);
-    if (!window)
-    {
+    if (!window){
         std::cout << "Failed to create window\n";
         glfwTerminate();
         return -1;
@@ -267,48 +264,9 @@ int main(){
 
         projectileSystem.update((float)deltaTime,sound,enemyes,healths, bounds,explosions,smokes,sound.explosionSource);
 
-        for (auto& p : projectileSystem.projectiles) {
-            if (!p.alive) continue;
-
-            glPushMatrix();
-            glTranslatef(p.x, p.y, p.z);
-
-            if (p.type == ProjectileType::Shell) drawShell();
-            else drawBullet();
-               
-            glPopMatrix();
-        }
-        for (auto it = explosions.begin(); it != explosions.end();) {
-            (*it)->Update(deltaTime);
-            (*it)->Draw();
-
-            if ((*it)->IsFinished()) {
-                delete* it;
-                it = explosions.erase(it);
-            }
-            else ++it;
-        }
-        for (auto it = smokes.begin(); it != smokes.end(); ){
-            SmokeEffect* smoke = *it;
-
-            bool alive = false;
-            for (auto& p : smoke->getCoordinates()) {
-                if (p.y <= 5.0f) {
-                    alive = true;
-                    break; 
-                }
-            }
-            if (!alive) {
-                delete smoke;        
-                it = smokes.erase(it); 
-            }
-            else {
-                smoke->Update(deltaTime);
-                smoke->Draw();
-                ++it;
-            }
-            
-        }
+        projectileSystem.updateProjectiles(projectileSystem);
+        updateExplosions(explosions, deltaTime);
+        updateSmokes(smokes, deltaTime);
         
         hud.Draw3DAim(playerTank);
 
