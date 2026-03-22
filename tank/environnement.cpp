@@ -36,8 +36,8 @@ void drawSky() {
 void drawGround(float camX, float camZ) {
     const float size = 10000.0f;
 
-    float x = floor(camX / size) * size;
-    float z = floor(camZ / size) * size;
+    float x = camX;
+    float z = camZ;
 
     glColor3f(0.0f, 102.0f / 255, 0.0f);
     glBegin(GL_QUADS);
