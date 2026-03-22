@@ -29,6 +29,9 @@
 #include "replenishmentAmmo.h"
 #include "minimap.h"
 #include "lightning.h"
+#include "imgui.h"
+#include "imgui_impl_glfw.h"
+#include "imgui_impl_opengl3.h"
 
 #define COUNT 55
 #define ECRANW 1600
@@ -213,10 +216,27 @@ int main(){
     generateEnemyes(enemyes,COUNT);
     repl.setCoordinates(10.0f, static_cast<float>(rand() % 30),static_cast<float>((rand() % 50) - 50));
 
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    ImGuiIO& io = ImGui::GetIO(); (void)io;
+
+    ImGui_ImplGlfw_InitForOpenGL(window, true);
+    ImGui_ImplOpenGL3_Init("#version 330");
+
+    ImGui::StyleColorsDark();
+
     while (!glfwWindowShouldClose(window)){
         double currentTime = glfwGetTime();
 
         countFps(deltaTime,lastTime,currentTime,frames,fps,fpsTimer);
+
+        ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplGlfw_NewFrame();
+        ImGui::NewFrame();
+
+        //
+
+        ImGui::Render();
 
         float radYaw = cam.cameraYaw * 3.14159265f / 180.0f;
         float radPitch = cam.angle * 3.14159265f / 180.0f;
@@ -298,11 +318,14 @@ int main(){
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_LIGHTING);
 
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
 
-
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplGlfw_Shutdown();
+    ImGui::DestroyContext();
     glfwDestroyWindow(window);
     glfwTerminate();
 
