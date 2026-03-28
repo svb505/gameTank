@@ -11,6 +11,7 @@
 #include "Info.h"
 #include "sounds.h"
 #include "shells.h"
+#include "artillery.h"
 
 struct Info;
 class ProjectileSystem {
@@ -106,6 +107,34 @@ public:
             else drawBullet();
 
             glPopMatrix();
+        }
+    }
+    void updateArtillery(std::vector<Projectile>& artilleryProjectiles, Sound& sound,
+        std::unordered_map<int, Entity>& enemies, std::vector<ExplosionEffect*>& explosions,
+        std::vector<SmokeEffect*>& smokes, ALuint explosionSource) {
+        for (auto& p : artilleryProjectiles) {
+            if (!p.alive) continue;
+
+            bool exploded = false;
+
+            for (auto& [id, en] : enemies) {
+                if (!healths.contains(id) || healths[id].destroyed) continue;
+                if (!bounds.contains(id)) continue;
+
+                if (checkCollision(bounds[id], p)) {
+                    healths[id].current -= p.damage;
+
+                    explosions.push_back(new ExplosionEffect(p.x, p.y, p.z,200));
+
+                    p.alive = false;
+                    exploded = true;
+                    break;
+                }
+            }
+            if (!exploded && p.y <= 0.0f) {
+                explosions.push_back(new ExplosionEffect(p.x, p.y, p.z, 200));
+                p.alive = false;
+            }
         }
     }
 private:

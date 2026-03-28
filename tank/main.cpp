@@ -264,10 +264,14 @@ int main(){
 
         if (repl.isInCircle(playerTank.x, playerTank.z)) repl.startReplish(deltaTime,playerTank,ECRANH,ECRANW);
 
+        art.updateShells(deltaTime);
+        art.drawAllShells();
+        art.deleteIfAlived();
+
         projectileSystem.update((float)deltaTime,sound,enemyes,healths, bounds,explosions,smokes,sound.explosionSource);
-
         projectileSystem.updateProjectiles(projectileSystem);
-
+        projectileSystem.updateArtillery(art.shells,sound,enemyes,explosions,smokes,sound.explosionSource);
+        
         updateExplosions(explosions, deltaTime);
         updateSmokes(smokes, deltaTime);
         

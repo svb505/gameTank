@@ -23,10 +23,10 @@ public:
 		ImGui::InputFloat("X for Artillery strike", &artX);
 		ImGui::InputFloat("Z for Artillery strike", &artZ);
 
-		if (ImGui::Button("Start artillery strike")){
-			art.spawnShells(artX,artZ);
-		}
+		if (ImGui::Button("Start artillery strike")) art.spawnShells(artX, artZ);
 
+		ImGui::Text("Strike during: 5s");
+		ImGui::Dummy(ImVec2(0.0f, 10.0f));
 		ImGui::Text("FPS: %.0f", fps);
 		ImGui::Dummy(ImVec2(0.0f, 10.0f));
 

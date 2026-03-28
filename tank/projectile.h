@@ -25,6 +25,9 @@ struct Projectile {
     float lifeTime = 7.0f; 
     bool alive = true;
 
+    float delay = 5.0f; 
+    bool active = false;
+
     void update(float dt) {
         vy -= gravity * dt;
 
