@@ -265,6 +265,7 @@ int main(){
         projectileSystem.update((float)deltaTime,sound,enemyes,healths, bounds,explosions,smokes,sound.explosionSource);
 
         projectileSystem.updateProjectiles(projectileSystem);
+
         updateExplosions(explosions, deltaTime);
         updateSmokes(smokes, deltaTime);
         

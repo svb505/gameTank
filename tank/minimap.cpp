@@ -44,6 +44,9 @@ void MiniMap::draw(int ECRANW, int ECRANH, Tank& playerTank, ProjectileSystem& p
     for (auto it = explosions.begin(); it != explosions.end(); ++it) (*it)->Draw();
     for (auto it = smokes.begin(); it != smokes.end(); ++it) (*it)->Draw();
 
+    drawGrid(cam.cameraX, cam.cameraZ);
+    drawGridText(cam.cameraX, cam.cameraZ);
+
     Render(smokes,false);
 
     glMatrixMode(GL_PROJECTION);
