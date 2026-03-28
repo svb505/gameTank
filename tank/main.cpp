@@ -235,7 +235,7 @@ int main(){
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        gui.render(fps, playerTank,art);
+        gui.render(fps, playerTank,art,sound);
 
         ImGui::Render();
 
@@ -270,7 +270,7 @@ int main(){
 
         projectileSystem.update((float)deltaTime,sound,enemyes,healths, bounds,explosions,smokes,sound.explosionSource);
         projectileSystem.updateProjectiles(projectileSystem);
-        projectileSystem.updateArtillery(art.shells,sound,enemyes,explosions,smokes,sound.explosionSource);
+        projectileSystem.updateArtillery(art.shells,sound,enemyes,explosions,smokes,sound.artExplosionSource);
         
         updateExplosions(explosions, deltaTime);
         updateSmokes(smokes, deltaTime);

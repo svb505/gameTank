@@ -128,11 +128,15 @@ public:
 
                     p.alive = false;
                     exploded = true;
+                    sound.setSourcePosition(sound.explosionSource, p.x, p.y, p.z);
+                    alSourcePlay(explosionSource);
                     break;
                 }
             }
             if (!exploded && p.y <= 0.0f) {
                 explosions.push_back(new ExplosionEffect(p.x, p.y, p.z, 200));
+                sound.setSourcePosition(sound.explosionSource, p.x, p.y, p.z);
+                alSourcePlay(explosionSource);
                 p.alive = false;
             }
         }

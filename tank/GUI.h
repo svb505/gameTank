@@ -2,7 +2,7 @@
 #include <string>
 #include "tank.h"
 #include "artillery.h"
-
+#include "sounds.h"
 class GUI {
 private:
 	std::string selectedShell = "";
@@ -13,7 +13,7 @@ private:
 	float artX = 0.0f;
 	float artZ = 0.0f;
 public:
-	void render(float& fps,Tank& tank,Artillery& art) {
+	void render(float& fps,Tank& tank,Artillery& art,Sound& sound) {
 		if (tank.selectedShell == shellType::APFSDS) selectedShell = "APFSDS";
 		else if (tank.selectedShell == shellType::SMOKE) selectedShell = "SMOKE";
 		else selectedShell = "HE";
@@ -23,7 +23,12 @@ public:
 		ImGui::InputFloat("X for Artillery strike", &artX);
 		ImGui::InputFloat("Z for Artillery strike", &artZ);
 
-		if (ImGui::Button("Start artillery strike")) art.spawnShells(artX, artZ);
+		if (ImGui::Button("Start artillery strike")) {
+			sound.setSourcePosition(sound.artVolleySource, tank.x, tank.y,tank.z);
+			alSourceStop(sound.artVolleySource);
+			alSourcePlay(sound.artVolleySource);
+			art.spawnShells(artX, artZ);
+		}
 
 		ImGui::Text("Strike during: 5s");
 		ImGui::Dummy(ImVec2(0.0f, 10.0f));
