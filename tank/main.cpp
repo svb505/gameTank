@@ -32,6 +32,7 @@
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
 #include "GUI.h"
+#include "artillery.h"
 
 #define COUNT 55
 #define ECRANW 1600
@@ -45,6 +46,7 @@ Replishment repl;
 MiniMap mnMap;
 Light light;
 GUI gui;
+Artillery art;
 
 void processTankInput(GLFWwindow* window, float dt,ProjectileSystem& projectileSystem){
     float moveSpeed = 6.0f * dt;
@@ -233,7 +235,7 @@ int main(){
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        gui.render(fps, playerTank);
+        gui.render(fps, playerTank,art);
 
         ImGui::Render();
 
