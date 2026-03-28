@@ -42,6 +42,9 @@
     <ClCompile Include="effects.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="artillery.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="tank.h">
@@ -90,6 +93,9 @@
       <Filter>Исходные файлы</Filter>
     </ClInclude>
     <ClInclude Include="GUI.h">
+      <Filter>Исходные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="artillery.h">
       <Filter>Исходные файлы</Filter>
     </ClInclude>
   </ItemGroup>
