@@ -12,7 +12,7 @@ class Tank {
 public:
     const float SPEED_LIMIT_FORWARD = 15.0f;
     const float SPEED_LIMIT_BACK = -7.0f;
-    const float REDUCTION_COEF = 0.9f;
+    const float REDUCTION_COEF = 0.995f;
     const float VELOCITY_COEF = 0.2f;
 
     float x = 0, y = 0, z = 0;

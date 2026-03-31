@@ -72,9 +72,11 @@ void processTankInput(GLFWwindow* window, float dt,ProjectileSystem& projectileS
     }
     if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
        tank.bodyYaw += tank.rotateSpeed * dt;
+       tank.moveSpeed *= tank.REDUCTION_COEF;
     }
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
         tank.bodyYaw -= tank.rotateSpeed * dt;
+        tank.moveSpeed *= tank.REDUCTION_COEF;
     }
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
         tank.oldX = tank.x; tank.oldY = tank.y; tank.oldZ = tank.z;
@@ -241,6 +243,7 @@ int main(){
         sound.setListener(cam.cameraX, cam.cameraY, cam.cameraZ, fx, fy, fz);
 
         if (tank.finishReload > 0.0f) tank.finishReload -= deltaTime;
+        if (tank.moveSpeed > 0.0f) tank.moveSpeed *= tank.REDUCTION_COEF;
 
         processTankInput(window, (float)deltaTime, projectileSystem);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
