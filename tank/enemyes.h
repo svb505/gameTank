@@ -2,6 +2,7 @@
 #include <iostream>
 #include <vector>
 #include <unordered_map>
+#include "bounds.h"
 
 class SmokeEffect;
 class Tank;
@@ -43,10 +44,7 @@ struct ApartmentComponent {
     bool smokeEnabled = false;
     int LOD = 1;
 };
-struct Bounds {
-    float minX, minY, minZ;
-    float maxX, maxY, maxZ;
-};
+
 
 extern std::vector<Entity> entities;
 
@@ -71,3 +69,4 @@ void DeathSystem(Tank& tank);
 void Update(float dt, Tank& tank);
 void Render(std::vector<SmokeEffect*>& smokes,bool healthBar = true);
 void generateEnemyes(std::unordered_map<int, Entity>& enemyes, int count);
+bool checkCollisionWithTank(float x,float y, float z);

@@ -45,6 +45,9 @@
     <ClCompile Include="artillery.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="bounds.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="tank.h">
@@ -96,6 +99,9 @@
       <Filter>Исходные файлы</Filter>
     </ClInclude>
     <ClInclude Include="artillery.h">
+      <Filter>Исходные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="bounds.h">
       <Filter>Исходные файлы</Filter>
     </ClInclude>
   </ItemGroup>

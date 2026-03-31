@@ -7,6 +7,7 @@
 #include "text.h"
 #include "tank.h"
 #include "enemyes.h"
+#include "bounds.h"
 
 std::vector<Entity> entities;
 
@@ -680,7 +681,6 @@ void Render(std::vector<SmokeEffect*>& smokes, bool healthBar) {
     RenderSystem(smokes);
     if (healthBar) HealthBarSystem();
 }
-
 void generateEnemyes(std::unordered_map<int, Entity>& enemyes, int count) {
     for (int i = 0; i < count; i++) {
         Entity e = CreateEntity();
@@ -710,4 +710,12 @@ void generateEnemyes(std::unordered_map<int, Entity>& enemyes, int count) {
             apartments[e] = { 5 + rand() % 10, 0.6f, 4.0f, 2.0f };
         }
     }
+}
+bool checkCollisionWithTank(float x, float y, float z) {
+    for (const auto& b : bounds) {
+        if (checkCollision(b.second, x, y, z)) {
+            return true;
+        }
+    }
+    return false;
 }

@@ -58,7 +58,7 @@ public:
         
         for (auto& p : projectiles) {
             if (!p.alive) continue;
-
+            
             p.update(dt);
 
             for (auto& [id, en] : enemies) {
@@ -66,7 +66,7 @@ public:
                 if (healths[id].destroyed && renders[id].type != RenderType::Apartment) continue;
                 if (!bounds.contains(id)) continue;
 
-                if (checkCollision(bounds[id], p)) {
+                if (checkCollision(bounds[id], p.x,p.y,p.z)) {
                     healths[id].current -= p.damage;
                     if (healths[id].current <= healths[id].max / 2) {
                         if (apartments.contains(id)) apartments[id].LOD = 2;
@@ -121,7 +121,7 @@ public:
                 if (!healths.contains(id) || healths[id].destroyed) continue;
                 if (!bounds.contains(id)) continue;
 
-                if (checkCollision(bounds[id], p)) {
+                if (checkCollision(bounds[id], p.x, p.y, p.z)) {
                     healths[id].current -= p.damage;
 
                     explosions.push_back(new ExplosionEffect(p.x, p.y, p.z,200));
@@ -142,11 +142,6 @@ public:
         }
     }
 private:
-    bool checkCollision(const Bounds& bounds, const Projectile& p){
-        return p.x >= bounds.minX && p.x <= bounds.maxX &&
-            p.y >= bounds.minY && p.y <= bounds.maxY &&
-            p.z >= bounds.minZ && p.z <= bounds.maxZ;
-    }
     void onHit(Projectile& p,Entity& en,Health& health,std::vector<ExplosionEffect*>& explosions,
         std::vector<SmokeEffect*>& smokes,ALuint explosionSource,Sound& sound,bool hitGround = false,bool smokeShell = false){
         

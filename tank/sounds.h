@@ -14,6 +14,7 @@ public:
     ALuint explosionBuffer = 0;
     ALuint shotBuffer = 0;
     ALuint mgunBuffer = 0;
+    ALuint collisionBuffer = 0;
     ALuint artVolleyBuffer = 0;
     ALuint artExplosionBuffer = 0;
     ALuint tankSource = 0;
@@ -21,7 +22,8 @@ public:
     ALuint artExplosionSource = 0;
     ALuint artVolleySource = 0;
     ALuint shotSource = 0;
-    ALuint mgunSource = 0;
+    ALuint mgunSource = 0; 
+    ALuint collisionSource = 0;
 
     void setSourcePosition(ALuint source, float x, float y, float z) {
         ALfloat pos[] = { x, y, z };
@@ -84,6 +86,7 @@ public:
         shotBuffer = LoadWav("sounds/shot.wav");
         mgunBuffer = LoadWav("sounds/mgun.wav");
         artVolleyBuffer = LoadWav("sounds/artVolley.wav");
+        collisionBuffer = LoadWav("sounds/collision.wav");
     }
     void createSources() {
         alDistanceModel(AL_INVERSE_DISTANCE_CLAMPED);
@@ -97,6 +100,10 @@ public:
         alGenSources(1, &explosionSource);
         alSourcei(explosionSource, AL_BUFFER, explosionBuffer);
         alSourcef(explosionSource, AL_GAIN, 1.0f);
+
+        alGenSources(1, &collisionSource);
+        alSourcei(collisionSource, AL_BUFFER, collisionBuffer);
+        alSourcef(collisionSource, AL_GAIN, 0.7f);
 
         alGenSources(1, &artExplosionSource);
         alSourcei(artExplosionSource, AL_BUFFER, artExplosionBuffer);
@@ -137,5 +144,9 @@ public:
         alSourcef(tankSource, AL_REFERENCE_DISTANCE, 4.0f);
         alSourcef(tankSource, AL_MAX_DISTANCE, 80.0f);
         alSourcef(tankSource, AL_ROLLOFF_FACTOR, 2.0f);
+
+        alSourcef(collisionSource, AL_REFERENCE_DISTANCE, 4.0f);
+        alSourcef(collisionSource, AL_MAX_DISTANCE, 80.0f);
+        alSourcef(collisionSource, AL_ROLLOFF_FACTOR, 2.0f);
     }
 };

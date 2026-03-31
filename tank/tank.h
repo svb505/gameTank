@@ -4,12 +4,14 @@
 #include <GLFW/glfw3.h>
 #include <cmath>
 #include "projectile.h"
+#include "bounds.h"
 
 constexpr float PI = 3.1415926f;
 
 class Tank {
 public:
     float x = 0, y = 0, z = 0;
+    float oldX = x, oldY = y, oldZ = z;
 
     float bodyYaw = -90.0f;
     float turretYaw = -90.0f; 
@@ -27,6 +29,15 @@ public:
     shellType selectedShell;
     int shellSpeed = 400;
 
+    float moveSpeed = 6.0f;
+    float rotateSpeed = 60.0f;
+    float turretSpeed = 60.0f;
+    float gunSpeed = 30.0f;
+
+    float bodyRad = (bodyYaw + 90.0f) * 3.1415926f / 180.0f;
+    float dirX = -sin(bodyRad);
+    float dirZ = -cos(bodyRad);
+
     void Draw() {
         glPushMatrix();
         glTranslatef(x, y, z);
@@ -38,9 +49,12 @@ public:
 
         glPopMatrix();
     }
-
+    void updateDirrections(float bR, float bY) {
+        bodyRad = (bY + 90.0f) * 3.1415926f / 180.0f;
+        dirX = -sin(bR);
+        dirZ = -cos(bR);
+    }
 private:
-
     void DrawBox(float w, float h, float d) {
         glScalef(w, h, d);
         glBegin(GL_QUADS);
@@ -76,7 +90,6 @@ private:
         glVertex3f(-0.5, -0.5, 0.5);
         glEnd();
     }
-
     void DrawCylinder(float r, float h, int seg = 16) {
         glBegin(GL_QUAD_STRIP);
         for (int i = 0; i <= seg; i++) {
@@ -88,9 +101,6 @@ private:
         }
         glEnd();
     }
-
-    //body
-
     void DrawHull() {
         glColor3f(0.2f, 0.5f, 0.2f);
         glPushMatrix();
@@ -98,7 +108,6 @@ private:
         DrawBox(3.5f, 0.8f, 2.5f);
         glPopMatrix();
     }
-
     void DrawTracks() {
         for (int side = -1; side <= 1; side += 2) {
             glPushMatrix();
@@ -109,7 +118,6 @@ private:
             glPopMatrix();
         }
     }
-
     void DrawTurret() {
         glPushMatrix();
         glTranslatef(0, 0.9f, 0);
@@ -125,9 +133,6 @@ private:
 
         glPopMatrix();
     }
-
-    //gun
-
     void DrawGun() {
         glPushMatrix();
         glTranslatef(0, 0.1f, 0.9f);

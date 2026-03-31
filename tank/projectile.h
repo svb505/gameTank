@@ -40,6 +40,4 @@ struct Projectile {
         if (lifeTime <= 0.0f)
             alive = false;
     }
-    
-
 };

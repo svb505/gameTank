@@ -128,6 +128,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="artillery.cpp" />
+    <ClCompile Include="bounds.cpp" />
     <ClCompile Include="effects.cpp" />
     <ClCompile Include="enemyes.cpp" />
     <ClCompile Include="environnement.cpp" />
@@ -140,6 +141,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="artillery.h" />
+    <ClInclude Include="bounds.h" />
     <ClInclude Include="camera.h" />
     <ClInclude Include="effects.h" />
     <ClInclude Include="enemyes.h" />
