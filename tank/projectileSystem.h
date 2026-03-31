@@ -19,14 +19,13 @@ public:
     std::vector<Projectile> projectiles;
 
     void spawnShell(float x, float y, float z,float yawDeg, float pitchDeg,shellType _shellType,int shellSpeed){
-        Projectile p;
+        Projectile p(_shellType);
         p.type = ProjectileType::Shell;
 
         p.selectedShellType = _shellType;
         
         p.x = x; p.y = y; p.z = z;
         p.speed = shellSpeed;
-        p.damage = (p.selectedShellType == shellType::APFSDS) ? 100 : 40;
 
         float yaw = yawDeg * 3.1415926f / 180.0f;
         float pitch = pitchDeg * 3.1415926f / 180.0f;
@@ -38,7 +37,7 @@ public:
         projectiles.push_back(p);
     }
     void spawnBullet(float x, float y, float z,float yawDeg){
-        Projectile p;
+        Projectile p(shellType::BULLET);
         p.type = ProjectileType::Bullet;
         p.x = x; p.y = y; p.z = z;
         p.speed = 120.0f;

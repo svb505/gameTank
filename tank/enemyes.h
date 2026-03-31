@@ -69,4 +69,4 @@ void DeathSystem(Tank& tank);
 void Update(float dt, Tank& tank);
 void Render(std::vector<SmokeEffect*>& smokes,bool healthBar = true);
 void generateEnemyes(std::unordered_map<int, Entity>& enemyes, int count);
-bool checkCollisionWithTank(float x,float y, float z);
+checkCol checkCollisionWithTank(float x,float y, float z);

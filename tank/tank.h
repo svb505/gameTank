@@ -53,6 +53,11 @@ public:
         this->x += dirX * moveSpeed * dt;
         this->z += dirZ * moveSpeed * dt;
     }
+    float returnImpactImpulse(Projectile& p) {
+        float baseDmg = p.damage;
+        float speedFactor = 1.0f + moveSpeed / SPEED_LIMIT_FORWARD;
+        return baseDmg * speedFactor;
+    }
 private:
     void DrawBox(float w, float h, float d) {
         glScalef(w, h, d);

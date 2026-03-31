@@ -8,7 +8,8 @@ enum class ProjectileType {
 enum class shellType {
     APFSDS,
     HE,
-    SMOKE
+    SMOKE,
+    BULLET
 };
 
 struct Projectile {
@@ -28,6 +29,9 @@ struct Projectile {
     float delay = 5.0f; 
     bool active = false;
 
+    Projectile(shellType shell) : selectedShellType(shell) {
+        damage = (selectedShellType == shellType::APFSDS) ? 100 : 40;
+    }
     void update(float dt) {
         vy -= gravity * dt;
 

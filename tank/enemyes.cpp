@@ -27,6 +27,8 @@ Entity CreateEntity() {
     return e;
 }
 
+
+
 void drawTank(TankComponent& tank, float bodyH) {
     glPushMatrix();
     glRotatef(1, 0, 1, 0);
@@ -669,6 +671,7 @@ void DeathSystem(Tank& tank) {
             if (apartments.contains(entity)) apartments[entity].destroyed = true;
 
             tank.kills++;
+            
         }
     }
 }
@@ -711,11 +714,11 @@ void generateEnemyes(std::unordered_map<int, Entity>& enemyes, int count) {
         }
     }
 }
-bool checkCollisionWithTank(float x, float y, float z) {
+checkCol checkCollisionWithTank(float x, float y, float z) {
     for (const auto& b : bounds) {
         if (checkCollision(b.second, x, y, z)) {
-            return true;
+            return {true, b.first};
         }
     }
-    return false;
+    return { false, 0 };
 }

@@ -274,8 +274,12 @@ int main(){
         updateExplosions(explosions, deltaTime);
         updateSmokes(smokes, deltaTime);
         
-        if (checkCollisionWithTank(tank.x, tank.y, tank.z)) {
+        auto tankCollision = checkCollisionWithTank(tank.x, tank.y, tank.z);
+
+        if (tankCollision.checked) {
             tank.x = tank.oldX; tank.y = tank.oldY; tank.z = tank.oldZ;
+
+            healths[tankCollision.id].current -= tank.returnImpactImpulse(projectileSystem.projectiles[0]);
 
             sound.setSourcePosition(sound.collisionSource, tank.x, tank.y, tank.z);
             alSourcePlay(sound.collisionSource);

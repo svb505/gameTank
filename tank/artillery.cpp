@@ -45,11 +45,10 @@ void Artillery::drawShell() {
 void Artillery::spawnShells(float x,float z) {
     for (int i = 0; i < volley; i++) {
         auto error = returnRandomError();
-        Projectile s;
+        Projectile s(shellType::HE);
         s.x = x + error[0];
         s.y = shellHeight;
         s.z = z + error[1];
-        s.damage = 100.0f;
         s.delay = 5.0f;
         s.active = false;
         s.speed = shellSpeed * returnSpeedError();
