@@ -48,6 +48,38 @@ Light light;
 GUI gui;
 Artillery art;
 
+bool firstMouse = true;
+double lastX = 800.0 / 2, lastY = 600.0 / 2;
+float sensitivity = 0.2f;
+bool cursorVisibility = false;
+
+
+void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
+    ImGuiIO& io = ImGui::GetIO();
+    io.AddMousePosEvent((float)xpos, (float)ypos); 
+
+    if (io.WantCaptureMouse || cursorVisibility) return;
+
+    if (firstMouse) {
+        lastX = xpos;
+        lastY = ypos;
+        firstMouse = false;
+    }
+
+    double xoffset = xpos - lastX;
+    double yoffset = lastY - ypos; 
+    lastX = xpos;
+    lastY = ypos;
+
+    xoffset *= sensitivity;
+    yoffset *= sensitivity;
+
+    cam.cameraYaw += static_cast<float>(xoffset);
+    cam.cameraPitch += static_cast<float>(yoffset);
+
+    if (cam.cameraYaw > 360.0f) cam.cameraYaw -= 360.0f;
+    if (cam.cameraYaw < 0.0f)   cam.cameraYaw += 360.0f;
+}
 void processTankInput(GLFWwindow* window, float dt,ProjectileSystem& projectileSystem){
     static bool lastShift = false;
     static bool lastFire = false;
@@ -106,13 +138,17 @@ void processTankInput(GLFWwindow* window, float dt,ProjectileSystem& projectileS
     if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS) {
         mnMap.setHeight(mnMap.getHeight() - mnMap.step * dt * 60);
     }
-    if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS) {
-        cam.cameraYaw += 45.0f * dt;
+    if (glfwGetKey(window, GLFW_KEY_LEFT_ALT) == GLFW_PRESS) {
+        if (cursorVisibility) {
+            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+            cursorVisibility = false;
+        }
+        else {
+            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+            cursorVisibility = true;
+        }
     }
-    if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS){
-        cam.cameraYaw -= 45.0f * dt;
-    }
-        
+
     if (shift && !lastShift) tank.aimMode = !tank.aimMode;
     lastShift = shift;
 
@@ -220,6 +256,9 @@ int main(){
     ImGui_ImplOpenGL3_Init("#version 330");
 
     ImGui::StyleColorsDark();
+
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    glfwSetCursorPosCallback(window, mouse_callback);
 
     while (!glfwWindowShouldClose(window)){
         double currentTime = glfwGetTime();
