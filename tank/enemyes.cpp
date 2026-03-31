@@ -664,15 +664,29 @@ void HealthBarSystem() {
     }
 }
 void DeathSystem(Tank& tank) {
-    for (auto& [entity, hp] : healths) if (hp.current <= 0) {
+    std::vector<Entity> toDelete;
+
+    for (auto& [entity, hp] : healths) {
         if (hp.current <= 0 && !hp.destroyed) {
             hp.destroyed = true;
 
             if (apartments.contains(entity)) apartments[entity].destroyed = true;
+            else toDelete.push_back(entity);
 
             tank.kills++;
-            
         }
+    }
+
+    for (auto& e : toDelete) {
+        healths.erase(e);
+        renders.erase(e);
+        tanks.erase(e);
+        radars.erase(e);
+        bounds.erase(e);
+        transforms.erase(e);
+        auto it = std::find(entities.begin(), entities.end(), e);
+        if (it != entities.end())
+            entities.erase(it);
     }
 }
 void Update(float dt, Tank& tank) {

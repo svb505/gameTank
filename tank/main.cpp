@@ -279,7 +279,7 @@ int main(){
         if (tankCollision.checked) {
             tank.x = tank.oldX; tank.y = tank.oldY; tank.z = tank.oldZ;
 
-            healths[tankCollision.id].current -= tank.returnImpactImpulse(projectileSystem.projectiles[0]);
+            healths[tankCollision.id].current -= tank.returnImpactImpulse();
 
             sound.setSourcePosition(sound.collisionSource, tank.x, tank.y, tank.z);
             alSourcePlay(sound.collisionSource);

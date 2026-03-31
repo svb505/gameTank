@@ -21,7 +21,7 @@ struct Projectile {
 
     float gravity = 9.8f;
     float speed;
-    int damage;
+    int damage = 100;
 
     float lifeTime = 7.0f; 
     bool alive = true;
