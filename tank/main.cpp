@@ -78,15 +78,11 @@ void processTankInput(GLFWwindow* window, float dt,ProjectileSystem& projectileS
     }
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
         tank.oldX = tank.x; tank.oldY = tank.y; tank.oldZ = tank.z;
-
-        tank.x += tank.dirX * tank.moveSpeed * dt;
-        tank.z += tank.dirZ * tank.moveSpeed * dt;
+        if (tank.moveSpeed <= tank.SPEED_LIMIT_FORWARD) tank.moveSpeed += tank.VELOCITY_COEF;
     }
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
         tank.oldX = tank.x; tank.oldY = tank.y; tank.oldZ = tank.z;
-
-        tank.x -= tank.dirX * tank.moveSpeed * dt;
-        tank.z -= tank.dirZ * tank.moveSpeed * dt;
+        if (tank.moveSpeed >= tank.SPEED_LIMIT_BACK) tank.moveSpeed -= tank.VELOCITY_COEF / 2;
     }
     if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS){
         tank.turretYaw += tank.turretSpeed * dt;
@@ -254,6 +250,7 @@ int main(){
         drawGround(cam.cameraX, cam.cameraZ);
 
         tank.Draw();
+        tank.updatePosition(tank.x,tank.z,deltaTime);
         repl.drawReplCircle(30);
 
         Update(deltaTime,tank); // Update enemyes

@@ -35,6 +35,7 @@ public:
 		ImGui::Text("FPS: %.0f", fps);
 		ImGui::Dummy(ImVec2(0.0f, 10.0f));
 
+		ImGui::Text("Speed: %.1f", tank.moveSpeed);
 		ImGui::Text("Total shells: %d", tank.totalShells);
 		ImGui::Text("Selected shell: %s", selectedShell);
 		ImGui::Text("Reload time: %.1f", tank.finishReload);
