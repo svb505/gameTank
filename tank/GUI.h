@@ -14,6 +14,7 @@ private:
 	float artZ = 0.0f;
 public:
 	void render(float& fps,Tank& tank,Artillery& art,Sound& sound,bool& fpslimit) {
+		std::string buf = std::format("{} / {}", tank.currentHP, tank.HP);
 		if (tank.selectedShell == shellType::APFSDS) selectedShell = "APFSDS";
 		else if (tank.selectedShell == shellType::SMOKE) selectedShell = "SMOKE";
 		else selectedShell = "HE";
@@ -35,7 +36,8 @@ public:
 		ImGui::Text("FPS: %.0f", fps);
 		ImGui::Checkbox("FPS Limit", &fpslimit);
 		ImGui::Dummy(ImVec2(0.0f, 10.0f));
-
+		ImGui::Text("My HP: %s",buf.c_str());
+		ImGui::Dummy(ImVec2(0.0f, 10.0f));
 		ImGui::Text("Speed: %.1f", tank.moveSpeed);
 		ImGui::Text("Total shells: %d", tank.totalShells);
 		ImGui::Text("Selected shell: %s", selectedShell);

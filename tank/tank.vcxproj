@@ -140,6 +140,7 @@
     <ClCompile Include="projectileSystem.cpp" />
     <ClCompile Include="shells.cpp" />
     <ClCompile Include="svbmath.cpp" />
+    <ClCompile Include="tank.cpp" />
     <ClCompile Include="text.cpp" />
   </ItemGroup>
   <ItemGroup>

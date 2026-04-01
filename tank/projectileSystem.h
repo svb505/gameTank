@@ -24,7 +24,7 @@ public:
     void spawnBullet(float x, float y, float z, float yawDeg);
     void update(float dt, Sound& sound, std::unordered_map<int, Entity>& enemies, std::unordered_map<Entity, Health>& healths,
         std::unordered_map<Entity, Bounds>& bounds, std::vector<ExplosionEffect*>& explosions,
-        std::vector<SmokeEffect*>& smokes, ALuint explosionSource);
+        std::vector<SmokeEffect*>& smokes, ALuint explosionSource, Tank& player);
     void updateProjectiles(ProjectileSystem& projectileSystem);
     void updateArtillery(std::vector<Projectile>& artilleryProjectiles, Sound& sound,
         std::unordered_map<int, Entity>& enemies, std::vector<ExplosionEffect*>& explosions,

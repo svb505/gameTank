@@ -13,6 +13,7 @@
 #include "shells.h"
 #include "artillery.h"
 #include "projectileSystem.h"
+#include "tank.h"
 
 void ProjectileSystem::onHit(Projectile& p, Entity& en, Health& health, std::vector<ExplosionEffect*>& explosions,
     std::vector<SmokeEffect*>& smokes, ALuint explosionSource, Sound& sound, bool hitGround, bool smokeShell) {
@@ -82,12 +83,34 @@ void ProjectileSystem::spawnBullet(float x, float y, float z, float yawDeg) {
 }
 void ProjectileSystem::update(float dt, Sound& sound, std::unordered_map<int, Entity>& enemies, std::unordered_map<Entity, Health>& healths,
     std::unordered_map<Entity, Bounds>& bounds, std::vector<ExplosionEffect*>& explosions,
-    std::vector<SmokeEffect*>& smokes, ALuint explosionSource) {
+    std::vector<SmokeEffect*>& smokes, ALuint explosionSource,Tank& player) {
 
     for (auto& p : projectiles) {
         if (!p.alive) continue;
 
         p.update(dt);
+
+        if (checkCollision(player.GetHullMax(), p.x, p.y, p.z) && p.isEnemy) {
+            player.currentHP -= p.damage;
+
+            p.alive = false;
+
+            sound.setSourcePosition(sound.explosionSource, p.x, p.y, p.z);
+            alSourceStop(explosionSource);
+            alSourcePlay(explosionSource);
+
+            if (p.type != ProjectileType::Bullet) explosions.push_back(new ExplosionEffect(p.x, p.y, p.z));
+            if (p.selectedShellType == shellType::SMOKE) smokes.push_back(new SmokeEffect(p.x, p.y, p.z));
+
+            if (player.currentHP <= 0) {
+                player.currentHP = player.HP;
+                player.x = player.baseX; 
+                player.y = player.baseY;
+                player.z = player.baseZ;
+            }
+
+            break;
+        }
 
         for (auto& [id, en] : enemies) {
             if (!healths.contains(id)) continue;

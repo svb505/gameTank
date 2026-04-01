@@ -297,7 +297,7 @@ int main(){
         tank.updatePosition(tank.x,tank.z,deltaTime);
         repl.drawReplCircle(30);
 
-        Update(deltaTime,tank,projectileSystem); // Update enemyes
+        Update(deltaTime,tank,projectileSystem,sound); // Update enemyes
         Render(smokes); // Render enemyes
 
         if (repl.isInCircle(tank.x, tank.z)) repl.startReplish(deltaTime,tank,ECRANH,ECRANW);
@@ -308,7 +308,8 @@ int main(){
         art.drawAllShells();
         art.deleteIfAlived();
 
-        projectileSystem.update((float)deltaTime,sound,enemyes,healths, bounds,explosions,smokes,sound.explosionSource);
+        projectileSystem.update((float)deltaTime,sound,enemyes,healths, bounds,explosions,smokes,
+            sound.explosionSource,tank);
         projectileSystem.updateProjectiles(projectileSystem);
         projectileSystem.updateArtillery(art.shells,sound,enemyes,explosions,smokes,sound.artExplosionSource);
         

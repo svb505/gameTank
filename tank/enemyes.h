@@ -8,6 +8,7 @@
 class SmokeEffect;
 class Tank;
 class ProjectileSystem;
+class Sound;
 
 using Entity = uint32_t;
 
@@ -72,7 +73,7 @@ void RenderSystem(std::vector<SmokeEffect*>& smokes);
 void BoundsSystem();
 void HealthBarSystem();
 void DeathSystem(Tank& tank);
-void Update(float dt, Tank& tank,ProjectileSystem& projectile);
+void Update(float dt, Tank& tank,ProjectileSystem& projectile,Sound& sound);
 void Render(std::vector<SmokeEffect*>& smokes,bool healthBar = true);
 void generateEnemyes(std::unordered_map<int, Entity>& enemyes, int count);
 bool playerInRadius(const svbmath::Vec3& enemyPos, const svbmath::Vec3& playerPos, float radius);
