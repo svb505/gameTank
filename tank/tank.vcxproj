@@ -136,6 +136,8 @@
     <ClCompile Include="lightning.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="minimap.cpp" />
+    <ClCompile Include="projectile.cpp" />
+    <ClCompile Include="projectileSystem.cpp" />
     <ClCompile Include="shells.cpp" />
     <ClCompile Include="svbmath.cpp" />
     <ClCompile Include="text.cpp" />

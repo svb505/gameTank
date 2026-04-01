@@ -62,7 +62,7 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
 
     if (firstMouse) {
         lastX = xpos;
-        lastY = ypos;
+        lastY = -ypos;
         firstMouse = false;
     }
 
@@ -297,7 +297,7 @@ int main(){
         tank.updatePosition(tank.x,tank.z,deltaTime);
         repl.drawReplCircle(30);
 
-        Update(deltaTime,tank); // Update enemyes
+        Update(deltaTime,tank,projectileSystem); // Update enemyes
         Render(smokes); // Render enemyes
 
         if (repl.isInCircle(tank.x, tank.z)) repl.startReplish(deltaTime,tank,ECRANH,ECRANW);

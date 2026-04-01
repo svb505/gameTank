@@ -9,6 +9,8 @@
 #include "enemyes.h"
 #include "bounds.h"
 #include "svbmath.h"
+#include "projectileSystem.h"
+#include <iostream>
 
 std::vector<Entity> entities;
 
@@ -75,7 +77,7 @@ void drawTank(TankComponent& tank, float bodyH) {
     // ================= TURRET =================
     glPushMatrix();
     glTranslatef(0.0f, bodyH + 0.4f, 0.0f);
-    glRotatef(tank.turretAngle, 0, 1, 0);
+    glRotatef(tank.turretAngle * 180.0f / PI + 180.0f, 0, 1, 0);
 
     float t = 0.5f;
     glColor3f(0, 0.6f, 0.2f);
@@ -688,10 +690,36 @@ void DeathSystem(Tank& tank) {
             entities.erase(it);
     }
 }
-void Update(float dt, Tank& tank) {
+void Update(float dt, Tank& tank, ProjectileSystem& projectile) {
     RadarSystem(dt);
     BoundsSystem();
     DeathSystem(tank);
+
+    for (auto& [id, bot] : tanks) {
+        svbmath::Vec3 enemyPos = { transforms[id].x, transforms[id].y, transforms[id].z };
+        svbmath::Vec3 tankPos = { tank.x, tank.y, tank.z };
+
+        if (bot.finishReload > 0.0f) {
+            bot.finishReload -= dt;
+            if (bot.finishReload < 0.0f) bot.finishReload = 0.0f;
+        }
+            
+        if (playerInRadius(enemyPos,tankPos, bot.detectionRadius)) {
+            svbmath::Vec3 dir = svbmath::Normalize(tankPos - enemyPos);
+            
+            float targetYaw = atan2(dir.x, dir.z);
+            float delta = svbmath::NormalizeAngle(targetYaw - bot.turretAngle);
+            float newTarget = bot.turretAngle + delta;
+
+            bot.turretAngle = svbmath::RotateTowards(bot.turretAngle,newTarget,bot.turretSpeed,dt);
+
+            if (bot.finishReload <= 0.0f) {
+                projectile.spawnShell(enemyPos.x, enemyPos.y, enemyPos.z, bot.turretAngle * 180.0f / PI, bot.gunAngle,
+                    shellType::APFSDS, 100.0f, true);
+                bot.finishReload = bot.reloadTime;
+            }
+        }
+    }
 }
 void Render(std::vector<SmokeEffect*>& smokes, bool healthBar) {
     RenderSystem(smokes);
@@ -713,7 +741,7 @@ void generateEnemyes(std::unordered_map<int, Entity>& enemyes, int count) {
         else if (i < 25) {
             renders[e] = { RenderType::Tank };
             healths[e] = { 200,200,false };
-            tanks[e] = { 0.0f, 0.0f };
+            tanks[e] = { 6.5f, 0.0f, 0.0f,0.0f,35.0f,40.0f };
         }
         else if (i < 30) {
             renders[e] = { RenderType::Radar };

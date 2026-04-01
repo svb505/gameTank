@@ -27,14 +27,16 @@ namespace svbmath{
 		return Dot(forward, dirToTarget) > cosFov;
 	}
 	float RotateTowards(float current, float target, float speed, float dt) {
-		float delta = NormalizeAngle(target - current);
+		float diff = target - current;
 
-		float maxStep = speed * dt;
+		while (diff > PI) diff -= 2 * PI;
+		while (diff < -PI) diff += 2 * PI;
 
-		if (delta > maxStep) delta = maxStep;
-		if (delta < -maxStep) delta = -maxStep;
+		float step = speed * dt;
 
-		return current + delta;
+		if (fabs(diff) <= step)
+			return target; // дошли до цели
+		return current + (diff > 0 ? step : -step);
 	}
 	float LengthSq(const Vec3& v) {
 		return v.x * v.x + v.y * v.y + v.z * v.z;

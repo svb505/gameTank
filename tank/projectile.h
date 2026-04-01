@@ -29,19 +29,10 @@ struct Projectile {
     float delay = 5.0f; 
     bool active = false;
 
+    bool isEnemy = false;
+
     Projectile(shellType shell) : selectedShellType(shell) {
         damage = (selectedShellType == shellType::APFSDS) ? 100 : 40;
     }
-    void update(float dt) {
-        vy -= gravity * dt;
-
-        x += vx * dt;
-        y += vy * dt;
-        z += vz * dt;
-
-        lifeTime -= dt;
-
-        if (lifeTime <= 0.0f)
-            alive = false;
-    }
+    void update(float dt);
 };

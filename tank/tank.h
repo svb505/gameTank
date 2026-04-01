@@ -5,8 +5,7 @@
 #include <cmath>
 #include "projectile.h"
 #include "bounds.h"
-
-constexpr float PI = 3.1415926f;
+#include "svbmath.h"
 
 class Tank {
 public:
