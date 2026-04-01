@@ -68,7 +68,7 @@ public:
                 if (checkCollision(bounds[id], p.x,p.y,p.z)) {
                     healths[id].current -= p.damage;
                     if (healths[id].current <= healths[id].max / 2) {
-                        if (apartments.contains(id)) apartments[id].LOD = 2;
+if (apartments.contains(id)) apartments[id].LOD = 2;
                     }
 
                     sound.setSourcePosition(sound.explosionSource, p.x, p.y, p.z);
@@ -165,18 +165,10 @@ private:
                 if (p.selectedShellType == shellType::APFSDS) { count = 300; radius = 4; height = 1.5f; }
                 else { count = 500; radius = 6; height = 2.0f; }
 
-                explosions.push_back(
-                    new ExplosionEffect(x, y, z, count, radius, height, 1.8f));
-                smokes.push_back(
-                    new SmokeEffect(x, y, z, 300, 3));
+                explosions.push_back(new ExplosionEffect(x, y, z, count, radius, height, 1.8f));
+                smokes.push_back(new SmokeEffect(x, y, z, 300, 3));
             }
-            else {
-                smokes.push_back(
-                    new SmokeEffect(x, y, z, 5500, 6,{1.0f,1.0f,1.0f,0.3f},3.0f,0.01f,6.0f));
-            }
-            
-        }
-
-        
+            else smokes.push_back(new SmokeEffect(x, y, z, 5500, 6,{1.0f,1.0f,1.0f,0.3f},3.0f,0.01f,6.0f));     
+        } 
     }
 };

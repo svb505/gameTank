@@ -27,8 +27,6 @@ Entity CreateEntity() {
     return e;
 }
 
-
-
 void drawTank(TankComponent& tank, float bodyH) {
     glPushMatrix();
     glRotatef(1, 0, 1, 0);

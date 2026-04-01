@@ -13,7 +13,7 @@ private:
 	float artX = 0.0f;
 	float artZ = 0.0f;
 public:
-	void render(float& fps,Tank& tank,Artillery& art,Sound& sound) {
+	void render(float& fps,Tank& tank,Artillery& art,Sound& sound,bool& fpslimit) {
 		if (tank.selectedShell == shellType::APFSDS) selectedShell = "APFSDS";
 		else if (tank.selectedShell == shellType::SMOKE) selectedShell = "SMOKE";
 		else selectedShell = "HE";
@@ -33,6 +33,7 @@ public:
 		ImGui::Text("Strike during: 5s");
 		ImGui::Dummy(ImVec2(0.0f, 10.0f));
 		ImGui::Text("FPS: %.0f", fps);
+		ImGui::Checkbox("FPS Limit", &fpslimit);
 		ImGui::Dummy(ImVec2(0.0f, 10.0f));
 
 		ImGui::Text("Speed: %.1f", tank.moveSpeed);

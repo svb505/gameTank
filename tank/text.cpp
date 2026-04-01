@@ -10,17 +10,8 @@ void BuildFont(){
 
     fontBase = glGenLists(256);
 
-    font = CreateFontA(
-        -16, 0, 0, 0,
-        FW_NORMAL,
-        FALSE, FALSE, FALSE,
-        ANSI_CHARSET,
-        OUT_TT_PRECIS,
-        CLIP_DEFAULT_PRECIS,
-        ANTIALIASED_QUALITY,
-        FF_DONTCARE | DEFAULT_PITCH,
-        "Consolas"
-    );
+    font = CreateFontA(-16, 0, 0, 0,FW_NORMAL,FALSE, FALSE, FALSE,ANSI_CHARSET,OUT_TT_PRECIS,CLIP_DEFAULT_PRECIS,
+        ANTIALIASED_QUALITY,FF_DONTCARE | DEFAULT_PITCH,"Consolas");
 
     SelectObject(hDC, font);
     wglUseFontBitmapsA(hDC, 0, 256, fontBase);

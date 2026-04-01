@@ -1,11 +1,11 @@
 #include "effects.h"
 
 ExplosionEffect::ExplosionEffect(float x, float y, float z, int count, float durationSec,
-    float radius, float height)
-    : centerX(x), centerY(y), centerZ(z), duration(durationSec), elapsedTime(0), finished(false),
-    radiusScale(radius), heightScale(height)
-{
+    float radius, float height) : centerX(x), centerY(y), centerZ(z), duration(durationSec),
+    elapsedTime(0), finished(false), radiusScale(radius), heightScale(height){
+
     particles.reserve(count);
+
     for (int i = 0; i < count; i++) {
 
         float u = ((float)rand() / RAND_MAX) * 2.0f - 1.0f;
@@ -75,12 +75,9 @@ void ExplosionEffect::Draw() {
 bool ExplosionEffect::IsFinished() const { return finished; }
 void ExplosionEffect::SetRadius(float r) { radiusScale = r; }
 void ExplosionEffect::SetHeight(float h) { heightScale = h; }
-SmokeEffect::SmokeEffect(float x, float y, float z, int count, float r,
-    const std::vector<float>& _colors, float _size, float _speed,
-    float hRadius)
-    : centerX(x), centerY(y), centerZ(z), radius(r), maxParticles(count), colors(_colors), size(_size),
-    speed(_speed), heightRadius(hRadius)
-{
+SmokeEffect::SmokeEffect(float x, float y, float z, int count, float r,const std::vector<float>& _colors, 
+    float _size, float _speed, float hRadius) : centerX(x), centerY(y), centerZ(z), radius(r), maxParticles(count),
+    colors(_colors), size(_size), speed(_speed), heightRadius(hRadius){
 
     particles.reserve(maxParticles);
     for (int i = 0; i < maxParticles; i++) {
@@ -96,9 +93,9 @@ SmokeEffect::SmokeEffect(float x, float y, float z, int count, float r,
 std::vector<SmokeEffect::Particle> SmokeEffect::getCoordinates() const {
     std::vector<Particle> coords;
     coords.reserve(particles.size());
-    for (auto& p : particles) {
-        coords.push_back({ p.x, p.y, p.z });
-    }
+
+    for (auto& p : particles) coords.push_back({ p.x, p.y, p.z });
+
     return coords;
 }
 void SmokeEffect::Update(float dt) {
@@ -114,9 +111,9 @@ void SmokeEffect::Draw() {
     glColor4f(colors[0], colors[1], colors[2], colors[3]);
     glPointSize(size);
     glBegin(GL_POINTS);
-    for (auto& p : particles) {
-        glVertex3f(p.x, p.y, p.z);
-    }
+
+    for (auto& p : particles) glVertex3f(p.x, p.y, p.z);
+
     glEnd();
 
     glPopMatrix();

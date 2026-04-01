@@ -52,7 +52,7 @@ bool firstMouse = true;
 double lastX = 800.0 / 2, lastY = 600.0 / 2;
 float sensitivity = 0.2f;
 bool cursorVisibility = false;
-
+bool fpsLimit = false;
 
 void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
     ImGuiIO& io = ImGui::GetIO();
@@ -200,7 +200,6 @@ int main(){
     int width, height, channels;
     unsigned char* pixels = stbi_load("icon.png", &width, &height, &channels, 4);
 
-
     if (!glfwInit()){
         std::cout << "Failed to initialize GLFW\n";
         return -1;
@@ -263,13 +262,16 @@ int main(){
     while (!glfwWindowShouldClose(window)){
         double currentTime = glfwGetTime();
 
+        if (fpsLimit) glfwSwapInterval(1);
+        else glfwSwapInterval(0);
+
         countFps(deltaTime,lastTime,currentTime,frames,fps,fpsTimer);
 
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        gui.render(fps, tank,art,sound);
+        gui.render(fps, tank,art,sound,fpsLimit);
 
         ImGui::Render();
 
