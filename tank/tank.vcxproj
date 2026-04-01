@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -134,6 +134,7 @@
     <ClCompile Include="environnement.cpp" />
     <ClCompile Include="HUD.cpp" />
     <ClCompile Include="lightning.cpp" />
+    <ClCompile Include="Logger.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="minimap.cpp" />
     <ClCompile Include="projectile.cpp" />
@@ -154,6 +155,7 @@
     <ClInclude Include="HUD.h" />
     <ClInclude Include="Info.h" />
     <ClInclude Include="lightning.h" />
+    <ClInclude Include="Logger.h" />
     <ClInclude Include="minimap.h" />
     <ClInclude Include="projectile.h" />
     <ClInclude Include="projectileSystem.h" />

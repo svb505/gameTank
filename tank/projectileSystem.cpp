@@ -14,6 +14,7 @@
 #include "artillery.h"
 #include "projectileSystem.h"
 #include "tank.h"
+#include "Logger.h"
 
 void ProjectileSystem::onHit(Projectile& p, Entity& en, Health& health, std::vector<ExplosionEffect*>& explosions,
     std::vector<SmokeEffect*>& smokes, ALuint explosionSource, Sound& sound, bool hitGround, bool smokeShell) {
@@ -63,6 +64,8 @@ void ProjectileSystem::spawnShell(float x, float y, float z, float yawDeg, float
     p.vz = cos(yaw) * cos(pitch) * p.speed;
 
     p.isEnemy = isEnemy;
+
+    LOG_INFO("Player shooted");
 
     projectiles.push_back(p);
 }

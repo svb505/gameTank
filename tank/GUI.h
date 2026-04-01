@@ -3,6 +3,7 @@
 #include "tank.h"
 #include "artillery.h"
 #include "sounds.h"
+
 class GUI {
 private:
 	std::string selectedShell = "";

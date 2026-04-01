@@ -7,6 +7,7 @@
 #include "enemyes.h"
 #include "projectileSystem.h"
 #include "projectile.h"
+#include "Logger.h"
 
 std::vector<float> Artillery::returnRandomError() {
     std::random_device rd;
@@ -43,6 +44,8 @@ void Artillery::drawShell() {
     glEnd();
 }
 void Artillery::spawnShells(float x,float z) {
+    LOG_INFO("Spawned artillery shell");
+
     for (int i = 0; i < volley; i++) {
         auto error = returnRandomError();
         Projectile s(shellType::HE);

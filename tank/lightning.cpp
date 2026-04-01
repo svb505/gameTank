@@ -2,8 +2,11 @@
 #include <GL/gl.h>
 #include <GLFW/glfw3.h>
 #include "lightning.h"
+#include "Logger.h"
 
 void Light::initLighting() {
+	LOG_INFO("Lightning initializated");
+
 	glEnable(GL_LIGHTING);
 	glEnable(GL_LIGHT0);
 	glEnable(GL_COLOR_MATERIAL);

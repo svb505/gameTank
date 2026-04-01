@@ -33,6 +33,7 @@
 #include "imgui_impl_opengl3.h"
 #include "GUI.h"
 #include "artillery.h"
+#include "Logger.h"
 
 #define COUNT 55
 #define ECRANW 1600
@@ -192,6 +193,8 @@ void countFps(double& deltaTime,double& lastTime,double& currentTime,int& frames
     }
 }
 int main(){
+    Logger::initLogger();
+
     srand(time(NULL));
 
     sound.setupBuffers();
@@ -201,12 +204,14 @@ int main(){
     unsigned char* pixels = stbi_load("icon.png", &width, &height, &channels, 4);
 
     if (!glfwInit()){
+        LOG_ERROR("Failed to initialize GLFW");
         std::cout << "Failed to initialize GLFW\n";
         return -1;
     }
 
     GLFWwindow* window = glfwCreateWindow(ECRANW,ECRANH, "Tank", NULL, NULL);
     if (!window){
+        LOG_ERROR("Failed to create window");
         std::cout << "Failed to create window\n";
         glfwTerminate();
         return -1;

@@ -11,6 +11,7 @@
 #include "svbmath.h"
 #include "projectileSystem.h"
 #include "sounds.h"
+#include "Logger.h"
 
 std::vector<Entity> entities;
 
@@ -674,6 +675,8 @@ void DeathSystem(Tank& tank) {
             if (apartments.contains(entity)) apartments[entity].destroyed = true;
             else toDelete.push_back(entity);
 
+            LOG_INFO("+1 kill");
+
             tank.kills++;
         }
     }
@@ -721,6 +724,8 @@ void Update(float dt, Tank& tank, ProjectileSystem& projectile,Sound& sound) {
                 alSourceStop(sound.shotSource);
                 alSourcePlay(sound.shotSource);
 
+                LOG_INFO("Bot shooted");
+
                 bot.finishReload = bot.reloadTime;
             }
         }
@@ -731,6 +736,8 @@ void Render(std::vector<SmokeEffect*>& smokes, bool healthBar) {
     if (healthBar) HealthBarSystem();
 }
 void generateEnemyes(std::unordered_map<int, Entity>& enemyes, int count) {
+    LOG_INFO("Genarate enemies");
+
     for (int i = 0; i < count; i++) {
         Entity e = CreateEntity();
 
