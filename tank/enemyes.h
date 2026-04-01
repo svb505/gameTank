@@ -3,6 +3,7 @@
 #include <vector>
 #include <unordered_map>
 #include "bounds.h"
+#include "svbmath.h"
 
 class SmokeEffect;
 class Tank;
@@ -31,6 +32,8 @@ struct RenderComponent {
 struct TankComponent {
     float turretAngle;
     float gunAngle;
+    float detectionRadius = 20.0f;
+    float turretSpeed = 2.0f;
 };
 struct RadarComponent {
     float rotationSpeed;
@@ -69,4 +72,5 @@ void DeathSystem(Tank& tank);
 void Update(float dt, Tank& tank);
 void Render(std::vector<SmokeEffect*>& smokes,bool healthBar = true);
 void generateEnemyes(std::unordered_map<int, Entity>& enemyes, int count);
+bool playerInRadius(svbmath::Vec3& enemyPos, svbmath::Vec3& playerPos);
 checkCol checkCollisionWithTank(float x,float y, float z);

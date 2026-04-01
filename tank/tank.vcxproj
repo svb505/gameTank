@@ -137,6 +137,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="minimap.cpp" />
     <ClCompile Include="shells.cpp" />
+    <ClCompile Include="svbmath.cpp" />
     <ClCompile Include="text.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -158,6 +159,7 @@
     <ClInclude Include="sounds.h" />
     <ClInclude Include="tank.h" />
     <ClInclude Include="text.h" />
+    <ClInclude Include="svbmath.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -8,6 +8,7 @@
 #include "tank.h"
 #include "enemyes.h"
 #include "bounds.h"
+#include "svbmath.h"
 
 std::vector<Entity> entities;
 
@@ -733,4 +734,8 @@ checkCol checkCollisionWithTank(float x, float y, float z) {
         }
     }
     return { false, 0 };
+}
+bool playerInRadius(const svbmath::Vec3& enemyPos, const svbmath::Vec3& playerPos, float radius){
+    svbmath::Vec3 diff = playerPos - enemyPos;
+    return LengthSq(diff) <= radius * radius;
 }

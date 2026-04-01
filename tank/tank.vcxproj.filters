@@ -48,6 +48,9 @@
     <ClCompile Include="bounds.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="svbmath.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="tank.h">
@@ -102,6 +105,9 @@
       <Filter>Исходные файлы</Filter>
     </ClInclude>
     <ClInclude Include="bounds.h">
+      <Filter>Исходные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="svbmath.h">
       <Filter>Исходные файлы</Filter>
     </ClInclude>
   </ItemGroup>
