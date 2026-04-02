@@ -31,6 +31,8 @@ struct Projectile {
 
     bool isEnemy = false;
 
+    float redution_coef = 0.99f;
+
     Projectile(shellType shell) : selectedShellType(shell) {
         damage = (selectedShellType == shellType::APFSDS) ? 100 : 40;
     }

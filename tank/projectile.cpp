@@ -4,9 +4,9 @@
 void Projectile::update(float dt) {
     vy -= gravity * dt;
 
-    x += vx * dt;
+    x += vx * redution_coef * dt;
     y += vy * dt;
-    z += vz * dt;
+    z += vz * redution_coef * dt;
 
     lifeTime -= dt;
 
