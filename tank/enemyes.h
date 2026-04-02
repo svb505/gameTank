@@ -19,6 +19,7 @@ struct Transform {
 struct Health {
     int current;
     int max;
+    float armor;
     bool destroyed = false;
 };
 enum class RenderType {

@@ -748,21 +748,21 @@ void generateEnemyes(std::unordered_map<int, Entity>& enemyes, int count) {
 
         transforms[e] = { x, 0.0f, z, (float)(rand() % 360) };
 
-        if (i < 10) { renders[e] = { RenderType::Vehicle }; healths[e] = { 100,100,false }; }
-        else if (i < 20) { renders[e] = { RenderType::Soldat }; healths[e] = { 50,50,false }; }
+        if (i < 10) { renders[e] = { RenderType::Vehicle }; healths[e] = { 100,100,50,false }; }
+        else if (i < 20) { renders[e] = { RenderType::Soldat }; healths[e] = { 50,50,20,false }; }
         else if (i < 25) {
             renders[e] = { RenderType::Tank };
-            healths[e] = { 200,200,false };
+            healths[e] = { 200,200,100,false };
             tanks[e] = { 6.5f, 0.0f, 0.0f,0.0f,35.0f,40.0f };
         }
         else if (i < 30) {
             renders[e] = { RenderType::Radar };
-            healths[e] = { 120,120,false };
+            healths[e] = { 120,120,40,false };
             radars[e] = { 90.0f };
         }
         else {
             renders[e] = { RenderType::Apartment };
-            healths[e] = { 1000,1000,false };
+            healths[e] = { 1000,1000,300,false };
             apartments[e] = { 5 + rand() % 10, 0.6f, 4.0f, 2.0f };
         }
     }

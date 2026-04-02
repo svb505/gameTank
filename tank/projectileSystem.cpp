@@ -16,6 +16,10 @@
 #include "tank.h"
 #include "Logger.h"
 
+float ProjectileSystem::calculatePenetration(float vel) {
+    const float k = 0.0005f;
+    return k * vel * vel;
+}
 void ProjectileSystem::onHit(Projectile& p, Entity& en, Health& health, std::vector<ExplosionEffect*>& explosions,
     std::vector<SmokeEffect*>& smokes, ALuint explosionSource, Sound& sound, bool hitGround, bool smokeShell) {
 
@@ -120,7 +124,9 @@ void ProjectileSystem::update(float dt, Sound& sound, std::unordered_map<int, En
             if (healths[id].destroyed && renders[id].type != RenderType::Apartment) continue;
             if (!bounds.contains(id)) continue;
 
-            if (checkCollision(bounds[id], p.x, p.y, p.z) && !p.isEnemy) {
+
+
+            if (checkCollision(bounds[id], p.x, p.y, p.z) && !p.isEnemy && calculatePenetration(p.speed)) {
                 healths[id].current -= p.damage;
                 if (healths[id].current <= healths[id].max / 2) {
                     if (apartments.contains(id)) apartments[id].LOD = 2;
@@ -177,7 +183,7 @@ void ProjectileSystem::updateArtillery(std::vector<Projectile>& artilleryProject
             if (!healths.contains(id) || healths[id].destroyed) continue;
             if (!bounds.contains(id)) continue;
 
-            if (checkCollision(bounds[id], p.x, p.y, p.z)) {
+            if (checkCollision(bounds[id], p.x, p.y, p.z) && calculatePenetration(p.speed)) {
                 healths[id].current -= p.damage;
 
                 explosions.push_back(new ExplosionEffect(p.x, p.y, p.z, 200));
