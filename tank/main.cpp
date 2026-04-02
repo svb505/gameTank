@@ -34,6 +34,7 @@
 #include "GUI.h"
 #include "artillery.h"
 #include "Logger.h"
+#include "weather.h"
 
 #define COUNT 55
 #define ECRANW 1600
@@ -48,12 +49,14 @@ MiniMap mnMap;
 Light light;
 GUI gui;
 Artillery art;
+Weather weat;
 
 bool firstMouse = true;
 double lastX = 800.0 / 2, lastY = 600.0 / 2;
 float sensitivity = 0.2f;
 bool cursorVisibility = false;
 bool fpsLimit = false;
+std::string weather = "Clean";
 
 void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
     ImGuiIO& io = ImGui::GetIO();
@@ -270,13 +273,32 @@ int main(){
         if (fpsLimit) glfwSwapInterval(1);
         else glfwSwapInterval(0);
 
+        if (weather == "Clean") { 
+            if (weat.particles.size() > 0) { 
+                alSourceStop(sound.rainSource); 
+                sound.rainPlayed = false;
+                weat.particles.clear(); 
+            } 
+        }
+        else if (weather == "Rainly") { 
+            if (!sound.rainPlayed) { 
+                alSourcePlay(sound.rainSource); 
+                sound.rainPlayed = true; 
+            } 
+            if (weat.particles.size() < weat.count) weat.generate(Type::rainly, cam); 
+        }
+        else if (weather == "Snowly") { 
+            alSourceStop(sound.rainSource); 
+            sound.rainPlayed = false;
+            if (weat.particles.size() < weat.count) weat.generate(Type::snowly, cam); }
+
         countFps(deltaTime,lastTime,currentTime,frames,fps,fpsTimer);
 
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        gui.render(fps, tank,art,sound,fpsLimit);
+        gui.render(fps, tank,art,sound,weather,fpsLimit);
 
         ImGui::Render();
 
@@ -300,10 +322,14 @@ int main(){
 
         tank.Draw();
         tank.updatePosition(tank.x,tank.z,deltaTime);
-        repl.drawReplCircle(30);
+
+        repl.drawReplCircle(30);//replishement ammo
 
         Update(deltaTime,tank,projectileSystem,sound); // Update enemyes
         Render(smokes); // Render enemyes
+
+        weat.update(cam,deltaTime);
+        weat.draw();
 
         if (repl.isInCircle(tank.x, tank.z)) repl.startReplish(deltaTime,tank,ECRANH,ECRANW);
 
@@ -313,17 +339,16 @@ int main(){
         art.drawAllShells();
         art.deleteIfAlived();
 
-        projectileSystem.update((float)deltaTime,sound,enemyes,healths, bounds,explosions,smokes,
-            sound.explosionSource,tank);
+        projectileSystem.update((float)deltaTime,sound,enemyes,healths, bounds,explosions,smokes,tank);
         projectileSystem.updateProjectiles(projectileSystem);
-        projectileSystem.updateArtillery(art.shells,sound,enemyes,explosions,smokes,sound.artExplosionSource);
+        projectileSystem.updateArtillery(art.shells,sound,enemyes,explosions,smokes);
         
         updateExplosions(explosions, deltaTime);
         updateSmokes(smokes, deltaTime);
         
         auto tankCollision = checkCollisionWithTank(tank.x, tank.y, tank.z);
 
-        if (tankCollision.checked) {
+        if (tankCollision.checked) { //Collision with enemy
             tank.x = tank.oldX; tank.y = tank.oldY; tank.z = tank.oldZ;
 
             healths[tankCollision.id].current -= tank.returnImpactImpulse();

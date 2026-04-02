@@ -24,13 +24,13 @@ public:
     void spawnBullet(float x, float y, float z, float yawDeg);
     void update(float dt, Sound& sound, std::unordered_map<int, Entity>& enemies, std::unordered_map<Entity, Health>& healths,
         std::unordered_map<Entity, Bounds>& bounds, std::vector<ExplosionEffect*>& explosions,
-        std::vector<SmokeEffect*>& smokes, ALuint explosionSource, Tank& player);
+        std::vector<SmokeEffect*>& smokes,Tank& player);
     void updateProjectiles(ProjectileSystem& projectileSystem);
     void updateArtillery(std::vector<Projectile>& artilleryProjectiles, Sound& sound,
         std::unordered_map<int, Entity>& enemies, std::vector<ExplosionEffect*>& explosions,
-        std::vector<SmokeEffect*>& smokes, ALuint explosionSource);
+        std::vector<SmokeEffect*>& smokes);
 private:
     void onHit(Projectile& p, Entity& en, Health& health, std::vector<ExplosionEffect*>& explosions,
-        std::vector<SmokeEffect*>& smokes, ALuint explosionSource, Sound& sound, bool hitGround = false, bool smokeShell = false);
+        std::vector<SmokeEffect*>& smokes, Sound& sound, bool hitGround = false, bool smokeShell = false);
     float calculatePenetration(float vel);
 };

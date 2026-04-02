@@ -21,11 +21,11 @@ float ProjectileSystem::calculatePenetration(float vel) {
     return k * vel * vel;
 }
 void ProjectileSystem::onHit(Projectile& p, Entity& en, Health& health, std::vector<ExplosionEffect*>& explosions,
-    std::vector<SmokeEffect*>& smokes, ALuint explosionSource, Sound& sound, bool hitGround, bool smokeShell) {
+    std::vector<SmokeEffect*>& smokes, Sound& sound, bool hitGround, bool smokeShell) {
 
     sound.setSourcePosition(sound.explosionSource, p.x, p.y, p.z);
-    alSourceStop(explosionSource);
-    alSourcePlay(explosionSource);
+    alSourceStop(sound.explosionSource);
+    alSourcePlay(sound.explosionSource);
 
     float x = p.x;
     float y = p.y;
@@ -90,7 +90,7 @@ void ProjectileSystem::spawnBullet(float x, float y, float z, float yawDeg) {
 }
 void ProjectileSystem::update(float dt, Sound& sound, std::unordered_map<int, Entity>& enemies, std::unordered_map<Entity, Health>& healths,
     std::unordered_map<Entity, Bounds>& bounds, std::vector<ExplosionEffect*>& explosions,
-    std::vector<SmokeEffect*>& smokes, ALuint explosionSource,Tank& player) {
+    std::vector<SmokeEffect*>& smokes,Tank& player) {
 
     for (auto& p : projectiles) {
         if (!p.alive) continue;
@@ -103,8 +103,8 @@ void ProjectileSystem::update(float dt, Sound& sound, std::unordered_map<int, En
             p.alive = false;
 
             sound.setSourcePosition(sound.explosionSource, p.x, p.y, p.z);
-            alSourceStop(explosionSource);
-            alSourcePlay(explosionSource);
+            alSourceStop(sound.explosionSource);
+            alSourcePlay(sound.explosionSource);
 
             if (p.type != ProjectileType::Bullet) explosions.push_back(new ExplosionEffect(p.x, p.y, p.z));
             if (p.selectedShellType == shellType::SMOKE) smokes.push_back(new SmokeEffect(p.x, p.y, p.z));
@@ -135,8 +135,8 @@ void ProjectileSystem::update(float dt, Sound& sound, std::unordered_map<int, En
                 if (apartments.contains(id)) smokes.push_back(new SmokeEffect(p.x, p.y, p.z, 300, 1.5f, { 0.5f,0.5f,0.5f },2.0f));
 
                 sound.setSourcePosition(sound.explosionSource, p.x, p.y, p.z);
-                alSourceStop(explosionSource);
-                alSourcePlay(explosionSource);
+                alSourceStop(sound.explosionSource);
+                alSourcePlay(sound.explosionSource);
 
                 if (p.type != ProjectileType::Bullet) explosions.push_back(new ExplosionEffect(p.x, p.y, p.z));
                 if (p.selectedShellType == shellType::SMOKE) smokes.push_back(new SmokeEffect(p.x, p.y, p.z));
@@ -145,7 +145,7 @@ void ProjectileSystem::update(float dt, Sound& sound, std::unordered_map<int, En
                 break;
             }
             if (p.alive && p.y <= 0.0f && p.type != ProjectileType::Bullet && !p.isEnemy) {
-                onHit(p, en, healths[id], explosions, smokes, explosionSource, sound, false, p.selectedShellType == shellType::SMOKE);
+                onHit(p, en, healths[id], explosions, smokes, sound, false, p.selectedShellType == shellType::SMOKE);
 
                 if (p.selectedShellType == shellType::SMOKE) smokes.push_back(new SmokeEffect(p.x, p.y, p.z));
 
@@ -173,7 +173,7 @@ void ProjectileSystem::updateProjectiles(ProjectileSystem& projectileSystem) {
 }
 void ProjectileSystem::updateArtillery(std::vector<Projectile>& artilleryProjectiles, Sound& sound,
     std::unordered_map<int, Entity>& enemies, std::vector<ExplosionEffect*>& explosions,
-    std::vector<SmokeEffect*>& smokes, ALuint explosionSource) {
+    std::vector<SmokeEffect*>& smokes) {
     for (auto& p : artilleryProjectiles) {
         if (!p.alive) continue;
 
@@ -190,15 +190,15 @@ void ProjectileSystem::updateArtillery(std::vector<Projectile>& artilleryProject
 
                 p.alive = false;
                 exploded = true;
-                sound.setSourcePosition(sound.explosionSource, p.x, p.y, p.z);
-                alSourcePlay(explosionSource);
+                sound.setSourcePosition(sound.artExplosionSource, p.x, p.y, p.z);
+                alSourcePlay(sound.artExplosionSource);
                 break;
             }
         }
         if (!exploded && p.y <= 0.0f) {
             explosions.push_back(new ExplosionEffect(p.x, p.y, p.z, 200));
-            sound.setSourcePosition(sound.explosionSource, p.x, p.y, p.z);
-            alSourcePlay(explosionSource);
+            sound.setSourcePosition(sound.artExplosionSource, p.x, p.y, p.z);
+            alSourcePlay(sound.artExplosionSource);
             p.alive = false;
         }
     }

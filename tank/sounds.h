@@ -7,6 +7,8 @@
 
 class Sound {
 public:
+    bool rainPlayed = false;
+
     ALCdevice* audioDevice = nullptr;
     ALCcontext* audioContext = nullptr;
 
@@ -24,6 +26,8 @@ public:
     ALuint shotSource = 0;
     ALuint mgunSource = 0; 
     ALuint collisionSource = 0;
+    ALuint rainSource = 0;
+    ALuint rainBuffer = 0;
 
     void setSourcePosition(ALuint source, float x, float y, float z) {
         ALfloat pos[] = { x, y, z };
@@ -87,6 +91,7 @@ public:
         mgunBuffer = LoadWav("sounds/mgun.wav");
         artVolleyBuffer = LoadWav("sounds/artVolley.wav");
         collisionBuffer = LoadWav("sounds/collision.wav");
+        rainBuffer = LoadWav("sounds/rain.wav");
     }
     void createSources() {
         alDistanceModel(AL_INVERSE_DISTANCE_CLAMPED);
@@ -100,6 +105,10 @@ public:
         alGenSources(1, &explosionSource);
         alSourcei(explosionSource, AL_BUFFER, explosionBuffer);
         alSourcef(explosionSource, AL_GAIN, 1.0f);
+
+        alGenSources(1, &rainSource);
+        alSourcei(rainSource, AL_BUFFER, rainBuffer);
+        alSourcef(rainSource, AL_GAIN, 1.0f);
 
         alGenSources(1, &collisionSource);
         alSourcei(collisionSource, AL_BUFFER, collisionBuffer);

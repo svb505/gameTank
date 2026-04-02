@@ -6,6 +6,8 @@
 
 void drawShell() {
     float s = 0.1f;
+    glColor3f(255.0f / 255.0f, 128.0f / 255.0f, 0.0f);
+
     glBegin(GL_QUADS);
     // front
     glVertex3f(-s, -s, s); glVertex3f(s, -s, s); glVertex3f(s, s, s); glVertex3f(-s, s, s);
@@ -22,7 +24,8 @@ void drawShell() {
     glEnd();
 };
 void drawBullet() {
-    glPointSize(1.0f);
+    glPointSize(1.0f); 
+    glColor3f(255.0f / 255.0f, 128.0f / 255.0f, 0.0f);
     glBegin(GL_POINTS);
     glVertex3f(0.0f, 0.0f, 0.0f);
     glEnd();

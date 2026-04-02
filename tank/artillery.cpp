@@ -28,6 +28,8 @@ float Artillery::returnSpeedError() {
 }
 void Artillery::drawShell() {
     float s = 0.1f;
+
+    glColor3f(255.0f / 255.0f, 128.0f / 255.0f, 0.0f);
     glBegin(GL_QUADS);
     // front
     glVertex3f(-s, -s, s); glVertex3f(s, -s, s); glVertex3f(s, s, s); glVertex3f(-s, s, s);
