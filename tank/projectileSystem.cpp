@@ -126,6 +126,8 @@ void ProjectileSystem::update(float dt, Sound& sound, std::unordered_map<int, En
                     if (apartments.contains(id)) apartments[id].LOD = 2;
                 }
 
+                if (apartments.contains(id)) smokes.push_back(new SmokeEffect(p.x, p.y, p.z, 300, 1.5f, { 0.5f,0.5f,0.5f },2.0f));
+
                 sound.setSourcePosition(sound.explosionSource, p.x, p.y, p.z);
                 alSourceStop(explosionSource);
                 alSourcePlay(explosionSource);
