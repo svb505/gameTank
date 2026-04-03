@@ -19,6 +19,9 @@ strike at specific coordinates with a margin of error.
   - GUI: ImGui
   - Other: chrono, cstdint, cstdlib, algorithm, ctime, stbimage
 
+## Required:
+  - For launch this game you need all .dll files in folder "DLLs"
+
 ## Demo:
 ![General Visual](images/f1.png "General game view")
 ![Destroyed building](images/f2.png "Destroyed building example")
