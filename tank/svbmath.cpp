@@ -6,7 +6,6 @@ namespace svbmath{
         float len = sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
         return { v.x / len, v.y / len, v.z / len };
     }
-
     Vec3 DirectionToTarget(const Vec3& enemy, const Vec3& target){
         return Normalize({ target.x - enemy.x,target.y - enemy.y,target.z - enemy.z });
     }
@@ -21,7 +20,6 @@ namespace svbmath{
 	float Dot(const Vec3& a, const Vec3& b) {
 		return a.x * b.x + a.y * b.y + a.z * b.z;
 	}
-
 	bool InFOV(const Vec3& forward, const Vec3& dirToTarget, float fovDeg) {
 		float cosFov = cos(fovDeg * 0.5f * PI / 180.0f);
 		return Dot(forward, dirToTarget) > cosFov;
@@ -41,6 +39,8 @@ namespace svbmath{
 	float LengthSq(const Vec3& v) {
 		return v.x * v.x + v.y * v.y + v.z * v.z;
 	}
-
+	float randFloat(float min, float max) {
+		return min + (max - min) * (float(rand()) / float(RAND_MAX));
+	}
 }
 

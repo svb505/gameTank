@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include <string>
+#include "svbmath.h"
 
 class Camera;
 class Sound;
@@ -19,6 +20,11 @@ struct Particle {
 	float gravity = 9.8f;
 	float fallSpeed;
 };
+struct SnowPiles {
+	svbmath::Vec3 pos;
+	float radius;
+	float height;
+};
 
 class Weather {
 private:
@@ -28,7 +34,13 @@ public:
 	Weather() { particles.reserve(count); }
 	
 	std::vector<Particle> particles = {};
+	std::vector<SnowPiles> snowPiles;
+
+	void drawSnowPile(float radius, float height);
+	void drawSphere(float radius, int stacks, int slices);
 	void draw();
 	void generate(const Type& type,Camera& cam);
 	void update(Camera& cam, float dt);
+	void generateSnowPiles(int count, float areaSize);
+	void renderSnowPiles();
 };

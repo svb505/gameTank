@@ -287,8 +287,10 @@ int main(){
                 sound.rainPlayed = false;
                 weat.particles.clear(); 
             } 
+            weat.snowPiles.clear();
         }
         else if (weather == "Rainly") { 
+            weat.snowPiles.clear();
             if (!sound.rainPlayed) { 
                 alSourcePlay(sound.rainSource); 
                 sound.rainPlayed = true; 
@@ -298,8 +300,10 @@ int main(){
         else if (weather == "Snowly") { 
             alSourceStop(sound.rainSource); 
             sound.rainPlayed = false;
-            if (weat.particles.size() < weat.count) weat.generate(Type::snowly, cam); }
-
+            if (weat.particles.size() < weat.count) weat.generate(Type::snowly, cam); 
+            if (weat.snowPiles.size() == 0) weat.generateSnowPiles(50, 100.0f);
+        }
+  
         countFps(deltaTime,lastTime,currentTime,frames,fps,fpsTimer);
 
         ImGui_ImplOpenGL3_NewFrame();
@@ -336,7 +340,8 @@ int main(){
         Update(deltaTime,tank,projectileSystem,sound); // Update enemyes
         Render(smokes); // Render enemyes
 
-        weat.update(cam,deltaTime);
+        weat.update(cam,deltaTime); //Update rain/snow
+        weat.renderSnowPiles();
         weat.draw();
 
         if (repl.isInCircle(tank.x, tank.z)) repl.startReplish(deltaTime,tank,ECRANH,ECRANW);

@@ -17,5 +17,6 @@ namespace svbmath {
 	bool InFOV(const Vec3& forward, const Vec3& dirToTarget, float fovDeg);
 	float RotateTowards(float current, float target, float speed, float dt);
 	float LengthSq(const Vec3& v);
+	float randFloat(float min, float max);
 }
 
