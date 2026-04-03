@@ -81,8 +81,15 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
     cam.cameraYaw += static_cast<float>(xoffset);
     cam.cameraPitch += static_cast<float>(yoffset);
 
+    tank.turretYaw += -static_cast<float>(xoffset);
+    tank.gunPitch += static_cast<float>(yoffset);
+
     if (cam.cameraYaw > 360.0f) cam.cameraYaw -= 360.0f;
     if (cam.cameraYaw < 0.0f)   cam.cameraYaw += 360.0f;
+    if (tank.turretYaw > 360.0f) tank.turretYaw -= 360.0f;
+    if (tank.turretYaw < 0.0f)   tank.turretYaw += 360.0f;
+    if (tank.gunPitch > 10.0f) tank.gunPitch = 10.0f;
+    if (tank.gunPitch < -10.0f)   tank.gunPitch = -10.0f;
 }
 void processTankInput(GLFWwindow* window, float dt,ProjectileSystem& projectileSystem){
     static bool lastShift = false;
@@ -125,20 +132,6 @@ void processTankInput(GLFWwindow* window, float dt,ProjectileSystem& projectileS
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
         tank.oldX = tank.x; tank.oldY = tank.y; tank.oldZ = tank.z;
         if (tank.moveSpeed >= tank.SPEED_LIMIT_BACK) tank.moveSpeed -= tank.VELOCITY_COEF / 2;
-    }
-    if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS){
-        tank.turretYaw += tank.turretSpeed * dt;
-        if (!tank.aimMode) cam.cameraYaw -= tank.turretSpeed * dt;
-    }
-    if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS){
-        tank.turretYaw -= tank.turretSpeed * dt;
-        if (!tank.aimMode) cam.cameraYaw += tank.turretSpeed * dt;
-    }
-    if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS && !glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS) {
-        tank.gunPitch = std::max(tank.gunPitch - tank.gunSpeed * dt, -10.0f);
-    }
-    if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS && !glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS) {
-        tank.gunPitch = std::min(tank.gunPitch + tank.gunSpeed * dt, 10.0f);
     }
     if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS) {
         mnMap.setHeight(mnMap.getHeight() + mnMap.step * dt * 60);
@@ -361,7 +354,8 @@ int main(){
         
         auto tankCollision = checkCollisionWithTank(tank.x, tank.y, tank.z);
 
-        if (tankCollision.checked) { //Collision with enemy
+        //Collision with enemy
+        if (tankCollision.checked) { 
             tank.x = tank.oldX; tank.y = tank.oldY; tank.z = tank.oldZ;
 
             healths[tankCollision.id].current -= tank.returnImpactImpulse();

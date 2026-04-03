@@ -29,8 +29,9 @@ void Weather::drawSphere(float radius, int stacks, int slices) {
 
 			float x = cosf(lon);
 			float z = sinf(lon);
-
+			glNormal3f(x * r0, y0, z * r0);
 			glVertex3f(radius * x * r0, radius * y0, radius * z * r0);
+			glNormal3f(x * r1, y1, z * r1);
 			glVertex3f(radius * x * r1, radius * y1, radius * z * r1);
 		}
 

@@ -134,8 +134,5 @@
     <ClInclude Include="weather.h">
       <Filter>Исходные файлы</Filter>
     </ClInclude>
-    <ClInclude Include="random.h">
-      <Filter>Исходные файлы</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>
