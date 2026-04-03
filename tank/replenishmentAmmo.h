@@ -23,7 +23,7 @@ public:
 		glBegin(GL_LINE_LOOP);
 
 		for (int i = 0; i < segments; i++) {
-			float angle = 2.0f + myPI * i / segments;
+			float angle = 2.0f * PI * i / segments;
 			float x = radius * cosf(angle);
 			float z = radius * sinf(angle);
 

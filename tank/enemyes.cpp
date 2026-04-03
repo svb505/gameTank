@@ -30,7 +30,25 @@ Entity CreateEntity() {
     entities.push_back(e);
     return e;
 }
+void drawSootEffect(float x, float y, float z, int segments, float radius) {
+    glPushMatrix();
+    glTranslatef(x, y, z);
+    glColor3f(0.0f, 0.0f, 0.0f);
 
+    glBegin(GL_TRIANGLE_FAN);
+    glVertex3f(0.0f, 0.0f, 0.0f); 
+
+    for (int i = 0; i <= segments; i++) {
+        float angle = 2.0f * PI * i / segments;
+        float px = radius * cosf(angle);
+        float pz = radius * sinf(angle);
+
+        glVertex3f(px, 0.0f, pz);
+    }
+
+    glEnd();
+    glPopMatrix();
+}
 void drawTank(TankComponent& tank, float bodyH) {
     glPushMatrix();
     glRotatef(1, 0, 1, 0);
@@ -222,7 +240,7 @@ void drawDestroyedAppartament(ApartmentComponent& ap, float totalH) {
     // ================= FRONT =================
     glColor3f(0.55f, 0.55f, 0.55f);
 
-    // Левая часть
+    //Left
     glBegin(GL_QUADS);
     glVertex3f(-halfW, 0, halfD);
     glVertex3f(0.0f, 0, halfD);
@@ -230,7 +248,7 @@ void drawDestroyedAppartament(ApartmentComponent& ap, float totalH) {
     glVertex3f(-halfW, leftTop, halfD);
     glEnd();
 
-    // Правая разрушенная часть
+    // right
     glBegin(GL_QUADS);
     glVertex3f(0.0f, 0, halfD);
     glVertex3f(halfW, 0, halfD);
@@ -283,13 +301,13 @@ void drawDestroyedAppartament(ApartmentComponent& ap, float totalH) {
     glEnd();
 
 
-    // ================= WINDOWS (стабильные) =================
+    // ================= WINDOWS =================
     glColor3f(0.1f, 0.1f, 0.1f);
 
     for (int f = 0; f < ap.floors; f++)
     {
         float y = f * ap.floorHeight + 0.2f;
-        if (y > rightTop) break; // окна только на целой части
+        if (y > rightTop) break;
 
         for (int i = -2; i <= 0; i++)
         {
@@ -321,7 +339,7 @@ void drawDestroyedAppartament(ApartmentComponent& ap, float totalH) {
     glPopMatrix();
 
 
-    // ================= RUBBLE (стабильная позиция) =================
+    // ================= RUBBLE =================
     glColor3f(0.4f, 0.4f, 0.4f);
 
     for (int i = 0; i < 15; i++)
@@ -599,6 +617,7 @@ void RenderSystem(std::vector<SmokeEffect*>& smokes) {
 
             if (ap.destroyed) {
                 drawDestroyedAppartament(ap, totalH);
+                drawSootEffect(0.0f, 0.1f, 0.0f,40.0f,5.0f);
                 if (!ap.smokeEnabled) { smokes.push_back(new SmokeEffect(x, y, z, 2000, 3.0f)); ap.smokeEnabled = true; }
             }
             else drawAppartament(ap, totalH);
