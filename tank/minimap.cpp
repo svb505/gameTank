@@ -12,7 +12,7 @@
 #include "minimap.h"
 
 void MiniMap::draw(int ECRANW, int ECRANH, Tank& playerTank, ProjectileSystem& projectileSystem,
-    std::vector<ExplosionEffect*>& explosions, std::vector<SmokeEffect*>& smokes,Camera& cam,
+    std::vector<ExplosionEffect*>& explosions, std::vector<SmokeEffect*>& smokes,Camera& cam, std::string weather,
     float dt) {
 
     float size = height * 0.6f;
@@ -32,7 +32,7 @@ void MiniMap::draw(int ECRANW, int ECRANH, Tank& playerTank, ProjectileSystem& p
 
     glClear(GL_DEPTH_BUFFER_BIT);
 
-    drawGround(playerTank.x, playerTank.z);
+    drawGround(playerTank.x, playerTank.z,weather);
     playerTank.Draw();
 
     for (auto& p : projectileSystem.projectiles) {

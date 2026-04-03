@@ -318,7 +318,7 @@ int main(){
 
         drawSky();
         cam.setupCamera(tank, tank.aimMode);
-        drawGround(cam.cameraX, cam.cameraZ);
+        drawGround(cam.cameraX, cam.cameraZ,weather);
 
         tank.Draw();
         tank.updatePosition(tank.x,tank.z,deltaTime);
@@ -359,7 +359,7 @@ int main(){
 
         hud.Draw3DAim(tank);
 
-        mnMap.draw(ECRANW, ECRANH, tank, projectileSystem, explosions, smokes, cam, deltaTime);
+        mnMap.draw(ECRANW, ECRANH, tank, projectileSystem, explosions, smokes, cam, weather,deltaTime);
 
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
         glfwSwapBuffers(window);

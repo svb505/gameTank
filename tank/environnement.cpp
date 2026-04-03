@@ -21,7 +21,7 @@ void drawGridText(float camX, float camZ) {
 
             std::string text = std::format("(X:{:.0f}; Z:{:.0f})", x, -z);
             float y = 1.5f;
-            RenderTextWorld(x, y, z, 1.0f, 1.0f, 1.0f, text.c_str());
+            RenderTextWorld(x, y, z, 0.8f, 0.8f, 0.8f, text.c_str());
         }
     }
 }
@@ -30,7 +30,7 @@ void drawGrid(float camX, float camZ) {
     float baseZ = camZ;
     float step = 50.0f;
 
-    glColor4f(1.0f, 1.0f, 1.0f, 0.3f);
+    glColor4f(0.8f, 0.8f, 0.8f, 0.3f);
     glBegin(GL_LINES);
 
     for (float i = -size; i <= size; i += step) {
@@ -93,11 +93,12 @@ void drawSky() {
 
     glEnable(GL_DEPTH_TEST);
 }
-void drawGround(float camX, float camZ) {
+void drawGround(float camX, float camZ,std::string weather) {
     float x = camX;
     float z = camZ;
 
-    glColor3f(0.0f, 102.0f / 255, 0.0f);
+    if (weather == "Snowly") glColor3f(1.0f, 1.0f, 1.0f);
+    else glColor3f(0.0f, 102.0f / 255, 0.0f);
     glBegin(GL_QUADS);
     glVertex3f(x - size, 0.0f, z - size);
     glVertex3f(x + size, 0.0f, z - size);
