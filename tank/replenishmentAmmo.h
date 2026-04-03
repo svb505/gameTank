@@ -32,7 +32,7 @@ public:
 		glPopMatrix();
 		glEnd();
 
-		RenderTextWorld(x,3.0f,z,1,1,1,"Replish ammo");
+		RenderTextWorld(x,4.0f, z, 1, 1, 1, "Replish ammo/Repair");
 	}
 	bool isInCircle(float tX, float tZ) {
 		float dx = tX - x;

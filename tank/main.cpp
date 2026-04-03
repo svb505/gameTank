@@ -87,8 +87,12 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
 void processTankInput(GLFWwindow* window, float dt,ProjectileSystem& projectileSystem){
     static bool lastShift = false;
     static bool lastFire = false;
-    bool fire = glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS;
+    static bool prevCtrl = false;
+    static bool prevAlt = false;
 
+    bool fire = glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS;
+    bool currCtrl = glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS;
+    bool currAlt = glfwGetKey(window, GLFW_KEY_LEFT_ALT) == GLFW_PRESS;
     bool shift = glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS;
 
     if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS){
@@ -142,7 +146,16 @@ void processTankInput(GLFWwindow* window, float dt,ProjectileSystem& projectileS
     if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS) {
         mnMap.setHeight(mnMap.getHeight() - mnMap.step * dt * 60);
     }
-    if (glfwGetKey(window, GLFW_KEY_LEFT_ALT) == GLFW_PRESS) {
+    if (glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_PRESS) {
+        float yaw = tank.bodyYaw + tank.turretYaw;
+
+        projectileSystem.spawnBullet(tank.x, tank.y + 1.0f, tank.z, yaw);
+
+        sound.setSourcePosition(sound.mgunSource, tank.x, tank.y + 1.6f, tank.z);
+        alSourceStop(sound.mgunSource);
+        alSourcePlay(sound.mgunSource);
+    }
+    if (currAlt && !prevAlt) {
         if (cursorVisibility) {
             glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
             cursorVisibility = false;
@@ -152,10 +165,7 @@ void processTankInput(GLFWwindow* window, float dt,ProjectileSystem& projectileS
             cursorVisibility = true;
         }
     }
-
     if (shift && !lastShift) tank.aimMode = !tank.aimMode;
-    lastShift = shift;
-
     if (fire && !lastFire && tank.finishReload <= 0.0f && tank.totalShells > 0) {
         float yaw = tank.bodyYaw + tank.turretYaw;
 
@@ -170,17 +180,15 @@ void processTankInput(GLFWwindow* window, float dt,ProjectileSystem& projectileS
 
         tank.finishReload = tank.reloadTime; 
     }
-    lastFire = fire;
-
-    if (glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_PRESS) {
-        float yaw = tank.bodyYaw + tank.turretYaw;
-
-        projectileSystem.spawnBullet(tank.x,tank.y + 1.0f,tank.z,yaw);
-
-        sound.setSourcePosition(sound.mgunSource, tank.x, tank.y + 1.6f, tank.z);
-        alSourceStop(sound.mgunSource);
-        alSourcePlay(sound.mgunSource);
+    if (currCtrl && !prevCtrl) {
+        cam.zoomed = !cam.zoomed;
+        cam.fov = cam.zoomed ? 40.0f : 70.0f;
     }
+
+    lastFire = fire;
+    prevCtrl = currCtrl;
+    lastShift = shift;
+    prevAlt = currAlt;
 }
 void countFps(double& deltaTime,double& lastTime,double& currentTime,int& frames,float& fps,float& fpsTimer) {
     deltaTime = currentTime - lastTime;

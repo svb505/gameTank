@@ -4,6 +4,8 @@
 class Tank;
 class Camera {
 public:
+    bool zoomed = false;
+
     float fov = 70.0f;
     float aspect = 1600.0f / 1000.0f;
     float nearPlane = 0.1f;
