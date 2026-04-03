@@ -12,22 +12,14 @@ public:
     ALCdevice* audioDevice = nullptr;
     ALCcontext* audioContext = nullptr;
 
-    ALuint tankBuffer = 0;
-    ALuint explosionBuffer = 0;
-    ALuint shotBuffer = 0;
-    ALuint mgunBuffer = 0;
-    ALuint collisionBuffer = 0;
-    ALuint artVolleyBuffer = 0;
-    ALuint artExplosionBuffer = 0;
-    ALuint tankSource = 0;
-    ALuint explosionSource = 0;
-    ALuint artExplosionSource = 0;
-    ALuint artVolleySource = 0;
-    ALuint shotSource = 0;
-    ALuint mgunSource = 0; 
-    ALuint collisionSource = 0;
-    ALuint rainSource = 0;
-    ALuint rainBuffer = 0;
+    ALuint tankSource = 0, tankBuffer = 0;
+    ALuint explosionSource = 0, explosionBuffer = 0;
+    ALuint artExplosionSource = 0, artExplosionBuffer = 0;
+    ALuint artVolleySource = 0, artVolleyBuffer = 0;
+    ALuint shotSource = 0, shotBuffer = 0;
+    ALuint mgunSource = 0, mgunBuffer = 0;
+    ALuint collisionSource = 0, collisionBuffer = 0;
+    ALuint rainSource = 0, rainBuffer = 0;
 
     void setSourcePosition(ALuint source, float x, float y, float z) {
         ALfloat pos[] = { x, y, z };
