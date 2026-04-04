@@ -363,7 +363,7 @@ int main(){
         updateExplosions(explosions, deltaTime);
         updateSmokes(smokes, deltaTime);
         
-        granades.update(deltaTime,smokes,tank);
+        granades.update(deltaTime,smokes,tank,sound);
         granades.drawAll(tank);
 
         auto tankCollision = checkCollisionWithTank(tank.x, tank.y, tank.z);

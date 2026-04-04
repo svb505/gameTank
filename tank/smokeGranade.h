@@ -3,6 +3,8 @@
 #include <vector>
 
 class Tank;
+class Sound;
+
 struct Position {
 	svbmath::Vec3 pos;
 	float speed = 15.0f;
@@ -24,6 +26,6 @@ public:
 	void drawAll(Tank& tank);
 	void draw(float x, float y, float z, float angle, float yaw);
 	void spawn(Tank& tank);
-	void update(float dt, std::vector<SmokeEffect*>& smokes, Tank& tank);
+	void update(float dt, std::vector<SmokeEffect*>& smokes, Tank& tank, Sound& sound);
 	void strike();
 };

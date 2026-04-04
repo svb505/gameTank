@@ -2,6 +2,7 @@
 #include "smokeGranade.h"
 #include "tank.h"
 #include <cmath>
+#include "sounds.h"
 
 void SmokeGranade::draw(float x, float y, float z,float angle,float yaw) {
     float s = 0.1f;
@@ -59,7 +60,7 @@ void SmokeGranade::spawn(Tank& tank) {
         granades.push_back(p);
     }
 }
-void SmokeGranade::update(float dt, std::vector<SmokeEffect*>& smokes,Tank& tank) {
+void SmokeGranade::update(float dt, std::vector<SmokeEffect*>& smokes,Tank& tank,Sound& sound) {
     float halfW = tank.params.turretW * 0.5f; 
 
     svbmath::Vec3 leftLocal = { -halfW, 0.0f, 0.0f }; 
@@ -95,6 +96,9 @@ void SmokeGranade::update(float dt, std::vector<SmokeEffect*>& smokes,Tank& tank
         if (g.pos.y <= 0.0f) {
             smokes.push_back(new SmokeEffect(g.pos.x, g.pos.y, g.pos.z, g.count, 7.0f, { 1.0f,1.0f,1.0f }, 3.0f,
                 0.1f,9.0f));
+            sound.setSourcePosition(sound.smokeSource, g.pos.x, g.pos.y, g.pos.z);
+            alSourcePlay(sound.smokeSource);
+
             it = granades.erase(it);
         }
         else ++it;

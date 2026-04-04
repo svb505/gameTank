@@ -20,6 +20,7 @@ public:
     ALuint mgunSource = 0, mgunBuffer = 0;
     ALuint collisionSource = 0, collisionBuffer = 0;
     ALuint rainSource = 0, rainBuffer = 0;
+    ALuint smokeSource = 0, smokeBuffer = 0;
 
     void setSourcePosition(ALuint source, float x, float y, float z) {
         ALfloat pos[] = { x, y, z };
@@ -41,8 +42,7 @@ public:
         alListenerfv(AL_VELOCITY, vel);
         alListenerfv(AL_ORIENTATION, ori);
     }
-    ALuint LoadWav(const char* filename)
-    {
+    ALuint LoadWav(const char* filename){
         SF_INFO info{};
         SNDFILE* file = sf_open(filename, SFM_READ, &info);
         if (!file) {
@@ -84,6 +84,7 @@ public:
         artVolleyBuffer = LoadWav("sounds/artVolley.wav");
         collisionBuffer = LoadWav("sounds/collision.wav");
         rainBuffer = LoadWav("sounds/rain.wav");
+        smokeBuffer = LoadWav("sounds/smoke.wav");
     }
     void createSources() {
         alDistanceModel(AL_INVERSE_DISTANCE_CLAMPED);
@@ -118,6 +119,10 @@ public:
         alSourcei(artVolleySource, AL_BUFFER, artVolleyBuffer);
         alSourcef(artVolleySource, AL_GAIN, 1.0f);
 
+        alGenSources(1, &smokeSource);
+        alSourcei(smokeSource, AL_BUFFER, smokeBuffer);
+        alSourcef(smokeSource, AL_GAIN, 1.0f);
+
         alGenSources(1, &mgunSource);
         alSourcei(mgunSource, AL_BUFFER, mgunBuffer);
         alSourcef(mgunSource, AL_GAIN, 0.8f);
@@ -149,5 +154,9 @@ public:
         alSourcef(collisionSource, AL_REFERENCE_DISTANCE, 4.0f);
         alSourcef(collisionSource, AL_MAX_DISTANCE, 80.0f);
         alSourcef(collisionSource, AL_ROLLOFF_FACTOR, 2.0f);
+
+        alSourcef(smokeSource, AL_REFERENCE_DISTANCE, 4.0f);
+        alSourcef(smokeSource, AL_MAX_DISTANCE, 80.0f);
+        alSourcef(smokeSource, AL_ROLLOFF_FACTOR, 2.0f);
     }
 };
