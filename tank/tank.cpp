@@ -86,29 +86,30 @@ void Tank::DrawCylinder(float r, float h, int seg) {
 void Tank::DrawHull() {
     glColor3f(0.2f, 0.5f, 0.2f);
     glPushMatrix();
-    glTranslatef(0, 0.4f, 0);
-    DrawBox(3.5f, 0.8f, 2.5f);
+    glTranslatef(0, params.hullY, 0);
+    DrawBox(params.hullW, params.hullH, params.hullD);
     glPopMatrix();
 }
 void Tank::DrawTracks() {
     for (int side = -1; side <= 1; side += 2) {
         glPushMatrix();
-        glTranslatef(0, 0.2f, side * 1.3f);
+        glTranslatef(0, params.trackY, side * params.trackOffsetZ);
 
         glColor3f(0.1f, 0.1f, 0.1f);
-        DrawBox(3.5f, 0.4f, 0.3f);
+        DrawBox(params.trackW, params.trackH, params.trackD);
+
         glPopMatrix();
     }
 }
 void Tank::DrawTurret() {
     glPushMatrix();
-    glTranslatef(0, 0.9f, 0);
+    glTranslatef(0, params.turretY, 0);
     glRotatef(turretYaw, 0, 1, 0);
 
-    // turret
     glColor3f(0.15f, 0.4f, 0.15f);
+
     glPushMatrix();
-    DrawBox(1.8f, 0.6f, 1.8f);
+    DrawBox(params.turretW, params.turretH, params.turretD);
     glPopMatrix();
 
     DrawGun();
@@ -117,12 +118,14 @@ void Tank::DrawTurret() {
 }
 void Tank::DrawGun() {
     glPushMatrix();
-    glTranslatef(0, 0.1f, 0.9f);
+
+    glTranslatef(0, params.gunOffsetY, params.gunOffsetZ);
     glRotatef(gunPitch, 1, 0, 0);
 
     glColor3f(0.1f, 0.1f, 0.1f);
+
     glRotatef(90, 1, 0, 0);
-    DrawCylinder(0.1f, 2.2f);
+    DrawCylinder(params.gunRadius, params.gunLength, 16);
 
     glPopMatrix();
 }
