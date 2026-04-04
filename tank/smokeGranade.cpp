@@ -1,12 +1,16 @@
 #include "effects.h"
 #include "smokeGranade.h"
+#include "tank.h"
 #include <cmath>
 
-void SmokeGranade::draw(float x, float y, float z) {
+void SmokeGranade::draw(float x, float y, float z,float angle,float yaw) {
     float s = 0.1f;
 
     glPushMatrix();
     glTranslatef(x,y,z);
+
+    glRotatef(yaw, 0, 1, 0);
+    glRotatef(angle, 1, 0, 0);
 
     glColor3f(0.3f, 0.3f, 0.3f);
 
@@ -26,9 +30,80 @@ void SmokeGranade::draw(float x, float y, float z) {
     glEnd();
     glPopMatrix();
 }
-void SmokeGranade::drawAll() {
-    for (auto& g : granades) draw(g.pos.x, g.pos.y, g.pos.z);
+void SmokeGranade::drawAll(Tank& tank) {
+    for (auto& g : granades) draw(g.pos.x, g.pos.y, g.pos.z,g.angle,tank.turretYaw);
 }
-void SmokeGranade::spawn(float x, float y, float z) {
-    Position p;
+void SmokeGranade::spawn(Tank& tank) {
+    float halfW = tank.params.turretW * 0.5f;
+
+    svbmath::Vec3 leftLocal = { -halfW, 0.0f, 0.0f };
+    svbmath::Vec3 rightLocal = { halfW, 0.0f, 0.0f };
+    svbmath::Vec3 leftSide = tank.LocalToWorldTurret(leftLocal);
+    svbmath::Vec3 rightSide = tank.LocalToWorldTurret(rightLocal);
+
+    for (int i = 0; i < maxCount; i++) {
+        Position p;
+
+        if (i < 3) p.pos = leftSide;
+        else p.pos = rightSide;
+
+        float angleRad = p.angle * PI / 180.0f;
+        float yawRad = (tank.bodyYaw + tank.turretYaw) * PI / 180.0f;
+
+        p.count = 3000;
+
+        p.vx = sin(yawRad) * cos(angleRad) * p.speed; 
+        p.vy = sin(p.angle) * p.speed; 
+        p.vz = cos(yawRad) * cos(angleRad) * p.speed;
+
+        granades.push_back(p);
+    }
+}
+void SmokeGranade::update(float dt, std::vector<SmokeEffect*>& smokes,Tank& tank) {
+    float halfW = tank.params.turretW * 0.5f; 
+
+    svbmath::Vec3 leftLocal = { -halfW, 0.0f, 0.0f }; 
+    svbmath::Vec3 rightLocal = { halfW, 0.0f, 0.0f }; 
+    svbmath::Vec3 leftSide = tank.LocalToWorldTurret(leftLocal); 
+    svbmath::Vec3 rightSide = tank.LocalToWorldTurret(rightLocal);
+
+    int i = 0;
+
+    for (auto& g : granades) {     
+        if (!g.strike) {
+            float angleRad = g.angle * PI / 180.0f;
+            float yawRad = (tank.bodyYaw + tank.turretYaw) * PI / 180.0f;
+
+            g.pos = (i < maxCount / 2) ? tank.LocalToWorldTurret(leftLocal) : tank.LocalToWorldTurret(rightLocal);
+            
+            g.vx = sin(yawRad) * cos(angleRad) * g.speed;
+            g.vy = sin(g.angle) * g.speed;
+            g.vz = cos(yawRad) * cos(angleRad) * g.speed;
+        }
+        else{
+            g.vy -= g.gravity * dt;
+
+            g.pos.x += g.vx * dt;
+            g.pos.y += g.vy * dt;
+            g.pos.z += g.vz * dt;
+        }
+        i++;
+    }
+
+    for (auto it = granades.begin(); it != granades.end();) {
+        auto& g = (*it);
+        if (g.pos.y <= 0.0f) {
+            smokes.push_back(new SmokeEffect(g.pos.x, g.pos.y, g.pos.z, g.count, 7.0f, { 1.0f,1.0f,1.0f }, 3.0f,
+                0.1f,9.0f));
+            it = granades.erase(it);
+        }
+        else ++it;
+    }
+    i = 0;
+}
+void SmokeGranade::strike() {
+    if (currentGranade < granades.size()) {
+        granades[currentGranade].strike = true;
+        currentGranade++;
+    }
 }

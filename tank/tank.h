@@ -35,9 +35,9 @@ struct TankParams {
 };
 
 class Tank {
-private:
-    TankParams params;
 public:
+    TankParams params;
+
     const float SPEED_LIMIT_FORWARD = 15.0f;
     const float SPEED_LIMIT_BACK = -7.0f;
     const float REDUCTION_COEF = 0.995f;
@@ -69,6 +69,8 @@ public:
     void updateDirrections(float bR, float bY);
     void updatePosition(float x, float z, float dt);
     float returnImpactImpulse();
+    svbmath::Vec3 RotateY(const svbmath::Vec3& v, float angleDeg);
+    svbmath::Vec3 LocalToWorldTurret(const svbmath::Vec3& local);
     Bounds GetHullMax() const;
 private:
     void DrawBox(float w, float h, float d);

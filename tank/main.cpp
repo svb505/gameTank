@@ -35,6 +35,7 @@
 #include "artillery.h"
 #include "Logger.h"
 #include "weather.h"
+#include "smokeGranade.h"
 
 #define COUNT 55
 #define ECRANW 1600
@@ -50,6 +51,7 @@ Light light;
 GUI gui;
 Artillery art;
 Weather weat;
+SmokeGranade granades;
 
 bool firstMouse = true;
 double lastX = 800.0 / 2, lastY = 600.0 / 2;
@@ -96,11 +98,13 @@ void processTankInput(GLFWwindow* window, float dt,ProjectileSystem& projectileS
     static bool lastFire = false;
     static bool prevCtrl = false;
     static bool prevAlt = false;
+    static bool prevG = false;
 
     bool fire = glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS;
     bool currCtrl = glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS;
     bool currAlt = glfwGetKey(window, GLFW_KEY_LEFT_ALT) == GLFW_PRESS;
     bool shift = glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS;
+    bool keyG = glfwGetKey(window, GLFW_KEY_G) == GLFW_PRESS;
 
     if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS){
         tank.selectedShell = shellType::APFSDS;
@@ -148,6 +152,8 @@ void processTankInput(GLFWwindow* window, float dt,ProjectileSystem& projectileS
         alSourceStop(sound.mgunSource);
         alSourcePlay(sound.mgunSource);
     }
+    
+    if (keyG && !prevG) granades.strike();
     if (currAlt && !prevAlt) {
         if (cursorVisibility) {
             glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
@@ -182,6 +188,7 @@ void processTankInput(GLFWwindow* window, float dt,ProjectileSystem& projectileS
     prevCtrl = currCtrl;
     lastShift = shift;
     prevAlt = currAlt;
+    prevG = keyG;
 }
 void countFps(double& deltaTime,double& lastTime,double& currentTime,int& frames,float& fps,float& fpsTimer) {
     deltaTime = currentTime - lastTime;
@@ -245,6 +252,8 @@ int main(){
     std::vector<SmokeEffect*> smokes;
     ProjectileSystem projectileSystem;
     
+    granades.spawn(tank);
+
     double lastTime = glfwGetTime();
     double deltaTime = 0.0;
     float fpsTimer = 0.0f;
@@ -352,6 +361,9 @@ int main(){
         updateExplosions(explosions, deltaTime);
         updateSmokes(smokes, deltaTime);
         
+        granades.update(deltaTime,smokes,tank);
+        granades.drawAll(tank);
+
         auto tankCollision = checkCollisionWithTank(tank.x, tank.y, tank.z);
 
         //Collision with enemy

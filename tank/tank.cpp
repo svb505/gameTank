@@ -11,6 +11,30 @@
 #include "svbmath.h"
 #include "tank.h"
 
+svbmath::Vec3 Tank::RotateY(const svbmath::Vec3& v, float angleDeg) {
+    float a = angleDeg * PI / 180.0f;
+    float c = cos(a);
+    float s = sin(a);
+
+    return {
+        v.x * c - v.z * s,
+        v.y,
+        v.x * s + v.z * c
+    };
+}
+svbmath::Vec3 Tank::LocalToWorldTurret(const svbmath::Vec3& local) {
+    svbmath::Vec3 p = local;
+
+    p = RotateY(p, turretYaw);
+    p.y += params.turretY;
+    p = RotateY(p, bodyYaw);
+
+    p.x += x;
+    p.y += y;
+    p.z += z;
+
+    return p;
+}
 void Tank::Draw() {
     glPushMatrix();
     glTranslatef(x, y, z);
