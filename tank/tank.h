@@ -3,6 +3,7 @@
 #include <GL/gl.h>
 #include <GLFW/glfw3.h>
 #include <cmath>
+#include <map>
 #include "projectile.h"
 #include "bounds.h"
 #include "svbmath.h"
@@ -33,21 +34,27 @@ struct TankParams {
     float gunOffsetY = 0.1f;
     float gunOffsetZ = 0.9f;
 };
-
 class Tank {
 public:
     TankParams params;
+
+    std::map<int, svbmath::Vec3> spawns = {
+     {1, {0.0f, 0.0f, 0.0f}},
+     {2, {-10.0f, 0.0f, 0.0f}},
+     {3, {10.0f, 0.0f, 0.0f}}
+    };
 
     const float SPEED_LIMIT_FORWARD = 15.0f;
     const float SPEED_LIMIT_BACK = -7.0f;
     const float REDUCTION_COEF = 0.995f;
     const float VELOCITY_COEF = 0.2f;
 
+    int selectedSpawn = 0;
     int HP = 200;
     int currentHP = HP;
 
-    float baseX = 0, baseY = 0, baseZ = 0;
-    float x = 0, y = 0, z = 0;
+    float baseX = 0.0f, baseY = 0.0f, baseZ = 0.0f;
+    float x = 0.0f, y = 0.0f, z = 0.0f;
     float oldX = x, oldY = y, oldZ = z;
 
     float bodyYaw = -90.0f, turretYaw = -90.0f, gunPitch = 0.0f;  

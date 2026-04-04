@@ -111,9 +111,10 @@ void ProjectileSystem::update(float dt, Sound& sound, std::unordered_map<int, En
 
             if (player.currentHP <= 0) {
                 player.currentHP = player.HP;
-                player.x = player.baseX; 
-                player.y = player.baseY;
-                player.z = player.baseZ;
+
+                player.x = player.spawns[player.selectedSpawn].x; 
+                player.y = player.spawns[player.selectedSpawn].y;
+                player.z = player.spawns[player.selectedSpawn].z;
             }
 
             break;

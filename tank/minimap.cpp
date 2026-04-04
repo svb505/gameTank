@@ -10,6 +10,7 @@
 #include "shells.h"
 #include "enemyes.h"
 #include "minimap.h"
+#include "renders.h"
 
 void MiniMap::draw(int ECRANW, int ECRANH, Tank& playerTank, ProjectileSystem& projectileSystem,
     std::vector<ExplosionEffect*>& explosions, std::vector<SmokeEffect*>& smokes,Camera& cam, std::string weather,
@@ -46,6 +47,8 @@ void MiniMap::draw(int ECRANW, int ECRANH, Tank& playerTank, ProjectileSystem& p
 
     drawGrid(cam.cameraX, cam.cameraZ);
     drawGridText(cam.cameraX, cam.cameraZ);
+
+    for (auto& s : playerTank.spawns) DrawSpawnMarker2D(s.second, 5.0f, 1.0f, 0.5f);
 
     Render(smokes,false);
 

@@ -54,10 +54,12 @@ Weather weat;
 SmokeGranade granades;
 
 bool firstMouse = true;
-double lastX = 800.0 / 2, lastY = 600.0 / 2;
-float sensitivity = 0.2f;
 bool cursorVisibility = false;
 bool fpsLimit = false;
+
+double lastX = 800.0 / 2, lastY = 600.0 / 2;
+float sensitivity = 0.1f;
+
 std::string weather = "Clean";
 
 void mouse_callback(GLFWwindow* window, double xpos, double ypos) {

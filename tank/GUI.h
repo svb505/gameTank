@@ -8,19 +8,23 @@
 class GUI {
 private:
 	std::vector<std::string> weathers = { "Clean", "Rainly","Snowly"};
-	std::vector<const char*> cstrs;
-	int currentIndex = 0;
+	std::vector<std::string> spawns = { "1", "2","3" };
+	std::vector<const char*> cstrsW;
+	std::vector<const char*> cstrsS;
+	int idxW = 0;
+	int idxS = 0;
 	std::string selectedShell = "";
 	std::string controlString = "\nLeft ctrl - Zoom\nLeft alt - Show/Hide cursor\nSPACE - Shot\nENTER - Machine gun\n"
 		"W - Move forward\nA - Move left\nS - Move right\nD - Move back\nShift - Aim mode\n1/2/3 - Change shell\n(APFSDS,HE,SMOKE)\n"
-		"ctrl + ^ - Increase minimap\nctrl + v - Decrease minimap";
+		"ctrl + ^ - Increase minimap\nctrl + v - Decrease minimap\nG - Smoke Granade";
 	float artX = 0.0f;
 	float artZ = 0.0f;
 public:
 	GUI() {
-		for (auto& s : weathers) cstrs.push_back(s.c_str());
+		for (auto& s : weathers) cstrsW.push_back(s.c_str());
+		for (auto& s : spawns) cstrsS.push_back(s.c_str());
 	}
-	void render(float& fps,Tank& tank,Artillery& art,Sound& sound, std::string& weather, bool& fpslimit) {
+	void render(float& fps,Tank& tank,Artillery& art,Sound& sound, std::string& weather,bool& fpslimit) {
 		std::string buf = std::format("{} / {}", tank.currentHP, tank.HP);
 		if (tank.selectedShell == shellType::APFSDS) selectedShell = "APFSDS";
 		else if (tank.selectedShell == shellType::SMOKE) selectedShell = "SMOKE";
@@ -45,7 +49,9 @@ public:
 		ImGui::Dummy(ImVec2(0.0f, 10.0f));
 		ImGui::Text("My HP: %s",buf.c_str());
 		ImGui::Dummy(ImVec2(0.0f, 10.0f));
-		if (ImGui::Combo("Select weather", &currentIndex, cstrs.data(), cstrs.size())) weather = weathers[currentIndex];
+		if (ImGui::Combo("Select weather", &idxW, cstrsW.data(), cstrsW.size())) weather = weathers[idxW];
+		ImGui::Dummy(ImVec2(0.0f, 10.0f));
+		if (ImGui::Combo("Select spawn", &idxS, cstrsS.data(), cstrsS.size())) tank.selectedSpawn = std::stoi(spawns[idxS]);
 		ImGui::Dummy(ImVec2(0.0f, 10.0f));
 		ImGui::Text("Speed: %.1f", tank.moveSpeed);
 		ImGui::Text("Total shells: %d", tank.totalShells);

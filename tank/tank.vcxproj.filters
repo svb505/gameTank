@@ -72,6 +72,9 @@
     <ClCompile Include="smokeGranade.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="renders.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="tank.h">
@@ -138,6 +141,9 @@
       <Filter>Исходные файлы</Filter>
     </ClInclude>
     <ClInclude Include="smokeGranade.h">
+      <Filter>Исходные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="renders.h">
       <Filter>Исходные файлы</Filter>
     </ClInclude>
   </ItemGroup>
