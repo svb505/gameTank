@@ -42,5 +42,31 @@ namespace svbmath{
 	float randFloat(float min, float max) {
 		return min + (max - min) * (float(rand()) / float(RAND_MAX));
 	}
+	Vec3 Cross(const Vec3& a, const Vec3& b) {
+		return { a.y * b.z - a.z * b.y, a.z * b.x - a.x * b.z, a.x * b.y - a.y * b.x };
+	}
+	float Length(const Vec3& v) { return sqrtf(v.x * v.x + v.y * v.y + v.z * v.z); }
+	Vec3 SteerTowards(const Vec3& currentDir, const Vec3& targetDir, float maxAngle){
+		Vec3 cur = Normalize(currentDir);
+		Vec3 tgt = Normalize(targetDir);
+
+		float cosTheta = Dot(cur, tgt);
+		if (cosTheta > 0.9999f) return cur; 
+
+		Vec3 axis = Cross(cur, tgt);
+		float axisLen = Length(axis);
+		if (axisLen < 1e-6f) return cur;    
+
+		axis = axis / axisLen;
+
+		float angle = acosf(cosTheta);
+		float angleStep = angle < maxAngle ? angle : maxAngle;
+
+		Vec3 cross = Cross(axis, cur);
+		float dot = Dot(axis, cur);
+		Vec3 newDir = cur * cosf(angleStep) + cross * sinf(angleStep) + axis * dot * (1 - cosf(angleStep));
+
+		return Normalize(newDir);
+	}
 }
 

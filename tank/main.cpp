@@ -119,6 +119,11 @@ void processTankInput(GLFWwindow* window, float dt,ProjectileSystem& projectileS
         tank.finishReload = tank.reloadTime;
     }
     if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS) {
+        tank.selectedShell = shellType::ATGM;
+        tank.shellSpeed = 10;
+        tank.finishReload = tank.reloadTime;
+    }
+    if (glfwGetKey(window, GLFW_KEY_4) == GLFW_PRESS) {
         tank.selectedShell = shellType::SMOKE;
         tank.shellSpeed = 100;
         tank.finishReload = tank.reloadTime;

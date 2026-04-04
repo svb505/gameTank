@@ -15,7 +15,7 @@ private:
 	int idxS = 0;
 	std::string selectedShell = "";
 	std::string controlString = "\nLeft ctrl - Zoom\nLeft alt - Show/Hide cursor\nSPACE - Shot\nENTER - Machine gun\n"
-		"W - Move forward\nA - Move left\nS - Move right\nD - Move back\nShift - Aim mode\n1/2/3 - Change shell\n(APFSDS,HE,SMOKE)\n"
+		"W - Move forward\nA - Move left\nS - Move right\nD - Move back\nShift - Aim mode\n1/2/3/4 - Change shell\n(APFSDS,HE,ATGM,SMOKE)\n"
 		"ctrl + ^ - Increase minimap\nctrl + v - Decrease minimap\nG - Smoke Granade";
 	float artX = 0.0f;
 	float artZ = 0.0f;
@@ -28,6 +28,7 @@ public:
 		std::string buf = std::format("{} / {}", tank.currentHP, tank.HP);
 		if (tank.selectedShell == shellType::APFSDS) selectedShell = "APFSDS";
 		else if (tank.selectedShell == shellType::SMOKE) selectedShell = "SMOKE";
+		else if (tank.selectedShell == shellType::ATGM) selectedShell = "ATGM";
 		else selectedShell = "HE";
 
 		ImGui::Begin("Settings & Info");

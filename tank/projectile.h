@@ -1,5 +1,8 @@
 #pragma once
 #include <cmath>
+#include "svbmath.h"
+
+class Tank;
 
 enum class ProjectileType {
     Shell,
@@ -9,12 +12,15 @@ enum class shellType {
     APFSDS,
     HE,
     SMOKE,
+    ATGM,
     BULLET
 };
 
 struct Projectile {
     ProjectileType type;
     shellType selectedShellType;
+
+    svbmath::Vec3 dir;
 
     float x, y, z;
     float vx, vy, vz;
@@ -32,9 +38,10 @@ struct Projectile {
     bool isEnemy = false;
 
     float redution_coef = 0.99f;
+    float turnSpeed;
 
     Projectile(shellType shell) : selectedShellType(shell) {
         damage = (selectedShellType == shellType::APFSDS) ? 100 : 40;
     }
-    void update(float dt);
+    void update(float dt, Tank& tank);
 };

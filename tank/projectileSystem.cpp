@@ -62,10 +62,20 @@ void ProjectileSystem::spawnShell(float x, float y, float z, float yawDeg, float
 
     float yaw = yawDeg * 3.1415926f / 180.0f;
     float pitch = pitchDeg * 3.1415926f / 180.0f;
+    if (_shellType == shellType::ATGM) {
+        svbmath::Vec3 dir{ sin(yaw) * cos(pitch),sin(pitch), cos(yaw) * cos(pitch)};
+        float len = sqrtf(dir.x * dir.x + dir.y * dir.y + dir.z * dir.z);
+        dir.x /= len; dir.y /= len; dir.z /= len;
 
-    p.vx = sin(yaw) * cos(pitch) * p.speed;
-    p.vy = -sin(pitch) * p.speed;
-    p.vz = cos(yaw) * cos(pitch) * p.speed;
+        p.dir = dir;
+        p.turnSpeed = 5.0f;
+    }
+    else {
+        p.vx = sin(yaw) * cos(pitch) * p.speed;
+        p.vy = -sin(pitch) * p.speed;
+        p.vz = cos(yaw) * cos(pitch) * p.speed;
+    }
+    
 
     p.isEnemy = isEnemy;
 
@@ -95,7 +105,7 @@ void ProjectileSystem::update(float dt, Sound& sound, std::unordered_map<int, En
     for (auto& p : projectiles) {
         if (!p.alive) continue;
 
-        p.update(dt);
+        p.update(dt, player);
 
         if (checkCollision(player.GetHullMax(), p.x, p.y, p.z) && p.isEnemy) {
             player.currentHP -= p.damage;
