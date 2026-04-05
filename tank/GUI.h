@@ -4,6 +4,7 @@
 #include "artillery.h"
 #include "sounds.h"
 #include "weather.h"
+#include "smokeGranade.h"
 
 class GUI {
 private:
@@ -24,7 +25,8 @@ public:
 		for (auto& s : weathers) cstrsW.push_back(s.c_str());
 		for (auto& s : spawns) cstrsS.push_back(s.c_str());
 	}
-	void render(float& fps,Tank& tank,Artillery& art,Sound& sound, std::string& weather,bool& badges,bool& fpslimit) {
+	void render(float& fps,Tank& tank,Artillery& art,Sound& sound, std::string& weather, SmokeGranade& g,bool& badges,
+		bool& fpslimit) {
 		std::string buf = std::format("{} / {}", tank.currentHP, tank.HP);
 		if (tank.selectedShell == shellType::APFSDS) selectedShell = "APFSDS";
 		else if (tank.selectedShell == shellType::SMOKE) selectedShell = "SMOKE";
@@ -51,6 +53,8 @@ public:
 		ImGui::Checkbox("FPS Limit", &fpslimit);
 		ImGui::Dummy(ImVec2(0.0f, 10.0f));
 		ImGui::Text("My HP: %s",buf.c_str());
+		ImGui::Dummy(ImVec2(0.0f, 10.0f));
+		ImGui::Text("Smoke granades %d / %d", g.granades.size(),g.maxCount);
 		ImGui::Dummy(ImVec2(0.0f, 10.0f));
 		if (ImGui::Combo("Select weather", &idxW, cstrsW.data(), cstrsW.size())) weather = weathers[idxW];
 		ImGui::Dummy(ImVec2(0.0f, 10.0f));

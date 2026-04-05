@@ -15,11 +15,9 @@ struct Position {
 	bool strike = false;
 };
 
-class SmokeGranade {
-private:
-	int maxCount = 6;
-	
+class SmokeGranade {	
 public:
+	int maxCount = 6;
 	int currentGranade = 0;
 	std::vector<Position> granades;
 

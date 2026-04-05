@@ -57,8 +57,8 @@ public:
 
     std::map<int, svbmath::Vec3> spawns = {
      {1, {0.0f, 0.0f, 0.0f}},
-     {2, {-10.0f, 0.0f, 0.0f}},
-     {3, {10.0f, 0.0f, 0.0f}}
+     {2, {-30.0f, 0.0f, 0.0f}},
+     {3, {30.0f, 0.0f, 0.0f}}
     };
 
     const float SPEED_LIMIT_FORWARD = 15.0f;
