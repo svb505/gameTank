@@ -24,7 +24,7 @@ public:
 		for (auto& s : weathers) cstrsW.push_back(s.c_str());
 		for (auto& s : spawns) cstrsS.push_back(s.c_str());
 	}
-	void render(float& fps,Tank& tank,Artillery& art,Sound& sound, std::string& weather,bool& fpslimit) {
+	void render(float& fps,Tank& tank,Artillery& art,Sound& sound, std::string& weather,bool& badges,bool& fpslimit) {
 		std::string buf = std::format("{} / {}", tank.currentHP, tank.HP);
 		if (tank.selectedShell == shellType::APFSDS) selectedShell = "APFSDS";
 		else if (tank.selectedShell == shellType::SMOKE) selectedShell = "SMOKE";
@@ -44,6 +44,8 @@ public:
 		}
 
 		ImGui::Text("Strike during: 5s");
+		ImGui::Dummy(ImVec2(0.0f, 10.0f));
+		ImGui::Checkbox("Badges in minimap",&badges);
 		ImGui::Dummy(ImVec2(0.0f, 10.0f));
 		ImGui::Text("FPS: %.0f", fps);
 		ImGui::Checkbox("FPS Limit", &fpslimit);

@@ -18,7 +18,7 @@ public:
     float getHeight() { return height; }
     void draw(int ECRANW, int ECRANH, Tank& playerTank, ProjectileSystem& projectileSystem,
         std::vector<ExplosionEffect*>& explosions, std::vector<SmokeEffect*>& smokes, Camera& cam, std::string weather,
-        float dt);
+        bool badges,float dt);
 };
 
     

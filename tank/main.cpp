@@ -56,6 +56,7 @@ SmokeGranade granades;
 bool firstMouse = true;
 bool cursorVisibility = false;
 bool fpsLimit = false;
+bool badges = false;
 
 double lastX = 800.0 / 2, lastY = 600.0 / 2;
 float sensitivity = 0.1f;
@@ -322,7 +323,7 @@ int main(){
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        gui.render(fps, tank,art,sound,weather,fpsLimit);
+        gui.render(fps, tank,art,sound,weather,badges,fpsLimit);
 
         ImGui::Render();
 
@@ -395,7 +396,7 @@ int main(){
 
         hud.Draw3DAim(tank);
 
-        mnMap.draw(ECRANW, ECRANH, tank, projectileSystem, explosions, smokes, cam, weather,deltaTime);
+        mnMap.draw(ECRANW, ECRANH, tank, projectileSystem, explosions, smokes, cam, weather,badges,deltaTime);
 
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
         glfwSwapBuffers(window);

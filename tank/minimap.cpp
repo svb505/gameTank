@@ -10,15 +10,16 @@
 #include "shells.h"
 #include "enemyes.h"
 #include "minimap.h"
-#include "renders.h"
+#include "badges.h"
 
 void MiniMap::draw(int ECRANW, int ECRANH, Tank& playerTank, ProjectileSystem& projectileSystem,
     std::vector<ExplosionEffect*>& explosions, std::vector<SmokeEffect*>& smokes,Camera& cam, std::string weather,
-    float dt) {
+    bool badges, float dt) {
 
     float size = height * 0.6f;
     int miniW = ECRANW / 4;
     int miniH = ECRANH / 4;
+    float scale = miniW / (2.0f * size);
 
     glViewport(ECRANW - miniW, 30, miniW, miniH);
 
@@ -34,7 +35,7 @@ void MiniMap::draw(int ECRANW, int ECRANH, Tank& playerTank, ProjectileSystem& p
     glClear(GL_DEPTH_BUFFER_BIT);
 
     drawGround(playerTank.x, playerTank.z,weather);
-    playerTank.Draw();
+    
 
     for (auto& p : projectileSystem.projectiles) {
         if (!p.alive) continue;
@@ -50,7 +51,14 @@ void MiniMap::draw(int ECRANW, int ECRANH, Tank& playerTank, ProjectileSystem& p
 
     for (auto& s : playerTank.spawns) DrawSpawnMarker2D(s.second, 5.0f, 1.0f, 0.5f);
 
-    Render(smokes,false);
+    if (!badges) {
+        playerTank.Draw();
+        Render(smokes, false);
+    }
+    else {
+        drawPlayerIcon(miniW * 0.5f, miniH * 0.5f, 1.0f, cam.cameraYaw);
+        RenderBadges(miniW,miniH,scale,playerTank,cam);
+    }
 
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
