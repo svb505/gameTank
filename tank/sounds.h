@@ -21,6 +21,7 @@ public:
     ALuint collisionSource = 0, collisionBuffer = 0;
     ALuint rainSource = 0, rainBuffer = 0;
     ALuint smokeSource = 0, smokeBuffer = 0;
+    ALuint killSource = 0, killBuffer = 0;
 
     void setSourcePosition(ALuint source, float x, float y, float z) {
         ALfloat pos[] = { x, y, z };
@@ -85,6 +86,7 @@ public:
         collisionBuffer = LoadWav("sounds/collision.wav");
         rainBuffer = LoadWav("sounds/rain.wav");
         smokeBuffer = LoadWav("sounds/smoke.wav");
+        killBuffer = LoadWav("sounds/kill.wav");
     }
     void createSources() {
         alDistanceModel(AL_INVERSE_DISTANCE_CLAMPED);
@@ -102,6 +104,10 @@ public:
         alGenSources(1, &rainSource);
         alSourcei(rainSource, AL_BUFFER, rainBuffer);
         alSourcef(rainSource, AL_GAIN, 1.0f);
+
+        alGenSources(1, &killSource);
+        alSourcei(killSource, AL_BUFFER, killBuffer);
+        alSourcef(killSource, AL_GAIN, 1.0f);
 
         alGenSources(1, &collisionSource);
         alSourcei(collisionSource, AL_BUFFER, collisionBuffer);

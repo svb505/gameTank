@@ -139,7 +139,11 @@ void ProjectileSystem::update(float dt, Sound& sound, std::unordered_map<int, En
                 healths[id].current -= p.damage;
 
                 if (healths[id].current > 0.0f) g_destroyText = "Target hit";
-                else g_destroyText = "Target Destoyed";
+                else { 
+                    g_destroyText = "Target Destoyed";
+                    sound.setSourcePosition(sound.killSource,player.x,player.y,player.z);
+                    alSourcePlay(sound.killSource);
+                }
                 if (healths[id].current <= healths[id].max / 2) {
                     if (apartments.contains(id)) apartments[id].LOD = 2;
                 }
