@@ -15,13 +15,14 @@
 #include "projectileSystem.h"
 #include "tank.h"
 #include "Logger.h"
+#include "text.h"
 
 float ProjectileSystem::calculatePenetration(float vel) {
     const float k = 0.0005f;
     return k * vel * vel;
 }
 void ProjectileSystem::onHit(Projectile& p, Entity& en, Health& health, std::vector<ExplosionEffect*>& explosions,
-    std::vector<SmokeEffect*>& smokes, Sound& sound, bool hitGround, bool smokeShell) {
+    std::vector<SmokeEffect*>& smokes, Sound& sound,float dt, bool hitGround, bool smokeShell) {
 
     sound.setSourcePosition(sound.explosionSource, p.x, p.y, p.z);
     alSourceStop(sound.explosionSource);
@@ -33,7 +34,11 @@ void ProjectileSystem::onHit(Projectile& p, Entity& en, Health& health, std::vec
 
     if (!hitGround) {
         health.current -= p.damage;
-        if (health.current <= 0) health.destroyed = true;
+        if (health.current <= 0) {
+            health.destroyed = true;
+            showDestroyText(1600,100,"Target Destoyed",dt);
+        }
+        else showDestroyText(1600, 100, "Target Hit", dt);
     }
 
     if (p.type == ProjectileType::Shell) {
@@ -135,15 +140,15 @@ void ProjectileSystem::update(float dt, Sound& sound, std::unordered_map<int, En
             if (healths[id].destroyed && renders[id].type != RenderType::Apartment) continue;
             if (!bounds.contains(id)) continue;
 
-
-
             if (checkCollision(bounds[id], p.x, p.y, p.z) && !p.isEnemy && calculatePenetration(p.speed)) {
                 healths[id].current -= p.damage;
                 if (healths[id].current <= healths[id].max / 2) {
                     if (apartments.contains(id)) apartments[id].LOD = 2;
                 }
 
-                if (apartments.contains(id)) smokes.push_back(new SmokeEffect(p.x, p.y, p.z, 300, 1.5f, { 0.5f,0.5f,0.5f },2.0f));
+                if (apartments.contains(id) && p.type != ProjectileType::Bullet) {
+                    smokes.push_back(new SmokeEffect(p.x, p.y, p.z, 300, 1.5f, { 0.5f,0.5f,0.5f }, 2.0f));
+                }
 
                 sound.setSourcePosition(sound.explosionSource, p.x, p.y, p.z);
                 alSourceStop(sound.explosionSource);
@@ -156,7 +161,7 @@ void ProjectileSystem::update(float dt, Sound& sound, std::unordered_map<int, En
                 break;
             }
             if (p.alive && p.y <= 0.0f && p.type != ProjectileType::Bullet && !p.isEnemy) {
-                onHit(p, en, healths[id], explosions, smokes, sound, false, p.selectedShellType == shellType::SMOKE);
+                onHit(p, en, healths[id], explosions, smokes, sound,dt, false, p.selectedShellType == shellType::SMOKE);
 
                 if (p.selectedShellType == shellType::SMOKE) smokes.push_back(new SmokeEffect(p.x, p.y, p.z));
 

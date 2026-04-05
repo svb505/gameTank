@@ -617,7 +617,7 @@ void RenderSystem(std::vector<SmokeEffect*>& smokes) {
 
             if (ap.destroyed) {
                 drawDestroyedAppartament(ap, totalH);
-                drawSootEffect(0.0f, 0.1f, 0.0f,40.0f,5.0f);
+                drawSootEffect(0.0f, 0.1f, 0.0f, 40.0f, 5.0f);
                 if (!ap.smokeEnabled) { smokes.push_back(new SmokeEffect(x, y, z, 2000, 3.0f)); ap.smokeEnabled = true; }
             }
             else drawAppartament(ap, totalH);
