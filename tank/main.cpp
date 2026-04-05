@@ -259,6 +259,9 @@ int main(){
     std::vector<SmokeEffect*> smokes;
     ProjectileSystem projectileSystem;
     
+    TrackBuffer leftTrack;
+    TrackBuffer rightTrack;
+
     granades.spawn(tank);
 
     double lastTime = glfwGetTime();
@@ -355,7 +358,14 @@ int main(){
 
         if (repl.isInCircle(tank.x, tank.z)) repl.startReplish(deltaTime,tank,ECRANH,ECRANW);
 
+        svbmath::Vec3 forward = { tank.dirX, 0.0f, tank.dirZ };
+        svbmath::Vec3 up = { 0, 1, 0 };
+        svbmath::Vec3 tankRight = svbmath::Normalize(svbmath::Cross(forward, up));
+
         tank.updateDirrections(tank.bodyRad,tank.bodyYaw);
+        tank.Update(deltaTime,{tank.x,tank.y,tank.z},tankRight,leftTrack,rightTrack);
+        tank.DrawTrack(leftTrack, 0.3f);
+        tank.DrawTrack(rightTrack, 0.3f);
 
         art.updateShells(deltaTime);
         art.drawAllShells();

@@ -8,6 +8,23 @@
 #include "bounds.h"
 #include "svbmath.h"
 
+constexpr int MAX_TRACK_POINTS = 128;
+
+struct TrackPoint {
+    svbmath::Vec3 pos;
+    float life; // 1.0 -> 0.0
+};
+
+struct TrackBuffer {
+    TrackPoint points[MAX_TRACK_POINTS];
+    int head = 0;
+    int count = 0;
+    svbmath::Vec3 lastPos;  
+    bool hasLast = false;    
+
+    void push(const svbmath::Vec3& p);
+    TrackPoint& get(int i);
+};
 struct TankParams {
     // Hull
     float hullW = 3.5f;
@@ -72,6 +89,7 @@ public:
 
     float bodyRad = (bodyYaw + 90.0f) * 3.1415926f / 180.0f, dirX = -sin(bodyRad), dirZ = -cos(bodyRad);
 
+    void UpdateTrack(TrackBuffer& track, const svbmath::Vec3& tankPos, float dt);
     void Draw();
     void updateDirrections(float bR, float bY);
     void updatePosition(float x, float z, float dt);
@@ -79,6 +97,8 @@ public:
     svbmath::Vec3 RotateY(const svbmath::Vec3& v, float angleDeg);
     svbmath::Vec3 LocalToWorldTurret(const svbmath::Vec3& local);
     Bounds GetHullMax() const;
+    void DrawTrack(const TrackBuffer& track, float width);
+    void Update(float dt, svbmath::Vec3 tankPos, svbmath::Vec3 tankRight, TrackBuffer& leftTrack, TrackBuffer& rightTrack);
 private:
     void DrawBox(float w, float h, float d);
     void DrawCylinder(float r, float h, int seg = 16);

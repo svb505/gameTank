@@ -11,6 +11,32 @@
 #include "svbmath.h"
 #include "tank.h"
 
+void Tank::UpdateTrack(TrackBuffer& track, const svbmath::Vec3& pos, float dt) {
+    float minDist = 0.3f;
+
+    if (!track.hasLast) {
+        track.lastPos = pos;
+        track.hasLast = true;
+    }
+
+    if (svbmath::Length(pos - track.lastPos) > minDist) {
+        track.push(pos);
+        track.lastPos = pos;
+    }
+
+    for (int i = 0; i < track.count; i++) {
+        track.get(i).life -= dt * 0.2f;
+    }
+}
+TrackPoint& TrackBuffer::get(int i) {
+    int idx = (head - count + i + MAX_TRACK_POINTS) % MAX_TRACK_POINTS;
+    return points[idx];
+}
+void TrackBuffer::push(const svbmath::Vec3& p) {
+    points[head] = { p, 1.0f };
+    head = (head + 1) % MAX_TRACK_POINTS;
+    if (count < MAX_TRACK_POINTS) count++;
+}
 svbmath::Vec3 Tank::RotateY(const svbmath::Vec3& v, float angleDeg) {
     float a = angleDeg * PI / 180.0f;
     float c = cos(a);
@@ -201,4 +227,52 @@ Bounds Tank::GetHullMax() const {
 
 
     return result;
+}
+void Tank::Update(float dt, svbmath::Vec3 tankPos, svbmath::Vec3 tankRight, TrackBuffer& leftTrack, TrackBuffer& rightTrack) {
+    float offset = 1.5f;
+    float TRACK_Y_OFFSET = 0.02f;
+
+    svbmath::Vec3 leftPos = tankPos - tankRight * offset;
+    svbmath::Vec3 rightPos = tankPos + tankRight * offset;
+
+    leftPos.y += TRACK_Y_OFFSET;
+    rightPos.y += TRACK_Y_OFFSET;
+
+    UpdateTrack(leftTrack, leftPos, dt);
+    UpdateTrack(rightTrack, rightPos, dt);
+}
+void Tank::DrawTrack(const TrackBuffer& track, float width) {
+    if (track.count < 2) return;
+
+    svbmath::Vec3 up = { 0, 1, 0 };
+
+    glDisable(GL_LIGHTING);
+    glBegin(GL_QUADS);
+
+    for (int i = 0; i < track.count - 1; i++) {
+        const TrackPoint& p1 = track.points[
+            (track.head - track.count + i + MAX_TRACK_POINTS) % MAX_TRACK_POINTS
+        ];
+        const TrackPoint& p2 = track.points[
+            (track.head - track.count + i + 1 + MAX_TRACK_POINTS) % MAX_TRACK_POINTS
+        ];
+
+        if (p1.life <= 0.0f || p2.life <= 0.0f) continue;
+
+        svbmath::Vec3 dir = svbmath::Normalize(p2.pos - p1.pos);
+        svbmath::Vec3 right = svbmath::Cross(dir, up) * width;
+
+        float alpha1 = p1.life;
+        float alpha2 = p2.life;
+
+        glColor4f(0.2f, 0.2f, 0.2f, alpha1);
+        glVertex3f(p1.pos.x - right.x, p1.pos.y, p1.pos.z - right.z);
+        glVertex3f(p1.pos.x + right.x, p1.pos.y, p1.pos.z + right.z);
+
+        glColor4f(0.2f, 0.2f, 0.2f, alpha2);
+        glVertex3f(p2.pos.x + right.x, p2.pos.y, p2.pos.z + right.z);
+        glVertex3f(p2.pos.x - right.x, p2.pos.y, p2.pos.z - right.z);
+    }
+
+    glEnd();
 }
