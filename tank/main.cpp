@@ -357,6 +357,8 @@ int main(){
         weat.renderSnowPiles();
         weat.draw();
 
+        showDestroyText(deltaTime);
+
         if (repl.isInCircle(tank.x, tank.z)) repl.startReplish(deltaTime,tank,ECRANH,ECRANW);
 
         svbmath::Vec3 forward = { tank.dirX, 0.0f, tank.dirZ };

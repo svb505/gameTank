@@ -1,10 +1,12 @@
 #include <windows.h>
 #include <GL/gl.h>
 #include "text.h"
+#include <string>
 
 GLuint fontBase = 0;
 float timerText = 3.0f;
 bool showText = false;
+std::string g_destroyText = "";
 
 void BuildFont(){
     HFONT font;
@@ -93,14 +95,15 @@ void RenderTextWorld(float x, float y, float z, float r, float g, float b, const
 
     glPopMatrix();
 }
-void showDestroyText(int WW,int WH, const char* text,float dt) {
+void showDestroyText(float dt) {
     if (timerText > 0.0f) {
-        RenderTextHUD(WW / 2 - 100, WH / 2 + 100, 1, 1, 1, text, WW, WH);
-        timerText -= dt;
-    }
-    else {
-        showText = false;
-        timerText = 3.0f;
+        RenderTextHUD(1600 / 2 - 100, 1500 / 2 + 100, 1, 1, 1, g_destroyText.c_str(), 1600, 1000);
+        timerText -= dt; 
+    } 
+    else { 
+        g_destroyText = "";
+        showText = false; 
+        timerText = 3.0f; 
     }
 }
 

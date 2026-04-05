@@ -22,7 +22,7 @@ float ProjectileSystem::calculatePenetration(float vel) {
     return k * vel * vel;
 }
 void ProjectileSystem::onHit(Projectile& p, Entity& en, Health& health, std::vector<ExplosionEffect*>& explosions,
-    std::vector<SmokeEffect*>& smokes, Sound& sound,float dt, bool hitGround, bool smokeShell) {
+    std::vector<SmokeEffect*>& smokes, Sound& sound,bool hitGround, bool smokeShell) {
 
     sound.setSourcePosition(sound.explosionSource, p.x, p.y, p.z);
     alSourceStop(sound.explosionSource);
@@ -34,11 +34,7 @@ void ProjectileSystem::onHit(Projectile& p, Entity& en, Health& health, std::vec
 
     if (!hitGround) {
         health.current -= p.damage;
-        if (health.current <= 0) {
-            health.destroyed = true;
-            showDestroyText(1600,100,"Target Destoyed",dt);
-        }
-        else showDestroyText(1600, 100, "Target Hit", dt);
+        if (health.current <= 0) health.destroyed = true;
     }
 
     if (p.type == ProjectileType::Shell) {
@@ -81,7 +77,6 @@ void ProjectileSystem::spawnShell(float x, float y, float z, float yawDeg, float
         p.vz = cos(yaw) * cos(pitch) * p.speed;
     }
     
-
     p.isEnemy = isEnemy;
 
     LOG_INFO("Player shooted");
@@ -142,6 +137,9 @@ void ProjectileSystem::update(float dt, Sound& sound, std::unordered_map<int, En
 
             if (checkCollision(bounds[id], p.x, p.y, p.z) && !p.isEnemy && calculatePenetration(p.speed)) {
                 healths[id].current -= p.damage;
+
+                if (healths[id].current > 0.0f) g_destroyText = "Target hit";
+                else g_destroyText = "Target Destoyed";
                 if (healths[id].current <= healths[id].max / 2) {
                     if (apartments.contains(id)) apartments[id].LOD = 2;
                 }
@@ -161,7 +159,7 @@ void ProjectileSystem::update(float dt, Sound& sound, std::unordered_map<int, En
                 break;
             }
             if (p.alive && p.y <= 0.0f && p.type != ProjectileType::Bullet && !p.isEnemy) {
-                onHit(p, en, healths[id], explosions, smokes, sound,dt, false, p.selectedShellType == shellType::SMOKE);
+                onHit(p, en, healths[id], explosions, smokes, sound, p.y <= 0.0f, p.selectedShellType == shellType::SMOKE);
 
                 if (p.selectedShellType == shellType::SMOKE) smokes.push_back(new SmokeEffect(p.x, p.y, p.z));
 

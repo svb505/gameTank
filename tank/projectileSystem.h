@@ -31,6 +31,6 @@ public:
         std::vector<SmokeEffect*>& smokes);
 private:
     void onHit(Projectile& p, Entity& en, Health& health, std::vector<ExplosionEffect*>& explosions,
-        std::vector<SmokeEffect*>& smokes, Sound& sound, float dt,bool hitGround = false, bool smokeShell = false);
+        std::vector<SmokeEffect*>& smokes, Sound& sound, bool hitGround = false, bool smokeShell = false);
     float calculatePenetration(float vel);
 };
