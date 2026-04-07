@@ -20,6 +20,7 @@ private:
 		"ctrl + ^ - Increase minimap\nctrl + v - Decrease minimap\nG - Smoke Granade";
 	float artX = 0.0f;
 	float artZ = 0.0f;
+	bool artWindow = false;
 public:
 	GUI() {
 		for (auto& s : weathers) cstrsW.push_back(s.c_str());
@@ -35,15 +36,24 @@ public:
 
 		ImGui::Begin("Settings & Info");
 
-		ImGui::InputFloat("X for Artillery strike", &artX);
-		ImGui::InputFloat("Z for Artillery strike", &artZ);
+		if (ImGui::Button("Aimer artillery strike")) artWindow = true;
 
-		if (ImGui::Button("Start artillery strike")) {
-			sound.setSourcePosition(sound.artVolleySource, tank.x, tank.y,tank.z);
-			alSourceStop(sound.artVolleySource);
-			alSourcePlay(sound.artVolleySource);
-			art.spawnShells(artX, artZ);
+		if (artWindow) {
+			ImGui::Begin("Artillery");
+			ImGui::InputFloat("X for Artillery strike", &artX);
+			ImGui::InputFloat("Z for Artillery strike", &artZ);
+
+			if (ImGui::Button("Start artillery strike")) {
+				sound.setSourcePosition(sound.artVolleySource, tank.x, tank.y, tank.z);
+				alSourceStop(sound.artVolleySource);
+				alSourcePlay(sound.artVolleySource);
+				art.spawnShells(artX, artZ);
+			}
+			if (ImGui::Button("Close")) artWindow = false;
+			ImGui::End();
 		}
+
+		
 
 		ImGui::Text("Strike during: 5s");
 		ImGui::Dummy(ImVec2(0.0f, 10.0f));
