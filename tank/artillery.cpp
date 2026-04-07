@@ -8,6 +8,7 @@
 #include "projectileSystem.h"
 #include "projectile.h"
 #include "Logger.h"
+#include "shells.h"
 
 std::vector<float> Artillery::returnRandomError() {
     std::random_device rd;
@@ -25,25 +26,6 @@ float Artillery::returnSpeedError() {
     std::uniform_real_distribution<float> errSpeed(0.5f,1.0f);
 
     return errSpeed(gen);
-}
-void Artillery::drawShell() {
-    float s = 0.1f;
-
-    glColor3f(255.0f / 255.0f, 128.0f / 255.0f, 0.0f);
-    glBegin(GL_QUADS);
-    // front
-    glVertex3f(-s, -s, s); glVertex3f(s, -s, s); glVertex3f(s, s, s); glVertex3f(-s, s, s);
-    // back
-    glVertex3f(-s, -s, -s); glVertex3f(s, -s, -s); glVertex3f(s, s, -s); glVertex3f(-s, s, -s);
-    // left
-    glVertex3f(-s, -s, -s); glVertex3f(-s, -s, s); glVertex3f(-s, s, s); glVertex3f(-s, s, -s);
-    // right
-    glVertex3f(s, -s, -s); glVertex3f(s, -s, s); glVertex3f(s, s, s); glVertex3f(s, s, -s);
-    // top
-    glVertex3f(-s, s, -s); glVertex3f(-s, s, s); glVertex3f(s, s, s); glVertex3f(s, s, -s);
-    // bottom
-    glVertex3f(-s, -s, -s); glVertex3f(-s, -s, s); glVertex3f(s, -s, s); glVertex3f(s, -s, -s);
-    glEnd();
 }
 void Artillery::spawnShells(float x,float z) {
     LOG_INFO("Spawned artillery shell");
