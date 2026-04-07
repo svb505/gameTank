@@ -94,11 +94,14 @@ public:
         ImGui::Text("Control: %s", controlString.c_str());
 
         ImGui::End();
+
         if (devWindow) {
-            ImGui::Begin("Profiler", &devWindow);
+            ImGui::Begin("Dev. Window", &devWindow);
 
             ImGui::Text("%s\n%s", p.getMemoryUsage()[0].c_str(), p.getMemoryUsage()[1].c_str());
             ImGui::Text("Enemyes count: %d",enemyes.size());
+            ImGui::Text("Sound buffers: %d", sound.buffers.size());
+            ImGui::Text("Sound sources: %d", sound.sources.size());
 
             ImGui::End();
         }

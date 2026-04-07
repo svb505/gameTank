@@ -113,7 +113,7 @@ public:
         alSourcePlay(sources["Tank"]);
 
         alGenSources(1, &sources["Explosion"]);
-        alSourcei(sources["Explosion"], AL_BUFFER, buffers["Explosions"]);
+        alSourcei(sources["Explosion"], AL_BUFFER, buffers["Explosion"]);
         alSourcef(sources["Explosion"], AL_GAIN, 1.0f);
 
         alGenSources(1, &sources["Rain"]);
