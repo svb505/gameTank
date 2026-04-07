@@ -21,66 +21,108 @@ private:
 	float artX = 0.0f;
 	float artZ = 0.0f;
 	bool artWindow = false;
+	bool mlrsWindow = false;
 public:
 	GUI() {
 		for (auto& s : weathers) cstrsW.push_back(s.c_str());
 		for (auto& s : spawns) cstrsS.push_back(s.c_str());
 	}
-	void render(float& fps,Tank& tank,Artillery& art,Sound& sound, std::string& weather, SmokeGranade& g,bool& badges,
-		bool& fpslimit) {
-		std::string buf = std::format("{} / {}", tank.currentHP, tank.HP);
-		if (tank.selectedShell == shellType::APFSDS) selectedShell = "APFSDS";
-		else if (tank.selectedShell == shellType::SMOKE) selectedShell = "SMOKE";
-		else if (tank.selectedShell == shellType::ATGM) selectedShell = "ATGM";
-		else selectedShell = "HE";
+    void render(float& fps, Tank& tank, Artillery& art, Sound& sound,std::string& weather, SmokeGranade& g,bool& badges,
+        bool& fpslimit){
+        std::string buf = std::format("{} / {}", tank.currentHP, tank.HP);
 
-		ImGui::Begin("Settings & Info");
+        if (tank.selectedShell == shellType::APFSDS) selectedShell = "APFSDS";
+        else if (tank.selectedShell == shellType::SMOKE) selectedShell = "SMOKE";
+        else if (tank.selectedShell == shellType::ATGM) selectedShell = "ATGM";
+        else selectedShell = "HE";
 
-		if (ImGui::Button("Aimer artillery strike")) artWindow = true;
+        bool canUseMlrs = (tank.kills > 0 && tank.kills % 5 == 0);
 
-		if (artWindow) {
-			ImGui::Begin("Artillery");
-			ImGui::InputFloat("X for Artillery strike", &artX);
-			ImGui::InputFloat("Z for Artillery strike", &artZ);
+        ImGui::Begin("Settings & Info");
 
-			if (ImGui::Button("Start artillery strike")) {
-				sound.setSourcePosition(sound.artVolleySource, tank.x, tank.y, tank.z);
-				alSourceStop(sound.artVolleySource);
-				alSourcePlay(sound.artVolleySource);
-				art.spawnShells(artX, artZ);
-			}
-			if (ImGui::Button("Close")) artWindow = false;
-			ImGui::End();
-		}
+        if (ImGui::Button("Aimer artillery strike")) artWindow = true;
 
-		
+        ImGui::BeginDisabled(!canUseMlrs);
+        if (ImGui::Button("Aimer MLRS strike")) mlrsWindow = true;
+        ImGui::EndDisabled();
 
-		ImGui::Text("Strike during: 5s");
-		ImGui::Dummy(ImVec2(0.0f, 10.0f));
-		ImGui::Checkbox("Badges in minimap",&badges);
-		ImGui::Dummy(ImVec2(0.0f, 10.0f));
-		ImGui::Text("FPS: %.0f", fps);
-		ImGui::Checkbox("FPS Limit", &fpslimit);
-		ImGui::Dummy(ImVec2(0.0f, 10.0f));
-		ImGui::Text("My HP: %s",buf.c_str());
-		ImGui::Dummy(ImVec2(0.0f, 10.0f));
-		ImGui::Text("Smoke granades %d / %d", g.granades.size(),g.maxCount);
-		ImGui::Dummy(ImVec2(0.0f, 10.0f));
-		if (ImGui::Combo("Select weather", &idxW, cstrsW.data(), cstrsW.size())) weather = weathers[idxW];
-		ImGui::Dummy(ImVec2(0.0f, 10.0f));
-		if (ImGui::Combo("Select spawn", &idxS, cstrsS.data(), cstrsS.size())) tank.selectedSpawn = std::stoi(spawns[idxS]);
-		ImGui::Dummy(ImVec2(0.0f, 10.0f));
-		ImGui::Text("Speed: %.1f", tank.moveSpeed);
-		ImGui::Text("Total shells: %d", tank.totalShells);
-		ImGui::Text("Selected shell: %s", selectedShell);
-		ImGui::Text("Reload time: %.1f", tank.finishReload);
-		ImGui::Dummy(ImVec2(0.0f, 10.0f));
+        if (!canUseMlrs && ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled)){
+            ImGui::SetTooltip("You must have a multiple of 5 kills.");
+        }
 
-		ImGui::Text("Kills: %d", tank.kills);
-		ImGui::Dummy(ImVec2(0.0f, 10.0f));
+        ImGui::Separator();
 
-		ImGui::Text("Control: %s", controlString.c_str());
+        ImGui::Checkbox("Badges in minimap", &badges);
 
-		ImGui::End();
-	}
+        ImGui::Dummy(ImVec2(0.0f, 10.0f));
+
+        ImGui::Text("FPS: %.0f", fps);
+        ImGui::Checkbox("FPS Limit", &fpslimit);
+
+        ImGui::Text("My HP: %s", buf.c_str());
+
+        ImGui::Dummy(ImVec2(0.0f, 10.0f));
+        
+        ImGui::Text("Smoke grenades %d / %d", (int)g.granades.size(), g.maxCount);
+        
+        ImGui::Dummy(ImVec2(0.0f, 10.0f));
+        if (ImGui::Combo("Select weather", &idxW, cstrsW.data(), cstrsW.size())) weather = weathers[idxW];
+        
+        ImGui::Dummy(ImVec2(0.0f, 10.0f));
+        
+        if (ImGui::Combo("Select spawn", &idxS, cstrsS.data(), cstrsS.size())) tank.selectedSpawn = std::stoi(spawns[idxS]);
+
+        ImGui::Separator();
+
+        ImGui::Text("Speed: %.1f", tank.moveSpeed);
+        ImGui::Dummy(ImVec2(0.0f, 10.0f));
+        ImGui::Text("Total shells: %d", tank.totalShells);
+        ImGui::Text("Selected shell: %s", selectedShell);
+        ImGui::Text("Reload time: %.1f", tank.finishReload);
+        ImGui::Dummy(ImVec2(0.0f, 10.0f));
+        ImGui::Text("Kills: %d", tank.kills);
+        ImGui::Dummy(ImVec2(0.0f, 10.0f));
+        ImGui::Text("Control: %s", controlString.c_str());
+
+        ImGui::End();
+
+        if (artWindow){
+            ImGui::Begin("Artillery", &artWindow);
+
+            ImGui::InputFloat("X for Artillery strike", &artX);
+            ImGui::InputFloat("Z for Artillery strike", &artZ);
+
+            if (ImGui::Button("Start artillery strike")){
+                art.init(8, 25.0f);
+
+                sound.setSourcePosition(sound.artVolleySource, tank.x, tank.y, tank.z);
+                alSourceStop(sound.artVolleySource);
+                alSourcePlay(sound.artVolleySource);
+
+                art.spawnShells(artX, artZ);
+            }
+
+            ImGui::End();
+        }
+        if (mlrsWindow){
+            ImGui::Begin("MLRS", &mlrsWindow);
+
+            ImGui::InputFloat("X for MLRS strike", &artX);
+            ImGui::InputFloat("Z for MLRS strike", &artZ);
+
+            if (ImGui::Button("Start MLRS strike")){
+                art.init(25, 125.0f);
+
+                sound.setSourcePosition(sound.artVolleySource, tank.x, tank.y, tank.z);
+                alSourceStop(sound.artVolleySource);
+                alSourcePlay(sound.artVolleySource);
+
+                art.spawnShells(artX, artZ);
+            }
+
+            ImGui::Text("Strike duration: 5s");
+
+            ImGui::End();
+        }
+    }
 };

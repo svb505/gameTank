@@ -14,16 +14,19 @@ std::vector<float> Artillery::returnRandomError() {
     std::random_device rd;
     static std::mt19937 gen(rd());
 
-    std::uniform_real_distribution<float> errX(0.0f,15.0f);
-    std::uniform_real_distribution<float> errZ(0.0f,15.0f);
+    std::uniform_real_distribution<float> errX(0.0f,25.0f);
+    std::uniform_real_distribution<float> errZ(0.0f,25.0f);
 
     return {errX(gen),errZ(gen)};
+}
+void Artillery::init(int volley, float shellSpeed) {
+    this->volley = volley; this->shellSpeed = shellSpeed;
 }
 float Artillery::returnSpeedError() {
     std::random_device rd;
     static std::mt19937 gen(rd());
 
-    std::uniform_real_distribution<float> errSpeed(0.5f,1.0f);
+    std::uniform_real_distribution<float> errSpeed(0.3f,1.0f);
 
     return errSpeed(gen);
 }
@@ -32,6 +35,7 @@ void Artillery::spawnShells(float x,float z) {
 
     for (int i = 0; i < volley; i++) {
         auto error = returnRandomError();
+
         Projectile s(shellType::HE);
         s.x = x + error[0];
         s.y = shellHeight;
