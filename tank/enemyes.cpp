@@ -740,9 +740,9 @@ void Update(float dt, Tank& tank, ProjectileSystem& projectile,Sound& sound) {
                 projectile.spawnShell(enemyPos.x, enemyPos.y + 1.0f, enemyPos.z, bot.turretAngle * 180.0f / PI, bot.gunAngle,
                     shellType::APFSDS, 100.0f, true);
 
-                sound.setSourcePosition(sound.shotSource, enemyPos.x, enemyPos.y, enemyPos.z);
-                alSourceStop(sound.shotSource);
-                alSourcePlay(sound.shotSource);
+                sound.setSourcePosition(sound.sources["Shot"], enemyPos.x, enemyPos.y, enemyPos.z);
+                alSourceStop(sound.sources["Shot"]);
+                alSourcePlay(sound.sources["Shot"]);
 
                 LOG_INFO("Bot shooted");
 

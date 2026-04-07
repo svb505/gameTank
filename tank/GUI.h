@@ -6,6 +6,7 @@
 #include "weather.h"
 #include "smokeGranade.h"
 #include "profiler.h"
+#include "enemyes.h"
 
 class GUI {
 private:
@@ -35,7 +36,7 @@ public:
 		for (auto& s : spawns) cstrsS.push_back(s.c_str());
 	}
     void render(float& fps, Tank& tank, Artillery& art, Sound& sound,std::string& weather, SmokeGranade& g,bool& badges,
-        bool& fpslimit){
+        bool& fpslimit, std::unordered_map<int, Entity>& enemyes){
         std::string buf = std::format("{} / {}", tank.currentHP, tank.HP);
 
         if (tank.selectedShell == shellType::APFSDS) selectedShell = "APFSDS";
@@ -97,6 +98,7 @@ public:
             ImGui::Begin("Profiler", &devWindow);
 
             ImGui::Text("%s\n%s", p.getMemoryUsage()[0].c_str(), p.getMemoryUsage()[1].c_str());
+            ImGui::Text("Enemyes count: %d",enemyes.size());
 
             ImGui::End();
         }
@@ -109,9 +111,9 @@ public:
             if (ImGui::Button("Start artillery strike")){
                 art.init(8, 25.0f);
 
-                sound.setSourcePosition(sound.artVolleySource, tank.x, tank.y, tank.z);
-                alSourceStop(sound.artVolleySource);
-                alSourcePlay(sound.artVolleySource);
+                sound.setSourcePosition(sound.sources["ArtVolley"], tank.x, tank.y, tank.z);
+                alSourceStop(sound.sources["ArtVolley"]);
+                alSourcePlay(sound.sources["ArtVolley"]);
 
                 art.spawnShells(artX, artZ);
             }
@@ -127,9 +129,9 @@ public:
             if (ImGui::Button("Start MLRS strike")){
                 art.init(25, 125.0f);
 
-                sound.setSourcePosition(sound.artVolleySource, tank.x, tank.y, tank.z);
-                alSourceStop(sound.artVolleySource);
-                alSourcePlay(sound.artVolleySource);
+                sound.setSourcePosition(sound.sources["ArtVolley"], tank.x, tank.y, tank.z);
+                alSourceStop(sound.sources["ArtVolley"]);
+                alSourcePlay(sound.sources["ArtVolley"]);
 
                 art.spawnShells(artX, artZ);
             }

@@ -156,9 +156,9 @@ void processTankInput(GLFWwindow* window, float dt,ProjectileSystem& projectileS
 
         projectileSystem.spawnBullet(tank.x, tank.y + 1.0f, tank.z, yaw);
 
-        sound.setSourcePosition(sound.mgunSource, tank.x, tank.y + 1.6f, tank.z);
-        alSourceStop(sound.mgunSource);
-        alSourcePlay(sound.mgunSource);
+        sound.setSourcePosition(sound.sources["MGun"], tank.x, tank.y + 1.6f, tank.z);
+        alSourceStop(sound.sources["MGun"]);
+        alSourcePlay(sound.sources["MGun"]);
     }
     
     if (keyG && !prevG) granades.strike();
@@ -179,9 +179,9 @@ void processTankInput(GLFWwindow* window, float dt,ProjectileSystem& projectileS
         projectileSystem.spawnShell(tank.x,tank.y + 1.6f,tank.z,yaw,tank.gunPitch,
             tank.selectedShell,tank.shellSpeed);
         
-        sound.setSourcePosition(sound.shotSource, tank.x, tank.y + 1.6f, tank.z);
-        alSourceStop(sound.shotSource);
-        alSourcePlay(sound.shotSource);
+        sound.setSourcePosition(sound.sources["Shot"], tank.x, tank.y + 1.6f, tank.z);
+        alSourceStop(sound.sources["Shot"]);
+        alSourcePlay(sound.sources["Shot"]);
 
         --tank.totalShells;
 
@@ -296,7 +296,7 @@ int main(){
 
         if (weather == "Clean") { 
             if (weat.particles.size() > 0) { 
-                alSourceStop(sound.rainSource); 
+                alSourceStop(sound.sources["Rain"]);
                 sound.rainPlayed = false;
                 weat.particles.clear(); 
             } 
@@ -305,13 +305,13 @@ int main(){
         else if (weather == "Rainly") { 
             weat.snowPiles.clear();
             if (!sound.rainPlayed) { 
-                alSourcePlay(sound.rainSource); 
+                alSourcePlay(sound.sources["Rain"]);
                 sound.rainPlayed = true; 
             } 
             if (weat.particles.size() < weat.count) weat.generate(Type::rainly, cam); 
         }
         else if (weather == "Snowly") { 
-            alSourceStop(sound.rainSource); 
+            alSourceStop(sound.sources["Rain"]);
             sound.rainPlayed = false;
             if (weat.particles.size() < weat.count) weat.generate(Type::snowly, cam); 
             if (weat.snowPiles.size() == 0) weat.generateSnowPiles(50, 100.0f);
@@ -323,7 +323,7 @@ int main(){
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        gui.render(fps, tank,art,sound,weather,granades,badges,fpsLimit);
+        gui.render(fps, tank,art,sound,weather,granades,badges,fpsLimit,enemyes);
 
         ImGui::Render();
 
@@ -392,8 +392,8 @@ int main(){
 
             healths[tankCollision.id].current -= tank.returnImpactImpulse();
 
-            sound.setSourcePosition(sound.collisionSource, tank.x, tank.y, tank.z);
-            alSourcePlay(sound.collisionSource);
+            sound.setSourcePosition(sound.sources["Collision"], tank.x, tank.y, tank.z);
+            alSourcePlay(sound.sources["Collision"]);
         }
 
         hud.Draw3DAim(tank);
