@@ -51,10 +51,10 @@ void Weather::drawSnowPile(float radius, float height) {
 }
 void Weather::draw() {
 	for (auto& p : particles) {
-		if (p.type == Type::rainly) {
-			glPushMatrix();
-			glTranslatef(p.x, p.y, p.z);
+		glPushMatrix();
+		glTranslatef(p.x, p.y, p.z);
 
+		if (p.type == Type::rainly) {
 			glColor3f(51.0f / 255.0f, 153.0f / 255.0f, 255.0f / 255.0f);
 
 			glLineWidth(2.0f);
@@ -63,13 +63,9 @@ void Weather::draw() {
 			glVertex3f(0.0f,0.0f,0.0f);
 			glVertex3f(0.0f, -1.0f, 0.0f);
 
-			glEnd();
-			glPopMatrix();
+			
 		}
 		if (p.type == Type::snowly) {
-			glPushMatrix();
-			glTranslatef(p.x, p.y, p.z);
-
 			glColor3f(1.0f, 1.0f, 1.0f);
 
 			glPointSize(3.0f);
@@ -77,10 +73,9 @@ void Weather::draw() {
 
 			glVertex3f(0.0f, 0.0f, 0.0f);
 			glVertex3f(0.0f, 0.0f, 0.0f);
-
-			glEnd();
-			glPopMatrix();
 		}
+		glEnd();
+		glPopMatrix();
 	}
 }
 void Weather::generate(const Type& type,Camera& cam) {

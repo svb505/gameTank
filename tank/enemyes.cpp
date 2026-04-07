@@ -30,6 +30,7 @@ Entity CreateEntity() {
     entities.push_back(e);
     return e;
 }
+
 void drawSootEffect(float x, float y, float z, int segments, float radius) {
     glPushMatrix();
     glTranslatef(x, y, z);
@@ -707,9 +708,9 @@ void DeathSystem(Tank& tank) {
         radars.erase(e);
         bounds.erase(e);
         transforms.erase(e);
+
         auto it = std::find(entities.begin(), entities.end(), e);
-        if (it != entities.end())
-            entities.erase(it);
+        if (it != entities.end()) entities.erase(it);
     }
 }
 void Update(float dt, Tank& tank, ProjectileSystem& projectile,Sound& sound) {

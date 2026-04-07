@@ -24,9 +24,7 @@ void Tank::UpdateTrack(TrackBuffer& track, const svbmath::Vec3& pos, float dt) {
         track.lastPos = pos;
     }
 
-    for (int i = 0; i < track.count; i++) {
-        track.get(i).life -= dt * 0.2f;
-    }
+    for (int i = 0; i < track.count; i++) track.get(i).life -= dt * 0.2f;
 }
 TrackPoint& TrackBuffer::get(int i) {
     int idx = (head - count + i + MAX_TRACK_POINTS) % MAX_TRACK_POINTS;
@@ -42,11 +40,7 @@ svbmath::Vec3 Tank::RotateY(const svbmath::Vec3& v, float angleDeg) {
     float c = cos(a);
     float s = sin(a);
 
-    return {
-        v.x * c - v.z * s,
-        v.y,
-        v.x * s + v.z * c
-    };
+    return {v.x * c - v.z * s,v.y,v.x * s + v.z * c};
 }
 svbmath::Vec3 Tank::LocalToWorldTurret(const svbmath::Vec3& local) {
     svbmath::Vec3 p = local;
@@ -228,7 +222,7 @@ Bounds Tank::GetHullMax() const {
 
     return result;
 }
-void Tank::Update(float dt, svbmath::Vec3 tankPos, svbmath::Vec3 tankRight, TrackBuffer& leftTrack, TrackBuffer& rightTrack) {
+void Tank::UpdateTrack(float dt, svbmath::Vec3 tankPos, svbmath::Vec3 tankRight, TrackBuffer& leftTrack, TrackBuffer& rightTrack) {
     float offset = 1.5f;
     float TRACK_Y_OFFSET = 0.02f;
 

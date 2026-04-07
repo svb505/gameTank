@@ -366,7 +366,7 @@ int main(){
         svbmath::Vec3 tankRight = svbmath::Normalize(svbmath::Cross(forward, up));
 
         tank.updateDirrections(tank.bodyRad,tank.bodyYaw);
-        tank.Update(deltaTime,{tank.x,tank.y,tank.z},tankRight,leftTrack,rightTrack);
+        tank.UpdateTrack(deltaTime,{tank.x,tank.y,tank.z},tankRight,leftTrack,rightTrack);
         tank.DrawTrack(leftTrack, 0.3f);
         tank.DrawTrack(rightTrack, 0.3f);
 
