@@ -75,6 +75,9 @@
     <ClCompile Include="badges.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="profiler.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="tank.h">
@@ -144,6 +147,9 @@
       <Filter>Исходные файлы</Filter>
     </ClInclude>
     <ClInclude Include="badges.h">
+      <Filter>Исходные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="profiler.h">
       <Filter>Исходные файлы</Filter>
     </ClInclude>
   </ItemGroup>

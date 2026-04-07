@@ -5,23 +5,30 @@
 #include "sounds.h"
 #include "weather.h"
 #include "smokeGranade.h"
+#include "profiler.h"
 
 class GUI {
 private:
+    Profiler p;
+
 	std::vector<std::string> weathers = { "Clean", "Rainly","Snowly"};
 	std::vector<std::string> spawns = { "1", "2","3" };
 	std::vector<const char*> cstrsW;
 	std::vector<const char*> cstrsS;
+
 	int idxW = 0;
 	int idxS = 0;
+
 	std::string selectedShell = "";
 	std::string controlString = "\nLeft ctrl - Zoom\nLeft alt - Show/Hide cursor\nSPACE - Shot\nENTER - Machine gun\n"
 		"W - Move forward\nA - Move left\nS - Move right\nD - Move back\nShift - Aim mode\n1/2/3/4 - Change shell\n(APFSDS,HE,ATGM,SMOKE)\n"
 		"ctrl + ^ - Increase minimap\nctrl + v - Decrease minimap\nG - Smoke Granade";
-	float artX = 0.0f;
+	
+    float artX = 0.0f;
 	float artZ = 0.0f;
 	bool artWindow = false;
 	bool mlrsWindow = false;
+    bool devWindow = false;
 public:
 	GUI() {
 		for (auto& s : weathers) cstrsW.push_back(s.c_str());
@@ -41,6 +48,7 @@ public:
         ImGui::Begin("Settings & Info");
 
         if (ImGui::Button("Aimer artillery strike")) artWindow = true;
+        if (ImGui::Button("Developper window")) devWindow = true;
 
         ImGui::BeginDisabled(!canUseMlrs);
         if (ImGui::Button("Aimer MLRS strike")) mlrsWindow = true;
@@ -85,7 +93,13 @@ public:
         ImGui::Text("Control: %s", controlString.c_str());
 
         ImGui::End();
+        if (devWindow) {
+            ImGui::Begin("Profiler", &devWindow);
 
+            ImGui::Text("%s\n%s", p.getMemoryUsage()[0].c_str(), p.getMemoryUsage()[1].c_str());
+
+            ImGui::End();
+        }
         if (artWindow){
             ImGui::Begin("Artillery", &artWindow);
 
