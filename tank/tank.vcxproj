@@ -130,9 +130,12 @@
     <ClCompile Include="artillery.cpp" />
     <ClCompile Include="bounds.cpp" />
     <ClCompile Include="camera.cpp" />
+    <ClCompile Include="craters.cpp" />
     <ClCompile Include="effects.cpp" />
     <ClCompile Include="enemyes.cpp" />
     <ClCompile Include="environnement.cpp" />
+    <ClCompile Include="getheight.cpp" />
+    <ClCompile Include="getnormal.cpp" />
     <ClCompile Include="HUD.cpp" />
     <ClCompile Include="lightning.cpp" />
     <ClCompile Include="Logger.cpp" />
@@ -153,9 +156,12 @@
     <ClInclude Include="artillery.h" />
     <ClInclude Include="bounds.h" />
     <ClInclude Include="camera.h" />
+    <ClInclude Include="craters.h" />
     <ClInclude Include="effects.h" />
     <ClInclude Include="enemyes.h" />
     <ClInclude Include="environnement.h" />
+    <ClInclude Include="getheight.h" />
+    <ClInclude Include="getnormal.h" />
     <ClInclude Include="GUI.h" />
     <ClInclude Include="HUD.h" />
     <ClInclude Include="Info.h" />

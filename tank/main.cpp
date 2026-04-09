@@ -2,7 +2,6 @@
 #include <windows.h>
 #include <GL/gl.h>
 #include <GLFW/glfw3.h>
-#include <iostream>
 #include <map>
 #include <vector>
 #include <cmath>
@@ -36,6 +35,7 @@
 #include "Logger.h"
 #include "weather.h"
 #include "smokeGranade.h"
+#include "craters.h"
 
 #define COUNT 55
 #define ECRANW 1600

@@ -16,6 +16,7 @@
 #include "tank.h"
 #include "Logger.h"
 #include "text.h"
+#include "craters.h"
 
 float ProjectileSystem::calculatePenetration(float vel) {
     const float k = 0.0005f;
@@ -164,6 +165,8 @@ void ProjectileSystem::update(float dt, Sound& sound, std::unordered_map<int, En
             if (p.alive && p.y <= 0.0f && p.type != ProjectileType::Bullet && !p.isEnemy) {
                 onHit(p, en, healths[id], context, sound, p.y <= 0.0f, p.selectedShellType == shellType::SMOKE);
 
+                addCrater(p.x, p.z);
+
                 if (p.selectedShellType == shellType::SMOKE) context.smokes.push_back(new SmokeEffect(p.x, p.y, p.z));
 
                 context.explosions.push_back(new ExplosionEffect(p.x, p.y, p.z));
@@ -212,6 +215,8 @@ void ProjectileSystem::updateArtillery(std::vector<Projectile>& artilleryProject
             }
         }
         if (!exploded && p.y <= 0.0f) {
+            addCrater(p.x, p.z);
+
             context.explosions.push_back(new ExplosionEffect(p.x, p.y, p.z, 200));
             sound.setSourcePosition(sound.sources["ArtExplosion"], p.x, p.y, p.z);
             alSourcePlay(sound.sources["ArtExplosion"]);
