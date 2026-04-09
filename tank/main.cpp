@@ -36,6 +36,7 @@
 #include "weather.h"
 #include "smokeGranade.h"
 #include "craters.h"
+#include "rangefinder.h"
 
 #define COUNT 55
 #define ECRANW 1600
@@ -53,10 +54,16 @@ Artillery art;
 Weather weat;
 SmokeGranade granades;
 
+int lastHitID = -1;
+static float lastHitDistance = 0.0f;
+
 bool firstMouse = true;
 bool cursorVisibility = false;
 bool fpsLimit = false;
 bool badges = false;
+
+static Ray debugRay;
+static bool drawDebugRay = false;
 
 double lastX = 800.0 / 2, lastY = 600.0 / 2;
 float sensitivity = 0.1f;
@@ -96,18 +103,20 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
     if (tank.gunPitch > 10.0f) tank.gunPitch = 10.0f;
     if (tank.gunPitch < -10.0f)   tank.gunPitch = -10.0f;
 }
-void processTankInput(GLFWwindow* window, float dt,ProjectileSystem& projectileSystem){
+void processTankInput(GLFWwindow* window, float dt,ProjectileSystem& projectileSystem, std::unordered_map<int, Entity>& enemyes){
     static bool lastShift = false;
     static bool lastFire = false;
     static bool prevCtrl = false;
     static bool prevAlt = false;
     static bool prevG = false;
+    static bool prevR = false;
 
     bool fire = glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS;
     bool currCtrl = glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS;
     bool currAlt = glfwGetKey(window, GLFW_KEY_LEFT_ALT) == GLFW_PRESS;
     bool shift = glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS;
     bool keyG = glfwGetKey(window, GLFW_KEY_G) == GLFW_PRESS;
+    bool keyR = glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS;
 
     if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS){
         tank.selectedShell = shellType::APFSDS;
@@ -160,7 +169,32 @@ void processTankInput(GLFWwindow* window, float dt,ProjectileSystem& projectileS
         alSourceStop(sound.sources["MGun"]);
         alSourcePlay(sound.sources["MGun"]);
     }
-    
+    if (keyR && !prevR) {
+        Ray ray;
+        ray.origin = { tank.x, tank.y + 1.6f, tank.z };
+
+        float yawRad = (tank.bodyYaw + tank.turretYaw) * 3.14159265f / 180.0f;
+        float pitchRad = tank.gunPitch * 3.14159265f / 180.0f;
+
+        ray.direction = { sin(yawRad) * cos(pitchRad), sin(pitchRad), cos(yawRad) * cos(pitchRad) };
+
+        float maxDist = 300.0f;
+
+        int hitID = -1;
+        float hitDistance = Raycast(ray, enemyes, bounds, hitID, maxDist);
+
+        debugRay = ray;
+        drawDebugRay = true;
+
+        if (hitID != -1) { 
+            lastHitID = hitID;
+            lastHitDistance = hitDistance;
+        }
+        else {
+            lastHitID = -1; 
+            lastHitDistance = 0.0f;
+        }
+    }
     if (keyG && !prevG) granades.strike();
     if (currAlt && !prevAlt) {
         if (cursorVisibility) {
@@ -197,6 +231,7 @@ void processTankInput(GLFWwindow* window, float dt,ProjectileSystem& projectileS
     lastShift = shift;
     prevAlt = currAlt;
     prevG = keyG;
+    prevR = keyR;
 }
 void countFps(double& deltaTime,double& lastTime,double& currentTime,int& frames,float& fps,float& fpsTimer) {
     deltaTime = currentTime - lastTime;
@@ -342,7 +377,7 @@ int main(){
         if (tank.finishReload > 0.0f) tank.finishReload -= deltaTime;
         if (tank.moveSpeed > 0.0f) tank.moveSpeed *= tank.REDUCTION_COEF;
 
-        processTankInput(window, (float)deltaTime, projectileSystem);
+        processTankInput(window, (float)deltaTime, projectileSystem, enemyes);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         drawSky();
@@ -360,6 +395,15 @@ int main(){
         weat.update(cam,deltaTime); //Update rain/snow
         weat.renderSnowPiles();
         weat.draw();
+
+        glDisable(GL_DEPTH_TEST);
+        glDisable(GL_LIGHTING);
+
+        std::string dist = std::format("Distance: {:.1f} m", lastHitDistance);
+        RenderTextHUD(ECRANW / 2, ECRANH / 2, 1, 1, 1, dist.c_str(), ECRANW, ECRANH);
+
+        glEnable(GL_LIGHTING);
+        glEnable(GL_DEPTH_TEST);
 
         showDestroyText(deltaTime);
 
@@ -394,7 +438,9 @@ int main(){
         if (tankCollision.checked) { 
             tank.x = tank.oldX; tank.y = tank.oldY; tank.z = tank.oldZ;
 
-            healths[tankCollision.id].current -= tank.returnImpactImpulse();
+            if (healths.contains(tankCollision.id)) {
+                healths[tankCollision.id].current -= tank.returnImpactImpulse();
+            }
 
             sound.setSourcePosition(sound.sources["Collision"], tank.x, tank.y, tank.z);
             alSourcePlay(sound.sources["Collision"]);
