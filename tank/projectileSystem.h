@@ -13,7 +13,9 @@
 #include "shells.h"
 #include "artillery.h"
 
+
 struct Info;
+struct EffectsContext;
 
 class ProjectileSystem {
 public:
@@ -23,14 +25,12 @@ public:
         bool isEnemy = false);
     void spawnBullet(float x, float y, float z, float yawDeg);
     void update(float dt, Sound& sound, std::unordered_map<int, Entity>& enemies, std::unordered_map<Entity, Health>& healths,
-        std::unordered_map<Entity, Bounds>& bounds, std::vector<ExplosionEffect*>& explosions,
-        std::vector<SmokeEffect*>& smokes,Tank& player);
+        std::unordered_map<Entity, Bounds>& bounds, EffectsContext& context,Tank& player);
     void updateProjectiles(ProjectileSystem& projectileSystem);
     void updateArtillery(std::vector<Projectile>& artilleryProjectiles, Sound& sound,
-        std::unordered_map<int, Entity>& enemies, std::vector<ExplosionEffect*>& explosions,
-        std::vector<SmokeEffect*>& smokes);
+        std::unordered_map<int, Entity>& enemies, EffectsContext& context);
 private:
-    void onHit(Projectile& p, Entity& en, Health& health, std::vector<ExplosionEffect*>& explosions,
-        std::vector<SmokeEffect*>& smokes, Sound& sound, bool hitGround = false, bool smokeShell = false);
+    void onHit(Projectile& p, Entity& en, Health& health, EffectsContext& context, Sound& sound, 
+        bool hitGround = false, bool smokeShell = false);
     float calculatePenetration(float vel);
 };

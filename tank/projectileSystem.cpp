@@ -21,8 +21,8 @@ float ProjectileSystem::calculatePenetration(float vel) {
     const float k = 0.0005f;
     return k * vel * vel;
 }
-void ProjectileSystem::onHit(Projectile& p, Entity& en, Health& health, std::vector<ExplosionEffect*>& explosions,
-    std::vector<SmokeEffect*>& smokes, Sound& sound,bool hitGround, bool smokeShell) {
+void ProjectileSystem::onHit(Projectile& p, Entity& en, Health& health, EffectsContext& context, Sound& sound,
+    bool hitGround, bool smokeShell) {
 
     sound.setSourcePosition(sound.sources["Explosion"], p.x, p.y, p.z);
     alSourceStop(sound.sources["Explosion"]);
@@ -45,10 +45,10 @@ void ProjectileSystem::onHit(Projectile& p, Entity& en, Health& health, std::vec
             if (p.selectedShellType == shellType::APFSDS) { count = 300; radius = 4; height = 1.5f; }
             else { count = 500; radius = 6; height = 2.0f; }
 
-            explosions.push_back(new ExplosionEffect(x, y, z, count, radius, height, 1.8f));
-            smokes.push_back(new SmokeEffect(x, y, z, 300, 3));
+            context.explosions.push_back(new ExplosionEffect(x, y, z, count, radius, height, 1.8f));
+            context.smokes.push_back(new SmokeEffect(x, y, z, 300, 3));
         }
-        else smokes.push_back(new SmokeEffect(x, y, z, 5500, 6, { 1.0f,1.0f,1.0f,0.3f }, 3.0f, 0.01f, 6.0f));
+        else context.smokes.push_back(new SmokeEffect(x, y, z, 5500, 6, { 1.0f,1.0f,1.0f,0.3f }, 3.0f, 0.01f, 6.0f));
     }
 }
 void ProjectileSystem::spawnShell(float x, float y, float z, float yawDeg, float pitchDeg, shellType _shellType, 
@@ -99,8 +99,7 @@ void ProjectileSystem::spawnBullet(float x, float y, float z, float yawDeg) {
     projectiles.push_back(p);
 }
 void ProjectileSystem::update(float dt, Sound& sound, std::unordered_map<int, Entity>& enemies, std::unordered_map<Entity, Health>& healths,
-    std::unordered_map<Entity, Bounds>& bounds, std::vector<ExplosionEffect*>& explosions,
-    std::vector<SmokeEffect*>& smokes,Tank& player) {
+    std::unordered_map<Entity, Bounds>& bounds, EffectsContext& context,Tank& player) {
 
     for (auto& p : projectiles) {
         if (!p.alive) continue;
@@ -116,8 +115,8 @@ void ProjectileSystem::update(float dt, Sound& sound, std::unordered_map<int, En
             alSourceStop(sound.sources["Explosion"]);
             alSourcePlay(sound.sources["Explosion"]);
 
-            if (p.type != ProjectileType::Bullet) explosions.push_back(new ExplosionEffect(p.x, p.y, p.z));
-            if (p.selectedShellType == shellType::SMOKE) smokes.push_back(new SmokeEffect(p.x, p.y, p.z));
+            if (p.type != ProjectileType::Bullet) context.explosions.push_back(new ExplosionEffect(p.x, p.y, p.z));
+            if (p.selectedShellType == shellType::SMOKE) context.smokes.push_back(new SmokeEffect(p.x, p.y, p.z));
 
             if (player.currentHP <= 0) {
                 player.currentHP = player.HP;
@@ -149,25 +148,25 @@ void ProjectileSystem::update(float dt, Sound& sound, std::unordered_map<int, En
                 }
 
                 if (apartments.contains(id) && p.type != ProjectileType::Bullet) {
-                    smokes.push_back(new SmokeEffect(p.x, p.y, p.z, 300, 1.5f, { 0.5f,0.5f,0.5f }, 2.0f));
+                    context.smokes.push_back(new SmokeEffect(p.x, p.y, p.z, 300, 1.5f, { 0.5f,0.5f,0.5f }, 2.0f));
                 }
 
                 sound.setSourcePosition(sound.sources["Explosion"], p.x, p.y, p.z);
                 alSourceStop(sound.sources["Explosion"]);
                 alSourcePlay(sound.sources["Explosion"]);
 
-                if (p.type != ProjectileType::Bullet) explosions.push_back(new ExplosionEffect(p.x, p.y, p.z));
-                if (p.selectedShellType == shellType::SMOKE) smokes.push_back(new SmokeEffect(p.x, p.y, p.z));
+                if (p.type != ProjectileType::Bullet) context.explosions.push_back(new ExplosionEffect(p.x, p.y, p.z));
+                if (p.selectedShellType == shellType::SMOKE) context.smokes.push_back(new SmokeEffect(p.x, p.y, p.z));
 
                 p.alive = false;
                 break;
             }
             if (p.alive && p.y <= 0.0f && p.type != ProjectileType::Bullet && !p.isEnemy) {
-                onHit(p, en, healths[id], explosions, smokes, sound, p.y <= 0.0f, p.selectedShellType == shellType::SMOKE);
+                onHit(p, en, healths[id], context, sound, p.y <= 0.0f, p.selectedShellType == shellType::SMOKE);
 
-                if (p.selectedShellType == shellType::SMOKE) smokes.push_back(new SmokeEffect(p.x, p.y, p.z));
+                if (p.selectedShellType == shellType::SMOKE) context.smokes.push_back(new SmokeEffect(p.x, p.y, p.z));
 
-                explosions.push_back(new ExplosionEffect(p.x, p.y, p.z));
+                context.explosions.push_back(new ExplosionEffect(p.x, p.y, p.z));
 
                 p.alive = false;
             }
@@ -190,8 +189,7 @@ void ProjectileSystem::updateProjectiles(ProjectileSystem& projectileSystem) {
     }
 }
 void ProjectileSystem::updateArtillery(std::vector<Projectile>& artilleryProjectiles, Sound& sound,
-    std::unordered_map<int, Entity>& enemies, std::vector<ExplosionEffect*>& explosions,
-    std::vector<SmokeEffect*>& smokes) {
+    std::unordered_map<int, Entity>& enemies, EffectsContext& context) {
     for (auto& p : artilleryProjectiles) {
         if (!p.alive) continue;
 
@@ -204,7 +202,7 @@ void ProjectileSystem::updateArtillery(std::vector<Projectile>& artilleryProject
             if (checkCollision(bounds[id], p.x, p.y, p.z) && calculatePenetration(p.speed)) {
                 healths[id].current -= p.damage;
 
-                explosions.push_back(new ExplosionEffect(p.x, p.y, p.z, 200));
+                context.explosions.push_back(new ExplosionEffect(p.x, p.y, p.z, 200));
 
                 p.alive = false;
                 exploded = true;
@@ -214,7 +212,7 @@ void ProjectileSystem::updateArtillery(std::vector<Projectile>& artilleryProject
             }
         }
         if (!exploded && p.y <= 0.0f) {
-            explosions.push_back(new ExplosionEffect(p.x, p.y, p.z, 200));
+            context.explosions.push_back(new ExplosionEffect(p.x, p.y, p.z, 200));
             sound.setSourcePosition(sound.sources["ArtExplosion"], p.x, p.y, p.z);
             alSourcePlay(sound.sources["ArtExplosion"]);
             p.alive = false;

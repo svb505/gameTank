@@ -60,5 +60,11 @@ public:
     void Update(float dt);
     void Draw();
 };
+
 void updateExplosions(std::vector<ExplosionEffect*>& explosions, float dt);
 void updateSmokes(std::vector<SmokeEffect*>& smokes, float dt);
+
+struct EffectsContext {
+    std::vector<ExplosionEffect*>& explosions;
+    std::vector<SmokeEffect*>& smokes;
+};

@@ -256,8 +256,12 @@ int main(){
 
     std::unordered_map<int, Entity> enemyes;
     std::vector<int> toDelete;
+
     std::vector<ExplosionEffect*> explosions;
     std::vector<SmokeEffect*> smokes;
+
+    EffectsContext context{ explosions, smokes };
+
     ProjectileSystem projectileSystem;
     
     TrackBuffer leftTrack;
@@ -374,9 +378,9 @@ int main(){
         art.drawAllShells();
         art.deleteIfAlived();
 
-        projectileSystem.update((float)deltaTime,sound,enemyes,healths, bounds,explosions,smokes,tank);
+        projectileSystem.update((float)deltaTime, sound, enemyes, healths, bounds, context, tank);
         projectileSystem.updateProjectiles(projectileSystem);
-        projectileSystem.updateArtillery(art.shells,sound,enemyes,explosions,smokes);
+        projectileSystem.updateArtillery(art.shells,sound,enemyes, context);
         
         updateExplosions(explosions, deltaTime);
         updateSmokes(smokes, deltaTime);
