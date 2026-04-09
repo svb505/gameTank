@@ -737,7 +737,7 @@ void Update(float dt, Tank& tank, ProjectileSystem& projectile,Sound& sound) {
             bot.turretAngle = svbmath::RotateTowards(bot.turretAngle,newTarget,bot.turretSpeed,dt);
 
             if (bot.finishReload <= 0.0f) {
-                projectile.spawnShell(enemyPos.x, enemyPos.y + 1.0f, enemyPos.z, bot.turretAngle * 180.0f / PI, bot.gunAngle,
+                projectile.spawnShell({ enemyPos.x, enemyPos.y + 1.0f, enemyPos.z }, bot.turretAngle * 180.0f / PI, bot.gunAngle,
                     shellType::APFSDS, 100.0f, true);
 
                 sound.setSourcePosition(sound.sources["Shot"], enemyPos.x, enemyPos.y, enemyPos.z);

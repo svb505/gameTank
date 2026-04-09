@@ -12,7 +12,7 @@
 #include "sounds.h"
 #include "shells.h"
 #include "artillery.h"
-
+#include "svbmath.h"
 
 struct Info;
 struct EffectsContext;
@@ -21,9 +21,9 @@ class ProjectileSystem {
 public:
     std::vector<Projectile> projectiles;
 
-    void spawnShell(float x, float y, float z, float yawDeg, float pitchDeg, shellType _shellType, int shellSpeed,
+    void spawnShell(svbmath::Vec3 pos, float yawDeg, float pitchDeg, shellType _shellType, int shellSpeed,
         bool isEnemy = false);
-    void spawnBullet(float x, float y, float z, float yawDeg);
+    void spawnBullet(svbmath::Vec3 pos, float yawDeg);
     void update(float dt, Sound& sound, std::unordered_map<int, Entity>& enemies, std::unordered_map<Entity, Health>& healths,
         std::unordered_map<Entity, Bounds>& bounds, EffectsContext& context,Tank& player);
     void updateProjectiles(ProjectileSystem& projectileSystem);

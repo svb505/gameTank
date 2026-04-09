@@ -51,14 +51,14 @@ void ProjectileSystem::onHit(Projectile& p, Entity& en, Health& health, EffectsC
         else context.smokes.push_back(new SmokeEffect(x, y, z, 5500, 6, { 1.0f,1.0f,1.0f,0.3f }, 3.0f, 0.01f, 6.0f));
     }
 }
-void ProjectileSystem::spawnShell(float x, float y, float z, float yawDeg, float pitchDeg, shellType _shellType, 
+void ProjectileSystem::spawnShell(svbmath::Vec3 pos, float yawDeg, float pitchDeg, shellType _shellType,
     int shellSpeed,bool isEnemy) {
     Projectile p(_shellType);
     p.type = ProjectileType::Shell;
 
     p.selectedShellType = _shellType;
 
-    p.x = x; p.y = y; p.z = z;
+    p.x = pos.x; p.y = pos.y; p.z = pos.z;
     p.speed = shellSpeed;
 
     float yaw = yawDeg * 3.1415926f / 180.0f;
@@ -83,10 +83,10 @@ void ProjectileSystem::spawnShell(float x, float y, float z, float yawDeg, float
 
     projectiles.push_back(p);
 }
-void ProjectileSystem::spawnBullet(float x, float y, float z, float yawDeg) {
+void ProjectileSystem::spawnBullet(svbmath::Vec3 pos, float yawDeg) {
     Projectile p(shellType::BULLET);
     p.type = ProjectileType::Bullet;
-    p.x = x; p.y = y; p.z = z;
+    p.x = pos.x; p.y = pos.y; p.z = pos.z;
     p.speed = 120.0f;
     p.damage = 1;
     p.lifeTime = 4.0f;

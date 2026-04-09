@@ -154,7 +154,7 @@ void processTankInput(GLFWwindow* window, float dt,ProjectileSystem& projectileS
     if (glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_PRESS) {
         float yaw = tank.bodyYaw + tank.turretYaw;
 
-        projectileSystem.spawnBullet(tank.x, tank.y + 1.0f, tank.z, yaw);
+        projectileSystem.spawnBullet({ tank.x, tank.y + 1.0f, tank.z }, yaw);
 
         sound.setSourcePosition(sound.sources["MGun"], tank.x, tank.y + 1.6f, tank.z);
         alSourceStop(sound.sources["MGun"]);
@@ -176,7 +176,7 @@ void processTankInput(GLFWwindow* window, float dt,ProjectileSystem& projectileS
     if (fire && !lastFire && tank.finishReload <= 0.0f && tank.totalShells > 0) {
         float yaw = tank.bodyYaw + tank.turretYaw;
 
-        projectileSystem.spawnShell(tank.x,tank.y + 1.6f,tank.z,yaw,tank.gunPitch,
+        projectileSystem.spawnShell({ tank.x,tank.y + 1.6f,tank.z }, yaw, tank.gunPitch,
             tank.selectedShell,tank.shellSpeed);
         
         sound.setSourcePosition(sound.sources["Shot"], tank.x, tank.y + 1.6f, tank.z);
