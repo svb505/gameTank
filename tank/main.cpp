@@ -208,7 +208,10 @@ void processTankInput(GLFWwindow* window, float dt,ProjectileSystem& projectileS
     }
     if (shift && !lastShift) tank.aimMode = !tank.aimMode;
     if (fire && !lastFire && tank.finishReload <= 0.0f && tank.totalShells > 0) {
-        float yaw = tank.bodyYaw + tank.turretYaw;
+        float yaw;
+
+        if (tank.turretLocked) yaw = tank.bodyYaw + tank.turretYaw;
+        else yaw = tank.turretYaw - 90.0f;
 
         projectileSystem.spawnShell({ tank.x,tank.y + 1.6f,tank.z }, yaw, tank.gunPitch,
             tank.selectedShell,tank.shellSpeed);

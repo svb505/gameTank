@@ -10,7 +10,11 @@
 
 
 void HUD::Draw3DAim(Tank& tank) {
-    float turretRad = (tank.bodyYaw + tank.turretYaw) * 3.1415926f / 180.0f;
+    float turretRad;
+
+    if (tank.turretLocked) turretRad = (tank.bodyYaw + tank.turretYaw) * 3.1415926f / 180.0f;
+    else turretRad = (tank.turretYaw - 90.0f) * 3.1415926f / 180.0f;
+
     float pitchRad = tank.gunPitch * 3.1415926f / 180.0f;
     float barrelLength = 4.9f;
     float barrelHeight = 0.9f;
