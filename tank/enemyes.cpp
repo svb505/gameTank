@@ -807,7 +807,7 @@ void DeathSystem(Tank& tank) {
             hp.destroyed = true;
 
             if (apartments.contains(entity)) apartments[entity].destroyed = true;
-            if (tanks.contains(entity)) tanks[entity].destroyed = true;
+            else if (tanks.contains(entity)) tanks[entity].destroyed = true;
             else toDelete.push_back(entity);
 
             LOG_INFO("+1 kill");
@@ -819,7 +819,6 @@ void DeathSystem(Tank& tank) {
     for (auto& e : toDelete) {
         healths.erase(e);
         renders.erase(e);
-        tanks.erase(e);
         radars.erase(e);
         bounds.erase(e);
         transforms.erase(e);
