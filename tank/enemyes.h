@@ -4,6 +4,7 @@
 #include <unordered_map>
 #include "bounds.h"
 #include "svbmath.h"
+#include <map>
 
 class SmokeEffect;
 class Tank;
@@ -22,6 +23,7 @@ struct Health {
     float armor;
     bool destroyed = false;
 };
+
 enum class RenderType {
     Soldat,
     Vehicle,
@@ -29,6 +31,9 @@ enum class RenderType {
     Radar,
     Apartment
 };
+
+extern std::map<RenderType, std::string> rendersMap;
+
 struct RenderComponent {
     RenderType type;
 };
@@ -80,5 +85,6 @@ void DeathSystem(Tank& tank);
 void Update(float dt, Tank& tank,ProjectileSystem& projectile,Sound& sound);
 void Render(std::vector<SmokeEffect*>& smokes,bool healthBar = true);
 void generateEnemyes(std::unordered_map<int, Entity>& enemyes, int count);
+std::string getRenderTypeString(RenderType& type);
 bool playerInRadius(const svbmath::Vec3& enemyPos, const svbmath::Vec3& playerPos, float radius);
 checkCol checkCollisionWithTank(float x,float y, float z);

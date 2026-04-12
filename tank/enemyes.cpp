@@ -13,6 +13,10 @@
 #include "sounds.h"
 #include "Logger.h"
 
+
+std::map<RenderType, std::string> rendersMap = { {RenderType::Soldat,"Soldat"}, {RenderType::Vehicle,"Vehicle"},
+        {RenderType::Tank,"Tank"}, {RenderType::Radar,"Radar"}, {RenderType::Apartment,"Apartment"} };
+
 std::vector<Entity> entities;
 
 std::unordered_map<Entity, Transform> transforms;
@@ -735,6 +739,9 @@ void RenderSystem(std::vector<SmokeEffect*>& smokes) {
         glPopMatrix();
     }
 }
+std::string getRenderTypeString(RenderType& type) {
+    return rendersMap[type];
+}
 void BoundsSystem() {
     for (auto e : entities) {
         if (!transforms.contains(e) || !renders.contains(e)) continue;
@@ -787,8 +794,10 @@ void HealthBarSystem() {
 
         std::string text = std::format("{}/{}", hp.current, hp.max);
 
+        RenderTextWorld(t.x, t.y + step * 1.3f, t.z, 1, 1, 1, getRenderTypeString(renders[entity].type).c_str());
         RenderTextWorld(t.x, t.y + step, t.z, 1, 0, 0, text.c_str());
     }
+
 }
 void DeathSystem(Tank& tank) {
     std::vector<Entity> toDelete;
