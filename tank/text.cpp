@@ -106,4 +106,68 @@ void showDestroyText(float dt) {
         timerText = 3.0f; 
     }
 }
+void RenderTextHUD_Colored(float x, float y, const char* text, int screenW, int screenH){
+    if (!text) return;
 
+    glMatrixMode(GL_PROJECTION);
+    glPushMatrix();
+    glLoadIdentity();
+    glOrtho(0, screenW, screenH, 0, -1, 1);
+
+    glMatrixMode(GL_MODELVIEW);
+    glPushMatrix();
+    glLoadIdentity();
+
+    glDisable(GL_DEPTH_TEST);
+
+    float r = 1.0f, g = 1.0f, b = 1.0f; 
+    glColor3f(r, g, b);
+
+    float cursorX = x;
+    float cursorY = y;
+
+    const float charWidth = 16.0f;
+    const float lineHeight = 16.0f;
+
+    const char* p = text;
+
+    while (*p){
+        if (*p == '\n'){
+            cursorY += lineHeight;
+            cursorX = x;
+            p++;
+            continue;
+        }
+
+        if (*p == '{'){
+            float nr, ng, nb;
+            if (sscanf_s(p, "{%f,%f,%f}", &nr, &ng, &nb) == 3){
+                r = nr;
+                g = ng;
+                b = nb;
+                glColor3f(r, g, b);
+
+                while (*p && *p != '}') p++;
+                if (*p == '}') p++;
+                continue;
+            }
+        }
+
+        glRasterPos2f(cursorX, cursorY);
+
+        glPushAttrib(GL_LIST_BIT);
+        glListBase(fontBase);
+        glCallLists(1, GL_UNSIGNED_BYTE, p);
+        glPopAttrib();
+
+        cursorX += charWidth;
+        p++;
+    }
+
+    glEnable(GL_DEPTH_TEST);
+
+    glPopMatrix();
+    glMatrixMode(GL_PROJECTION);
+    glPopMatrix();
+    glMatrixMode(GL_MODELVIEW);
+}
