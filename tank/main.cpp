@@ -70,38 +70,43 @@ float sensitivity = 0.1f;
 
 std::string weather = "Clean";
 
-void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
+void mouse_callback(GLFWwindow* window, double xpos, double ypos){
     ImGuiIO& io = ImGui::GetIO();
-    io.AddMousePosEvent((float)xpos, (float)ypos); 
+    io.AddMousePosEvent((float)xpos, (float)ypos);
 
     if (io.WantCaptureMouse || cursorVisibility) return;
 
-    if (firstMouse) {
+    static bool first = true;
+    static double lastX = 0.0;
+    static double lastY = 0.0;
+
+    if (first) {
         lastX = xpos;
-        lastY = -ypos;
-        firstMouse = false;
+        lastY = ypos;
+        first = false;
+        return;
     }
 
     double xoffset = xpos - lastX;
-    double yoffset = lastY - ypos; 
+    double yoffset = ypos - lastY;
+
     lastX = xpos;
     lastY = ypos;
 
     xoffset *= sensitivity;
     yoffset *= sensitivity;
 
-    cam.cameraYaw += static_cast<float>(xoffset);
-    cam.cameraPitch += static_cast<float>(yoffset);
+    cam.cameraYaw += (float)xoffset;
+    cam.cameraPitch -= (float)yoffset;
 
-    tank.turretYaw += -static_cast<float>(xoffset);
-    tank.gunPitch += static_cast<float>(yoffset);
+    tank.turretYaw -= (float)xoffset;
+    tank.gunPitch += (float)yoffset;
 
-    if (cam.cameraYaw > 360.0f) cam.cameraYaw -= 360.0f;
-    if (cam.cameraYaw < 0.0f)   cam.cameraYaw += 360.0f;
-    if (tank.turretYaw > 360.0f) tank.turretYaw -= 360.0f;
-    if (tank.turretYaw < 0.0f)   tank.turretYaw += 360.0f;
-    if (tank.gunPitch > 10.0f) tank.gunPitch = 10.0f;
-    if (tank.gunPitch < -10.0f)   tank.gunPitch = -10.0f;
+    cam.cameraYaw = fmod(cam.cameraYaw + 360.0f, 360.0f);
+
+    tank.turretYaw = fmod(tank.turretYaw + 360.0f, 360.0f);
+
+    tank.gunPitch = std::clamp(tank.gunPitch, -10.0f, 10.0f);
 }
 void processTankInput(GLFWwindow* window, float dt,ProjectileSystem& projectileSystem, std::unordered_map<int, Entity>& enemyes){
     static bool lastShift = false;
