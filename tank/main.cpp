@@ -362,7 +362,7 @@ int main(){
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        gui.render(fps, tank,art,sound,weather,granades,badges,fpsLimit,enemyes);
+        gui.render(fps, tank,art,sound,weather,granades,badges,fpsLimit,enemyes,tank.turretLocked);
 
         ImGui::Render();
 

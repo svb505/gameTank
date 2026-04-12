@@ -36,7 +36,7 @@ public:
 		for (auto& s : spawns) cstrsS.push_back(s.c_str());
 	}
     void render(float& fps, Tank& tank, Artillery& art, Sound& sound,std::string& weather, SmokeGranade& g,bool& badges,
-        bool& fpslimit, std::unordered_map<int, Entity>& enemyes){
+        bool& fpslimit, std::unordered_map<int, Entity>& enemyes,bool& locked){
         std::string buf = std::format("{} / {}", tank.currentHP, tank.HP);
 
         if (tank.selectedShell == shellType::APFSDS) selectedShell = "APFSDS";
@@ -71,7 +71,8 @@ public:
         ImGui::Text("My HP: %s", buf.c_str());
 
         ImGui::Dummy(ImVec2(0.0f, 10.0f));
-        
+        ImGui::Checkbox("Lock turret", &locked);
+        ImGui::Dummy(ImVec2(0.0f, 10.0f));
         ImGui::Text("Smoke grenades %d / %d", (int)g.granades.size(), g.maxCount);
         
         ImGui::Dummy(ImVec2(0.0f, 10.0f));

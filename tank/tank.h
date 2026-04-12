@@ -61,6 +61,8 @@ public:
      {3, {30.0f, 0.0f, 0.0f}}
     };
 
+    bool turretLocked = true;
+
     const float SPEED_LIMIT_FORWARD = 15.0f;
     const float SPEED_LIMIT_BACK = -7.0f;
     const float REDUCTION_COEF = 0.995f;

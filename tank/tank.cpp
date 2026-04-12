@@ -148,7 +148,8 @@ void Tank::DrawTracks() {
 void Tank::DrawTurret() {
     glPushMatrix();
     glTranslatef(0, params.turretY, 0);
-    glRotatef(turretYaw, 0, 1, 0);
+    if (turretLocked) glRotatef(turretYaw, 0, 1, 0);
+    else glRotatef(turretYaw - bodyYaw - 90.0f, 0, 1, 0);
 
     glColor3f(0.15f, 0.4f, 0.15f);
 
