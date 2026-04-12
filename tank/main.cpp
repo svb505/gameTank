@@ -130,7 +130,7 @@ void processTankInput(GLFWwindow* window, float dt,ProjectileSystem& projectileS
     }
     if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS){
         tank.selectedShell = shellType::HE;
-        tank.shellSpeed = 100;
+        tank.shellSpeed = 200;
         tank.finishReload = tank.reloadTime;
     }
     if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS) {
@@ -140,7 +140,7 @@ void processTankInput(GLFWwindow* window, float dt,ProjectileSystem& projectileS
     }
     if (glfwGetKey(window, GLFW_KEY_4) == GLFW_PRESS) {
         tank.selectedShell = shellType::SMOKE;
-        tank.shellSpeed = 100;
+        tank.shellSpeed = 200;
         tank.finishReload = tank.reloadTime;
     }
     if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {

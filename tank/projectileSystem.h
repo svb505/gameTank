@@ -30,7 +30,6 @@ public:
     void updateArtillery(std::vector<Projectile>& artilleryProjectiles, Sound& sound,
         std::unordered_map<int, Entity>& enemies, EffectsContext& context);
 private:
-    void onHit(Projectile& p, Entity& en, Health& health, EffectsContext& context, Sound& sound, 
-        bool hitGround = false, bool smokeShell = false);
+    void onHit(Projectile& p, int id,Health* health,EffectsContext& context,Sound& sound,Tank& player,bool hitGround);
     float calculatePenetration(float vel);
 };
