@@ -23,7 +23,7 @@ private:
 	std::string selectedShell = "";
 	std::string controlString = "\nLeft ctrl - Zoom\nLeft alt - Show/Hide cursor\nSPACE - Shot\nENTER - Machine gun\n"
 		"W - Move forward\nA - Move left\nS - Move right\nD - Move back\nShift - Aim mode\n1/2/3/4 - Change shell\n(APFSDS,HE,ATGM,SMOKE)\n"
-		"ctrl + ^ - Increase minimap\nctrl + v - Decrease minimap\nG - Smoke Granade";
+		"ctrl + ^ - Increase minimap\nctrl + v - Decrease minimap\nG - Smoke Granade\nR - Range Finder";
 	
     float artX = 0.0f;
 	float artZ = 0.0f;
@@ -62,6 +62,9 @@ public:
         ImGui::Separator();
 
         ImGui::Checkbox("Badges in minimap", &badges);
+
+        ImGui::Dummy(ImVec2(0.0f, 10.0f));
+        ImGui::Checkbox("Show Health Bars of enemyes", &showBars);
 
         ImGui::Dummy(ImVec2(0.0f, 10.0f));
 

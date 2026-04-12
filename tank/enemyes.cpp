@@ -13,6 +13,7 @@
 #include "sounds.h"
 #include "Logger.h"
 
+bool showBars = true;
 
 std::map<RenderType, std::string> rendersMap = { {RenderType::Soldat,"Soldat"}, {RenderType::Vehicle,"Vehicle"},
         {RenderType::Tank,"Tank"}, {RenderType::Radar,"Radar"}, {RenderType::Apartment,"Apartment"} };
@@ -785,19 +786,20 @@ void BoundsSystem() {
     }
 }
 void HealthBarSystem() {
-    for (auto& [entity, hp] : healths) {
-        if (hp.destroyed) continue;
+    if (showBars) {
+        for (auto& [entity, hp] : healths) {
+            if (hp.destroyed) continue;
 
-        auto& t = transforms[entity];
-        float step = (apartments.contains(entity)) ? apartments[entity].floorHeight *
-            apartments[entity].floors + 2.0f : 2.0f;
+            auto& t = transforms[entity];
+            float step = (apartments.contains(entity)) ? apartments[entity].floorHeight *
+                apartments[entity].floors + 2.0f : 2.0f;
 
-        std::string text = std::format("{}/{}", hp.current, hp.max);
+            std::string text = std::format("{}/{}", hp.current, hp.max);
 
-        RenderTextWorld(t.x, t.y + step * 1.3f, t.z, 1, 1, 1, getRenderTypeString(renders[entity].type).c_str());
-        RenderTextWorld(t.x, t.y + step, t.z, 1, 0, 0, text.c_str());
+            RenderTextWorld(t.x, t.y + step * 1.3f, t.z, 1, 1, 1, getRenderTypeString(renders[entity].type).c_str());
+            RenderTextWorld(t.x, t.y + step, t.z, 1, 0, 0, text.c_str());
+        }
     }
-
 }
 void DeathSystem(Tank& tank) {
     std::vector<Entity> toDelete;

@@ -33,6 +33,7 @@ enum class RenderType {
 };
 
 extern std::map<RenderType, std::string> rendersMap;
+extern bool showBars;
 
 struct RenderComponent {
     RenderType type;
