@@ -39,6 +39,8 @@ struct TankComponent {
     float gunAngle = 0.0f;
     float detectionRadius = 35.0f;
     float turretSpeed = 70.0f;
+
+    bool destroyed = false;
 };
 struct RadarComponent {
     float rotationSpeed;
@@ -68,6 +70,7 @@ Entity CreateEntity();
 void drawTank(TankComponent& tank, float bodyH);
 void DrawCube(float w, float h, float d);
 void RadarSystem(float dt);
+void drawDestroyedTank(TankComponent& tank, float bodyH);
 void drawDestroyedAppartament(ApartmentComponent& ap, float totalH);
 void drawAppartament(ApartmentComponent& ap, float totalH);
 void RenderSystem(std::vector<SmokeEffect*>& smokes);

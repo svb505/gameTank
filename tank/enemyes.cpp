@@ -50,6 +50,110 @@ void drawSootEffect(float x, float y, float z, int segments, float radius) {
     glEnd();
     glPopMatrix();
 }
+void drawDestroyedTank(TankComponent& tank, float bodyH) {
+    glPushMatrix();
+
+    // Небольшой наклон корпуса (как будто подбит)
+    glRotatef(-10, 0, 0, 1);
+    glRotatef(5, 1, 0, 0);
+
+    // Темный "сгоревший" цвет
+    glColor3f(0.1f, 0.1f, 0.1f);
+
+    // ===== BODY =====
+    glBegin(GL_QUADS);
+
+    // Front
+    glVertex3f(-1, -bodyH, 1);
+    glVertex3f(1, -bodyH, 1);
+    glVertex3f(1, bodyH, 1);
+    glVertex3f(-1, bodyH, 1);
+
+    // Back
+    glVertex3f(-1, -bodyH, -1);
+    glVertex3f(-1, bodyH, -1);
+    glVertex3f(1, bodyH, -1);
+    glVertex3f(1, -bodyH, -1);
+
+    // Left
+    glVertex3f(-1, -bodyH, -1);
+    glVertex3f(-1, -bodyH, 1);
+    glVertex3f(-1, bodyH, 1);
+    glVertex3f(-1, bodyH, -1);
+
+    // Right
+    glVertex3f(1, -bodyH, -1);
+    glVertex3f(1, bodyH, -1);
+    glVertex3f(1, bodyH, 1);
+    glVertex3f(1, -bodyH, 1);
+
+    // Top
+    glVertex3f(-1, bodyH, -1);
+    glVertex3f(-1, bodyH, 1);
+    glVertex3f(1, bodyH, 1);
+    glVertex3f(1, bodyH, -1);
+
+    // Bottom
+    glVertex3f(-1, -bodyH, -1);
+    glVertex3f(1, -bodyH, -1);
+    glVertex3f(1, -bodyH, 1);
+    glVertex3f(-1, -bodyH, 1);
+
+    glEnd();
+
+    // ===== TURRET =====
+    glPushMatrix();
+    glTranslatef(0.0f, bodyH + 0.4f, 0.0f);
+
+    // Башня "сломана" — случайный угол
+    glRotatef(140.0f, 0, 1, 0);
+
+    float t = 0.5f;
+    glColor3f(0.15f, 0.15f, 0.15f);
+
+    glBegin(GL_QUADS);
+    glVertex3f(-t, -t, t); glVertex3f(t, -t, t); glVertex3f(t, t, t); glVertex3f(-t, t, t);
+    glVertex3f(-t, -t, -t); glVertex3f(-t, t, -t); glVertex3f(t, t, -t); glVertex3f(t, -t, -t);
+    glVertex3f(-t, -t, -t); glVertex3f(-t, -t, t); glVertex3f(-t, t, t); glVertex3f(-t, t, -t);
+    glVertex3f(t, -t, -t); glVertex3f(t, t, -t); glVertex3f(t, t, t); glVertex3f(t, -t, t);
+    glVertex3f(-t, t, -t); glVertex3f(-t, t, t); glVertex3f(t, t, t); glVertex3f(t, t, -t);
+    glVertex3f(-t, -t, -t); glVertex3f(t, -t, -t); glVertex3f(t, -t, t); glVertex3f(-t, -t, t);
+    glEnd();
+
+    // ===== GUN =====
+    glPushMatrix();
+
+    glTranslatef(0.0f, 0.0f, t);
+
+    // Пушка опущена вниз (сломана)
+    glRotatef(-35.0f, 1, 0, 0);
+
+    float w = 0.12f;
+    float h = 0.12f;
+    float len = 1.8f;
+
+    glColor3f(0.05f, 0.05f, 0.05f);
+
+    glBegin(GL_QUADS);
+
+    // Front
+    glVertex3f(-w, -h, len);
+    glVertex3f(w, -h, len);
+    glVertex3f(w, h, len);
+    glVertex3f(-w, h, len);
+
+    // Остальные грани
+    glVertex3f(-w, h, 0); glVertex3f(-w, h, len); glVertex3f(w, h, len); glVertex3f(w, h, 0);
+    glVertex3f(-w, -h, 0); glVertex3f(w, -h, 0); glVertex3f(w, -h, len); glVertex3f(-w, -h, len);
+    glVertex3f(-w, -h, 0); glVertex3f(-w, -h, len); glVertex3f(-w, h, len); glVertex3f(-w, h, 0);
+    glVertex3f(w, -h, 0); glVertex3f(w, h, 0); glVertex3f(w, h, len); glVertex3f(w, -h, len);
+
+    glEnd();
+
+    glPopMatrix(); // gun
+    glPopMatrix(); // turret
+    glPopMatrix(); // tank
+}
 void drawTank(TankComponent& tank, float bodyH) {
     glPushMatrix();
     glRotatef(1, 0, 1, 0);
@@ -576,7 +680,7 @@ void drawAppartament(ApartmentComponent& ap, float totalH) {
 }
 void RenderSystem(std::vector<SmokeEffect*>& smokes) {
     for (auto e : entities) {
-        if (healths[e].destroyed && renders[e].type != RenderType::Apartment) continue;
+        if (healths[e].destroyed && renders[e].type != RenderType::Apartment && renders[e].type != RenderType::Tank) continue;
 
         auto& t = transforms[e];
         auto& r = renders[e];
@@ -600,7 +704,8 @@ void RenderSystem(std::vector<SmokeEffect*>& smokes) {
             auto& tank = tanks[e];
             float bodyH = 0.6f;
 
-            drawTank(tank, bodyH);
+            if (!tank.destroyed) drawTank(tank, bodyH);
+            else drawDestroyedTank(tank, bodyH);
         }
                              break;
 
@@ -693,6 +798,7 @@ void DeathSystem(Tank& tank) {
             hp.destroyed = true;
 
             if (apartments.contains(entity)) apartments[entity].destroyed = true;
+            if (tanks.contains(entity)) tanks[entity].destroyed = true;
             else toDelete.push_back(entity);
 
             LOG_INFO("+1 kill");
@@ -727,7 +833,7 @@ void Update(float dt, Tank& tank, ProjectileSystem& projectile,Sound& sound) {
             if (bot.finishReload < 0.0f) bot.finishReload = 0.0f;
         }
             
-        if (playerInRadius(enemyPos,tankPos, bot.detectionRadius)) {
+        if (playerInRadius(enemyPos,tankPos, bot.detectionRadius) && !bot.destroyed) {
             svbmath::Vec3 dir = svbmath::Normalize(tankPos - enemyPos);
             
             float targetYaw = atan2(dir.x, dir.z);
