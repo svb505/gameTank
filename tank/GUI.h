@@ -27,6 +27,7 @@ private:
 	
     float artX = 0.0f;
 	float artZ = 0.0f;
+
 	bool artWindow = false;
 	bool mlrsWindow = false;
     bool devWindow = false;
@@ -94,6 +95,7 @@ public:
         ImGui::Text("Reload time: %.1f", tank.finishReload);
         ImGui::Dummy(ImVec2(0.0f, 10.0f));
         ImGui::Text("Kills: %d", tank.kills);
+        ImGui::Text("Score: %d", tank.score);
         ImGui::Dummy(ImVec2(0.0f, 10.0f));
         ImGui::Text("Control: %s", controlString.c_str());
 

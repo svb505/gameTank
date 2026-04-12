@@ -70,6 +70,8 @@ public:
 
     int selectedSpawn = 0;
     int HP = 200;
+    int score = 0;
+    int scoreToCount = 10;
     int currentHP = HP;
 
     float baseX = 0.0f, baseY = 0.0f, baseZ = 0.0f;

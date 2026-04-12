@@ -138,9 +138,13 @@ void ProjectileSystem::update(float dt, Sound& sound, std::unordered_map<int, En
             if (checkCollision(bounds[id], p.x, p.y, p.z) && !p.isEnemy && calculatePenetration(p.speed)) {
                 healths[id].current -= p.damage;
 
-                if (healths[id].current > 0.0f) g_destroyText = "Target hit";
+                if (healths[id].current > 0.0f) {
+                    g_destroyText = "Target hit";
+                    if (p.type != ProjectileType::Bullet && !healths[id].destroyed) player.score += player.scoreToCount / 2;
+                }
                 else { 
                     g_destroyText = "Target Destoyed";
+                    if (p.type != ProjectileType::Bullet && !healths[id].destroyed) player.score += player.scoreToCount;
                     sound.setSourcePosition(sound.sources["Kill"],player.x,player.y,player.z);
                     alSourcePlay(sound.sources["Kill"]);
                 }
