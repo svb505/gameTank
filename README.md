@@ -2,8 +2,9 @@
 This is a **local tank game** where the goal is to destroy various enemies (soldiers, tanks, houses, etc.). 
 Each enemy has its own HP pool, and each shell deals damage.
 
-## Features: **Positional sound** with attenuation, **kill chat**, **different shell types** (APFSDS, HE, Smoke), 
-**explosion** and **fire effects** through points,**destruction of buildings** when a shell hits or a tank crashes into them, 
+## Features: **Positional sound** with attenuation, **kill chat**, **AI**, **different shell types** (APFSDS, HE, Smoke), 
+**Explosion** and **fire effects** through points,**destruction of buildings** when a shell hits or a tank crashes into them, 
+small **AI** for enemy tanks that **turns the turret towards the player** if he is within range and **shoots at him**.
 tank crashes into objects and destroys them, **lighting**, a **minimap** with dynamic data (your position, enemies around, effects, etc.), 
 **Arced projectile trajectory**, **ammo limitation**, the **ability to replenish ammo** at a special point, and **calling an artillery**
 strike at specific coordinates with a margin of error.
