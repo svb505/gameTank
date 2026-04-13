@@ -137,6 +137,7 @@
     <ClCompile Include="getheight.cpp" />
     <ClCompile Include="getnormal.cpp" />
     <ClCompile Include="HUD.cpp" />
+    <ClCompile Include="killchat.cpp" />
     <ClCompile Include="lightning.cpp" />
     <ClCompile Include="Logger.cpp" />
     <ClCompile Include="main.cpp" />
@@ -166,6 +167,7 @@
     <ClInclude Include="GUI.h" />
     <ClInclude Include="HUD.h" />
     <ClInclude Include="Info.h" />
+    <ClInclude Include="killchat.h" />
     <ClInclude Include="lightning.h" />
     <ClInclude Include="Logger.h" />
     <ClInclude Include="minimap.h" />

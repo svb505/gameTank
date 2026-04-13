@@ -14,8 +14,11 @@
 #include "artillery.h"
 #include "svbmath.h"
 
+
 struct Info;
 struct EffectsContext;
+
+extern std::map<shellType,std::string> shellTypes;
 
 class ProjectileSystem {
 public:
@@ -29,6 +32,7 @@ public:
     void updateProjectiles(ProjectileSystem& projectileSystem);
     void updateArtillery(std::vector<Projectile>& artilleryProjectiles, Sound& sound,
         std::unordered_map<int, Entity>& enemies, EffectsContext& context);
+    std::string getShellType(shellType& shellType);
 private:
     void onHit(Projectile& p, int id,Health* health,EffectsContext& context,Sound& sound,Tank& player,bool hitGround);
     float calculatePenetration(float vel);

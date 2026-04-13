@@ -37,6 +37,7 @@
 #include "smokeGranade.h"
 #include "craters.h"
 #include "rangefinder.h"
+#include "killchat.h"
 
 #define COUNT 55
 #define ECRANW 1600
@@ -403,6 +404,9 @@ int main(){
         weat.update(cam,deltaTime); //Update rain/snow
         weat.renderSnowPiles();
         weat.draw();
+
+        updateKillChat(deltaTime); 
+        showKillChat(ECRANW, ECRANH); 
 
         glDisable(GL_DEPTH_TEST);
         glDisable(GL_LIGHTING);

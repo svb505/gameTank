@@ -17,6 +17,14 @@
 #include "Logger.h"
 #include "text.h"
 #include "craters.h"
+#include "killchat.h"
+
+std::map<shellType, std::string> shellTypes = { {shellType::APFSDS,"APFSDS"},{shellType::HE,"HE"},
+        {shellType::SMOKE,"SMOKE"} ,{shellType::ATGM,"ATGM"} ,{shellType::BULLET,"BULLET"} };
+
+std::string ProjectileSystem::getShellType(shellType& shellType) {
+    return shellTypes[shellType];
+}
 
 float ProjectileSystem::calculatePenetration(float vel) {
     const float k = 0.0005f;
@@ -45,6 +53,8 @@ void ProjectileSystem::onHit(Projectile& p, int id, Health* health,EffectsContex
 
                 if (!p.isEnemy && p.type != ProjectileType::Bullet)
                     player.score += player.scoreToCount;
+
+                addToKillChat("Player",getRenderTypeString(renders[id].type),getShellType(p.selectedShellType),0,id);
 
                 sound.setSourcePosition(sound.sources["Kill"], player.x, player.y, player.z);
                 alSourcePlay(sound.sources["Kill"]);
@@ -154,6 +164,8 @@ void ProjectileSystem::update(float dt,Sound& sound,std::unordered_map<int, Enti
             onHit(p, 0, nullptr, context, sound, player, false);
 
             if (player.currentHP <= 0) {
+                addToKillChat("Tank", "Player", getShellType(p.selectedShellType), 0, 0);
+
                 player.currentHP = player.HP;
                 player.x = player.spawns[player.selectedSpawn].x;
                 player.y = player.spawns[player.selectedSpawn].y;

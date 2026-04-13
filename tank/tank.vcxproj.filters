@@ -90,6 +90,9 @@
     <ClCompile Include="rangefinder.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="killchat.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="tank.h">
@@ -174,6 +177,9 @@
       <Filter>Исходные файлы</Filter>
     </ClInclude>
     <ClInclude Include="rangefinder.h">
+      <Filter>Исходные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="killchat.h">
       <Filter>Исходные файлы</Filter>
     </ClInclude>
   </ItemGroup>

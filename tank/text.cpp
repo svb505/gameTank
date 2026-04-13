@@ -2,6 +2,7 @@
 #include <GL/gl.h>
 #include "text.h"
 #include <string>
+#include "killchat.h"
 
 GLuint fontBase = 0;
 float timerText = 3.0f;
@@ -106,9 +107,7 @@ void showDestroyText(float dt) {
         timerText = 3.0f; 
     }
 }
-void RenderTextHUD_Colored(float x, float y, const char* text, int screenW, int screenH){
-    if (!text) return;
-
+void RenderTextHUD_Colored(float x, float y,const std::vector<ColoredWord>& words,int screenW, int screenH){
     glMatrixMode(GL_PROJECTION);
     glPushMatrix();
     glLoadIdentity();
@@ -119,51 +118,34 @@ void RenderTextHUD_Colored(float x, float y, const char* text, int screenW, int 
     glLoadIdentity();
 
     glDisable(GL_DEPTH_TEST);
-
-    float r = 1.0f, g = 1.0f, b = 1.0f; 
-    glColor3f(r, g, b);
+    glDisable(GL_LIGHTING);
 
     float cursorX = x;
     float cursorY = y;
 
-    const float charWidth = 16.0f;
-    const float lineHeight = 16.0f;
+    const float charWidth = 13.0f;
 
-    const char* p = text;
+    for (const auto& w : words){
+        glColor3f(w.r, w.g, w.b);
 
-    while (*p){
-        if (*p == '\n'){
-            cursorY += lineHeight;
-            cursorX = x;
+        const char* p = w.text.c_str();
+
+        while (*p){
+            glRasterPos2f(cursorX, cursorY);
+
+            glPushAttrib(GL_LIST_BIT);
+            glListBase(fontBase);
+            glCallLists(1, GL_UNSIGNED_BYTE, p);
+            glPopAttrib();
+
+            cursorX += charWidth;
             p++;
-            continue;
         }
-
-        if (*p == '{'){
-            float nr, ng, nb;
-            if (sscanf_s(p, "{%f,%f,%f}", &nr, &ng, &nb) == 3){
-                r = nr;
-                g = ng;
-                b = nb;
-                glColor3f(r, g, b);
-
-                while (*p && *p != '}') p++;
-                if (*p == '}') p++;
-                continue;
-            }
-        }
-
-        glRasterPos2f(cursorX, cursorY);
-
-        glPushAttrib(GL_LIST_BIT);
-        glListBase(fontBase);
-        glCallLists(1, GL_UNSIGNED_BYTE, p);
-        glPopAttrib();
 
         cursorX += charWidth;
-        p++;
     }
 
+    glEnable(GL_LIGHTING);
     glEnable(GL_DEPTH_TEST);
 
     glPopMatrix();
