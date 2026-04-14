@@ -9,7 +9,7 @@
 #include <vector>
 
 
-void HUD::Draw3DAim(Tank& tank) {
+void Draw3DAim(Tank& tank) {
     float turretRad;
 
     if (tank.turretLocked) turretRad = (tank.bodyYaw + tank.turretYaw) * 3.1415926f / 180.0f;

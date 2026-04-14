@@ -12,8 +12,12 @@
 #include "minimap.h"
 #include "badges.h"
 
-void MiniMap::draw(int ECRANW, int ECRANH, Tank& playerTank, ProjectileSystem& projectileSystem,
-    std::vector<ExplosionEffect*>& explosions, std::vector<SmokeEffect*>& smokes,Camera& cam, std::string weather,
+float height = 80.0f;
+int step = 3;
+
+void setHeight(float h) { height = h; }
+float getHeight() { return height; }
+void drawMiniMap(int ECRANW, int ECRANH, Tank& playerTank, EffectsContext& context, Camera& cam, std::string weather,
     bool badges, float dt) {
 
     float size = height * 0.6f;
@@ -37,14 +41,14 @@ void MiniMap::draw(int ECRANW, int ECRANH, Tank& playerTank, ProjectileSystem& p
     drawGround(playerTank.x, playerTank.z,weather);
     
 
-    for (auto& p : projectileSystem.projectiles) {
+    for (auto& p : projectiles) {
         if (!p.alive) continue;
 
         if (p.type == ProjectileType::Shell) drawShell();
         else drawBullet();
     }
-    for (auto it = explosions.begin(); it != explosions.end(); ++it) (*it)->Draw();
-    for (auto it = smokes.begin(); it != smokes.end(); ++it) (*it)->Draw();
+    for (auto it = context.explosions.begin(); it != context.explosions.end(); ++it) (*it)->Draw();
+    for (auto it = context.smokes.begin(); it != context.smokes.end(); ++it) (*it)->Draw();
 
     drawGrid(cam.cameraX, cam.cameraZ);
     drawGridText(cam.cameraX, cam.cameraZ);
@@ -53,7 +57,7 @@ void MiniMap::draw(int ECRANW, int ECRANH, Tank& playerTank, ProjectileSystem& p
 
     if (!badges) {
         playerTank.Draw();
-        Render(smokes, false);
+        Render(context.smokes, false);
     }
     else {
         drawPlayerIcon(miniW * 0.5f, miniH * 0.5f, 1.0f, cam.cameraYaw);

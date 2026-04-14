@@ -46,10 +46,7 @@
 Camera cam;
 Tank tank;
 Sound sound;
-HUD hud;
 Replishment repl;
-MiniMap mnMap;
-Light light;
 GUI gui;
 Artillery art;
 Weather weat;
@@ -109,7 +106,7 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos){
 
     tank.gunPitch = std::clamp(tank.gunPitch, -10.0f, 10.0f);
 }
-void processTankInput(GLFWwindow* window, float dt,ProjectileSystem& projectileSystem, std::unordered_map<int, Entity>& enemyes){
+void processTankInput(GLFWwindow* window, float dt,std::unordered_map<int, Entity>& enemyes){
     static bool lastShift = false;
     static bool lastFire = false;
     static bool prevCtrl = false;
@@ -161,15 +158,17 @@ void processTankInput(GLFWwindow* window, float dt,ProjectileSystem& projectileS
         if (tank.moveSpeed >= tank.SPEED_LIMIT_BACK) tank.moveSpeed -= tank.VELOCITY_COEF / 2;
     }
     if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS) {
-        mnMap.setHeight(mnMap.getHeight() + mnMap.step * dt * 60);
+        //set minimap height
+        setHeight(getHeight() + step * dt * 60);
     }
     if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS) {
-        mnMap.setHeight(mnMap.getHeight() - mnMap.step * dt * 60);
+        //set minimap height
+        setHeight(getHeight() - step * dt * 60);
     }
     if (glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_PRESS) {
         float yaw = tank.bodyYaw + tank.turretYaw;
 
-        projectileSystem.spawnBullet({ tank.x, tank.y + 1.0f, tank.z }, yaw);
+        spawnBullet({ tank.x, tank.y + 1.0f, tank.z }, yaw);
 
         sound.setSourcePosition(sound.sources["MGun"], tank.x, tank.y + 1.6f, tank.z);
         alSourceStop(sound.sources["MGun"]);
@@ -219,7 +218,7 @@ void processTankInput(GLFWwindow* window, float dt,ProjectileSystem& projectileS
         if (tank.turretLocked) yaw = tank.bodyYaw + tank.turretYaw;
         else yaw = tank.turretYaw - 90.0f;
 
-        projectileSystem.spawnShell({ tank.x,tank.y + 1.6f,tank.z }, yaw, tank.gunPitch,
+        spawnShell({ tank.x,tank.y + 1.6f,tank.z }, yaw, tank.gunPitch,
             tank.selectedShell,tank.shellSpeed);
         
         sound.setSourcePosition(sound.sources["Shot"], tank.x, tank.y + 1.6f, tank.z);
@@ -305,8 +304,6 @@ int main(){
     std::vector<SmokeEffect*> smokes;
 
     EffectsContext context{ explosions, smokes };
-
-    ProjectileSystem projectileSystem;
     
     TrackBuffer leftTrack;
     TrackBuffer rightTrack;
@@ -319,7 +316,7 @@ int main(){
     int frames = 0;
     float fps = 0.0f;
 
-    light.initLighting();
+    initLighting();
 
     generateEnemyes(enemyes,COUNT);
     repl.setCoordinates(10.0f, static_cast<float>(rand() % 30),static_cast<float>((rand() % 50) - 50));
@@ -386,7 +383,7 @@ int main(){
         if (tank.finishReload > 0.0f) tank.finishReload -= deltaTime;
         if (tank.moveSpeed > 0.0f) tank.moveSpeed *= tank.REDUCTION_COEF;
 
-        processTankInput(window, (float)deltaTime, projectileSystem, enemyes);
+        processTankInput(window, (float)deltaTime, enemyes);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         drawSky();
@@ -398,7 +395,7 @@ int main(){
 
         repl.drawReplCircle(30);//replishement ammo
 
-        Update(deltaTime,tank,projectileSystem,sound); // Update enemyes
+        Update(deltaTime,tank,sound); // Update enemyes
         Render(smokes); // Render enemyes
 
         weat.update(cam,deltaTime); //Update rain/snow
@@ -434,9 +431,10 @@ int main(){
         art.drawAllShells();
         art.deleteIfAlived();
 
-        projectileSystem.update((float)deltaTime, sound, enemyes, healths, bounds, context, tank);
-        projectileSystem.updateProjectiles(projectileSystem);
-        projectileSystem.updateArtillery(art.shells,sound,enemyes, context);
+        //Update projectiles
+        update((float)deltaTime, sound, enemyes, healths, bounds, context, tank);
+        updateProjectiles();
+        updateArtillery(art.shells,sound,enemyes, context);
         
         updateExplosions(explosions, deltaTime);
         updateSmokes(smokes, deltaTime);
@@ -458,9 +456,9 @@ int main(){
             alSourcePlay(sound.sources["Collision"]);
         }
 
-        hud.Draw3DAim(tank);
+        Draw3DAim(tank);
 
-        mnMap.draw(ECRANW, ECRANH, tank, projectileSystem, explosions, smokes, cam, weather,badges,deltaTime);
+        drawMiniMap(ECRANW, ECRANH, tank, context, cam, weather,badges,deltaTime);
 
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
         glfwSwapBuffers(window);

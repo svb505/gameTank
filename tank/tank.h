@@ -8,7 +8,7 @@
 #include "bounds.h"
 #include "svbmath.h"
 
-constexpr int MAX_TRACK_POINTS = 128;
+constexpr int MAX_TRACK_POINTS = 64;
 
 struct TrackPoint {
     svbmath::Vec3 pos;

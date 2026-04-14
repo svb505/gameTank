@@ -4,7 +4,7 @@
 #include "lightning.h"
 #include "Logger.h"
 
-void Light::initLighting() {
+void initLighting() {
 	LOG_INFO("Lightning initializated");
 
 	glEnable(GL_LIGHTING);

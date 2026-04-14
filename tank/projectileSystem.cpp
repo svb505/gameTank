@@ -19,18 +19,19 @@
 #include "craters.h"
 #include "killchat.h"
 
+std::vector<Projectile> projectiles = {};
 std::map<shellType, std::string> shellTypes = { {shellType::APFSDS,"APFSDS"},{shellType::HE,"HE"},
         {shellType::SMOKE,"SMOKE"} ,{shellType::ATGM,"ATGM"} ,{shellType::BULLET,"BULLET"} };
 
-std::string ProjectileSystem::getShellType(shellType& shellType) {
+std::string getShellType(shellType& shellType) {
     return shellTypes[shellType];
 }
 
-float ProjectileSystem::calculatePenetration(float vel) {
+float calculatePenetration(float vel) {
     const float k = 0.0005f;
     return k * vel * vel;
 }
-void ProjectileSystem::onHit(Projectile& p, int id, Health* health,EffectsContext& context,Sound& sound, Tank& player,bool hitGround) {
+void onHit(Projectile& p, int id, Health* health,EffectsContext& context,Sound& sound, Tank& player,bool hitGround) {
 
     float x = p.x;
     float y = p.y;
@@ -103,7 +104,7 @@ void ProjectileSystem::onHit(Projectile& p, int id, Health* health,EffectsContex
 
     p.alive = false;
 }
-void ProjectileSystem::spawnShell(svbmath::Vec3 pos, float yawDeg, float pitchDeg, shellType _shellType,
+void spawnShell(svbmath::Vec3 pos, float yawDeg, float pitchDeg, shellType _shellType,
     int shellSpeed,bool isEnemy) {
     Projectile p(_shellType);
     p.type = ProjectileType::Shell;
@@ -135,7 +136,7 @@ void ProjectileSystem::spawnShell(svbmath::Vec3 pos, float yawDeg, float pitchDe
 
     projectiles.push_back(p);
 }
-void ProjectileSystem::spawnBullet(svbmath::Vec3 pos, float yawDeg) {
+void spawnBullet(svbmath::Vec3 pos, float yawDeg) {
     Projectile p(shellType::BULLET);
     p.type = ProjectileType::Bullet;
     p.x = pos.x; p.y = pos.y; p.z = pos.z;
@@ -150,7 +151,7 @@ void ProjectileSystem::spawnBullet(svbmath::Vec3 pos, float yawDeg) {
 
     projectiles.push_back(p);
 }
-void ProjectileSystem::update(float dt,Sound& sound,std::unordered_map<int, Entity>& enemies,std::unordered_map<Entity, Health>& healths,
+void update(float dt,Sound& sound,std::unordered_map<int, Entity>& enemies,std::unordered_map<Entity, Health>& healths,
     std::unordered_map<Entity, Bounds>& bounds,EffectsContext& context,Tank& player) {
     for (auto& p : projectiles) {
         if (!p.alive) continue;
@@ -196,8 +197,8 @@ void ProjectileSystem::update(float dt,Sound& sound,std::unordered_map<int, Enti
         return !p.alive;
         });
 }
-void ProjectileSystem::updateProjectiles(ProjectileSystem& projectileSystem) {
-    for (auto& p : projectileSystem.projectiles) {
+void updateProjectiles() {
+    for (auto& p : projectiles) {
         if (!p.alive) continue;
 
         glPushMatrix();
@@ -209,7 +210,7 @@ void ProjectileSystem::updateProjectiles(ProjectileSystem& projectileSystem) {
         glPopMatrix();
     }
 }
-void ProjectileSystem::updateArtillery(std::vector<Projectile>& artilleryProjectiles, Sound& sound,
+void updateArtillery(std::vector<Projectile>& artilleryProjectiles, Sound& sound,
     std::unordered_map<int, Entity>& enemies, EffectsContext& context) {
     for (auto& p : artilleryProjectiles) {
         if (!p.alive) continue;
