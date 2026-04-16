@@ -2,10 +2,10 @@
 #include "svbmath.h"
 #include <algorithm>
 
-bool checkCollision(const Bounds& target, float x, float y, float z) {
-    return x >= target.minX && x <= target.maxX &&
-        y >= target.minY && y <= target.maxY &&
-        z >= target.minZ && z <= target.maxZ;
+bool checkCollision(const Bounds& target, svbmath::Vec3& pos) {
+    return pos.x >= target.minX && pos.x <= target.maxX &&
+        pos.y >= target.minY && pos.y <= target.maxY &&
+        pos.z >= target.minZ && pos.z <= target.maxZ;
 }
 bool RayIntersectsAABB(const svbmath::Vec3& rayOrigin, const svbmath::Vec3& rayDir,
     const Bounds& b, float& tNear, float& tFar)

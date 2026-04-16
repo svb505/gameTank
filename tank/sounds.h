@@ -5,6 +5,7 @@
 #include <iostream>
 #include <vector>
 #include "map"
+#include "svbmath.h"
 
 struct SourceConfig {
     std::string name;
@@ -48,8 +49,8 @@ public:
         {"Kill", 0},
     };
 
-    void setSourcePosition(ALuint source, float x, float y, float z) {
-        ALfloat pos[] = { x, y, z };
+    void setSourcePosition(ALuint source, svbmath::Vec3 posit) {
+        ALfloat pos[] = { posit.x, posit.y, posit.z };
         ALfloat vel[] = { 0.0f, 0.0f, 0.0f };
 
         alSourcefv(source, AL_POSITION, pos);

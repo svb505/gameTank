@@ -13,7 +13,7 @@ class Sound;
 using Entity = uint32_t;
 
 struct Transform {
-    float x, y, z;
+    svbmath::Vec3 pos;
     float angle;
 };
 struct Health {
@@ -87,4 +87,4 @@ void Render(std::vector<SmokeEffect*>& smokes,bool healthBar = true);
 void generateEnemyes(std::unordered_map<int, Entity>& enemyes, int count);
 std::string getRenderTypeString(RenderType& type);
 bool playerInRadius(const svbmath::Vec3& enemyPos, const svbmath::Vec3& playerPos, float radius);
-checkCol checkCollisionWithTank(float x,float y, float z);
+checkCol checkCollisionWithTank(svbmath::Vec3& pos);

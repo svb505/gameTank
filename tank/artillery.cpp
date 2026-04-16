@@ -37,9 +37,9 @@ void Artillery::spawnShells(float x,float z) {
         auto error = returnRandomError();
 
         Projectile s(shellType::HE);
-        s.x = x + error[0];
-        s.y = shellHeight;
-        s.z = z + error[1];
+        s.pos.x = x + error[0];
+        s.pos.y = shellHeight;
+        s.pos.z = z + error[1];
         s.delay = 5.0f;
         s.active = false;
         s.speed = shellSpeed * returnSpeedError();
@@ -56,14 +56,14 @@ void Artillery::updateShells(float dt) {
             continue;
         }
 
-        s.y -= s.speed * dt;
+        s.pos.y -= s.speed * dt;
     }
 }
 void Artillery::drawAllShells() {
     for (auto& s : shells) {
         if (!s.alive) continue;
         glPushMatrix();
-        glTranslatef(s.x, s.y, s.z);
+        glTranslatef(s.pos.x, s.pos.y, s.pos.z);
         drawShell();
         glPopMatrix();
     }

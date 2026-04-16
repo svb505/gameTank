@@ -34,21 +34,20 @@ void Projectile::update(float dt,Tank& tank) {
             dir.z /= lenDir;
         }
 
-        x += dir.x * speed * dt;
-        y += dir.y * speed * dt;
-        z += dir.z * speed * dt;
+        pos.x += dir.x * speed * dt;
+        pos.y += dir.y * speed * dt;
+        pos.z += dir.z * speed * dt;
     }
     else {
-        vy -= gravity * dt;
+        velocity.y -= gravity * dt;
 
-        x += vx * redution_coef * dt;
-        y += vy * dt;
-        z += vz * redution_coef * dt;
+        pos.x += velocity.x * redution_coef * dt;
+        pos.y += velocity.y * dt;
+        pos.z += velocity.z * redution_coef * dt;
     }
     
 
     lifeTime -= dt;
 
-    if (lifeTime <= 0.0f)
-        alive = false;
+    if (lifeTime <= 0.0f) alive = false;
 }

@@ -49,15 +49,15 @@ svbmath::Vec3 Tank::LocalToWorldTurret(const svbmath::Vec3& local) {
     p.y += params.turretY;
     p = RotateY(p, bodyYaw);
 
-    p.x += x;
-    p.y += y;
-    p.z += z;
+    p.x += pos.x;
+    p.y += pos.y;
+    p.z += pos.z;
 
     return p;
 }
 void Tank::Draw() {
     glPushMatrix();
-    glTranslatef(x, y, z);
+    glTranslatef(pos.x, pos.y, pos.z);
     glRotatef(bodyYaw, 0, 1, 0);
 
     DrawHull();
@@ -71,9 +71,9 @@ void Tank::updateDirrections(float bR, float bY) {
     dirX = -sin(bR);
     dirZ = -cos(bR);
 }
-void Tank::updatePosition(float x, float z, float dt) {
-    this->x += dirX * moveSpeed * dt;
-    this->z += dirZ * moveSpeed * dt;
+void Tank::updatePosition(svbmath::Vec3& pos, float dt) {
+    this->pos.x += dirX * moveSpeed * dt;
+    this->pos.z += dirZ * moveSpeed * dt;
 }
 float Tank::returnImpactImpulse() {
     float baseDmg = 100;
@@ -204,13 +204,13 @@ Bounds Tank::GetHullMax() const {
         float z = corners[i].x * sinYaw + corners[i].z * cosYaw;
         float y = corners[i].y;
 
-        min.x = std::min(min.x, x + this->x);
-        min.y = std::min(min.y, y + this->y);
-        min.z = std::min(min.z, z + this->z);
+        min.x = std::min(min.x, x + this->pos.x);
+        min.y = std::min(min.y, y + this->pos.y);
+        min.z = std::min(min.z, z + this->pos.z);
 
-        max.x = std::max(max.x, x + this->x);
-        max.y = std::max(max.y, y + this->y);
-        max.z = std::max(max.z, z + this->z);
+        max.x = std::max(max.x, x + this->pos.x);
+        max.y = std::max(max.y, y + this->pos.y);
+        max.z = std::max(max.z, z + this->pos.z);
     }
 
     result.minX = min.x;

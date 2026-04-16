@@ -35,11 +35,11 @@ void drawMiniMap(int ECRANW, int ECRANH, Tank& playerTank, EffectsContext& conte
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
-    gluLookAt(playerTank.x, height, playerTank.z,playerTank.x, 0.0f, playerTank.z,0, 0, -1);
+    gluLookAt(playerTank.pos.x, height, playerTank.pos.z,playerTank.pos.x, 0.0f, playerTank.pos.z,0, 0, -1);
 
     glClear(GL_DEPTH_BUFFER_BIT);
 
-    drawGround(playerTank.x, playerTank.z,weather);
+    drawGround(playerTank.pos.x, playerTank.pos.z,weather);
     
 
     for (auto& p : projectiles) {

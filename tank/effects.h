@@ -7,12 +7,13 @@
 #include <cmath>
 #include <chrono>
 #include <cstdlib>
+#include "svbmath.h"
 
 class ExplosionEffect {
 private:
     struct Particle {
-        float x, y, z;
-        float vx, vy, vz;
+        svbmath::Vec3 pos;
+        svbmath::Vec3 velovity;
         float life;
     };
 
@@ -26,7 +27,7 @@ private:
     float heightScale;
 
 public:
-    ExplosionEffect(float x, float y, float z, int count = 400, float durationSec = 6.0f,
+    ExplosionEffect(svbmath::Vec3 pos, int count = 400, float durationSec = 6.0f,
         float radius = 2.0f, float height = 1.8f);
 
     void Update(float dt);
@@ -38,7 +39,7 @@ public:
 class SmokeEffect {
 private:
     struct Particle {
-        float x, y, z;
+        svbmath::Vec3 pos;
         float size;
         float riseSpeed;
     };
@@ -53,7 +54,7 @@ private:
     std::vector<float> colors = { 0.2f, 0.2f, 0.2f, 0.2f };
 
 public:
-    SmokeEffect(float x, float y, float z, int count = 100, float r = 1.0f,
+    SmokeEffect(svbmath::Vec3 pos, int count = 100, float r = 1.0f,
         const std::vector<float>& _colors = { 0.2f, 0.2f, 0.2f, 0.5f }, float _size = 1.0f, float _speed = 0.5f,
         float hRadius = 0.5f);
     std::vector<Particle> getCoordinates() const;

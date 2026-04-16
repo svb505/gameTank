@@ -3,12 +3,13 @@
 #include "tank.h"
 #include <cmath>
 #include "sounds.h"
+#include "svbmath.h"
 
-void SmokeGranade::draw(float x, float y, float z,float angle,float yaw) {
+void SmokeGranade::draw(svbmath::Vec3& pos,float angle,float yaw) {
     float s = 0.1f;
 
     glPushMatrix();
-    glTranslatef(x,y,z);
+    glTranslatef(pos.x, pos.y, pos.z);
 
     glRotatef(yaw, 0, 1, 0);
     glRotatef(angle, 1, 0, 0);
@@ -32,7 +33,7 @@ void SmokeGranade::draw(float x, float y, float z,float angle,float yaw) {
     glPopMatrix();
 }
 void SmokeGranade::drawAll(Tank& tank) {
-    for (auto& g : granades) draw(g.pos.x, g.pos.y, g.pos.z,g.angle,tank.turretYaw);
+    for (auto& g : granades) draw(g.pos,g.angle,tank.turretYaw);
 }
 void SmokeGranade::spawn(Tank& tank) {
     float halfW = tank.params.turretW * 0.5f;
@@ -53,9 +54,9 @@ void SmokeGranade::spawn(Tank& tank) {
 
         p.count = 3000;
 
-        p.vx = sin(yawRad) * cos(angleRad) * p.speed; 
-        p.vy = sin(p.angle) * p.speed; 
-        p.vz = cos(yawRad) * cos(angleRad) * p.speed;
+        p.velocity.x = sin(yawRad) * cos(angleRad) * p.speed; 
+        p.velocity.y = sin(p.angle) * p.speed;
+        p.velocity.z = cos(yawRad) * cos(angleRad) * p.speed;
 
         granades.push_back(p);
     }
@@ -77,16 +78,16 @@ void SmokeGranade::update(float dt, std::vector<SmokeEffect*>& smokes,Tank& tank
 
             g.pos = (i < maxCount / 2) ? tank.LocalToWorldTurret(leftLocal) : tank.LocalToWorldTurret(rightLocal);
             
-            g.vx = sin(yawRad) * cos(angleRad) * g.speed;
-            g.vy = sin(g.angle) * g.speed;
-            g.vz = cos(yawRad) * cos(angleRad) * g.speed;
+            g.velocity.x = sin(yawRad) * cos(angleRad) * g.speed;
+            g.velocity.y = sin(g.angle) * g.speed;
+            g.velocity.z = cos(yawRad) * cos(angleRad) * g.speed;
         }
         else{
-            g.vy -= g.gravity * dt;
+            g.velocity.y -= g.gravity * dt;
 
-            g.pos.x += g.vx * dt;
-            g.pos.y += g.vy * dt;
-            g.pos.z += g.vz * dt;
+            g.pos.x += g.velocity.x * dt;
+            g.pos.y += g.velocity.y * dt;
+            g.pos.z += g.velocity.z * dt;
         }
         i++;
     }
@@ -94,9 +95,9 @@ void SmokeGranade::update(float dt, std::vector<SmokeEffect*>& smokes,Tank& tank
     for (auto it = granades.begin(); it != granades.end();) {
         auto& g = (*it);
         if (g.pos.y <= 0.0f) {
-            smokes.push_back(new SmokeEffect(g.pos.x, g.pos.y, g.pos.z, g.count, 7.0f, { 1.0f,1.0f,1.0f }, 3.0f,
+            smokes.push_back(new SmokeEffect(g.pos, g.count, 7.0f, { 1.0f,1.0f,1.0f }, 3.0f,
                 0.1f,9.0f));
-            sound.setSourcePosition(sound.sources["Smoke"], g.pos.x, g.pos.y, g.pos.z);
+            sound.setSourcePosition(sound.sources["Smoke"], g.pos);
             alSourcePlay(sound.sources["Smoke"]);
 
             it = granades.erase(it);

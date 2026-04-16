@@ -135,7 +135,7 @@ public:
             if (ImGui::Button("Start artillery strike")){
                 art.init(8, 25.0f);
 
-                sound.setSourcePosition(sound.sources["ArtVolley"], tank.x, tank.y, tank.z);
+                sound.setSourcePosition(sound.sources["ArtVolley"], tank.pos);
                 alSourceStop(sound.sources["ArtVolley"]);
                 alSourcePlay(sound.sources["ArtVolley"]);
 
@@ -153,7 +153,7 @@ public:
             if (ImGui::Button("Start MLRS strike")){
                 art.init(25, 125.0f);
 
-                sound.setSourcePosition(sound.sources["ArtVolley"], tank.x, tank.y, tank.z);
+                sound.setSourcePosition(sound.sources["ArtVolley"], tank.pos);
                 alSourceStop(sound.sources["ArtVolley"]);
                 alSourcePlay(sound.sources["ArtVolley"]);
 

@@ -21,9 +21,8 @@ struct Projectile {
     shellType selectedShellType;
 
     svbmath::Vec3 dir;
-
-    float x, y, z;
-    float vx, vy, vz;
+    svbmath::Vec3 velocity;
+    svbmath::Vec3 pos;
 
     float gravity = 9.8f;
     float speed;

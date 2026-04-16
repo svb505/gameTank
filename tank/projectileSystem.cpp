@@ -32,12 +32,8 @@ float calculatePenetration(float vel) {
 }
 void onHit(Projectile& p, int id, Health* health,EffectsContext& context,Sound& sound, Tank& player,bool hitGround) {
 
-    float x = p.x;
-    float y = p.y;
-    float z = p.z;
-
     const char* snd = (p.type == ProjectileType::Shell) ? "Explosion" : "Explosion";
-    sound.setSourcePosition(sound.sources[snd], x, y, z);
+    sound.setSourcePosition(sound.sources[snd], p.pos);
     alSourceStop(sound.sources[snd]);
     alSourcePlay(sound.sources[snd]);
 
@@ -56,7 +52,7 @@ void onHit(Projectile& p, int id, Health* health,EffectsContext& context,Sound& 
 
                 addToKillChat("Player",getRenderTypeString(renders[id].type),getShellType(p.selectedShellType),0,id);
 
-                sound.setSourcePosition(sound.sources["Kill"], player.x, player.y, player.z);
+                sound.setSourcePosition(sound.sources["Kill"], player.pos);
                 alSourcePlay(sound.sources["Kill"]);
             }
             else if (health->current > 0.0f) {
@@ -77,13 +73,13 @@ void onHit(Projectile& p, int id, Health* health,EffectsContext& context,Sound& 
         }
     }
 
-    if (hitGround) addCrater(x, z);
+    if (hitGround) addCrater(p.pos.x, p.pos.z);
 
     if (p.type != ProjectileType::Bullet) {
 
         if (p.selectedShellType == shellType::SMOKE) {
             context.smokes.push_back(
-                new SmokeEffect(x, y, z, 5500, 6, { 1.0f,1.0f,1.0f,0.3f }, 3.0f, 0.01f, 6.0f)
+                new SmokeEffect(p.pos , 5500, 6, { 1.0f,1.0f,1.0f,0.3f }, 3.0f, 0.01f, 6.0f)
             );
         }
         else {
@@ -92,11 +88,11 @@ void onHit(Projectile& p, int id, Health* health,EffectsContext& context,Sound& 
             float height = (p.selectedShellType == shellType::APFSDS) ? 1.5f : 2.0f;
 
             context.explosions.push_back(
-                new ExplosionEffect(x, y, z, count, radius, height, 1.8f)
+                new ExplosionEffect(p.pos, count, radius, height, 1.8f)
             );
 
             context.smokes.push_back(
-                new SmokeEffect(x, y, z, 300, 3)
+                new SmokeEffect(p.pos, 300, 3)
             );
         }
     }
@@ -110,7 +106,7 @@ void spawnShell(svbmath::Vec3 pos, float yawDeg, float pitchDeg, shellType _shel
 
     p.selectedShellType = _shellType;
 
-    p.x = pos.x; p.y = pos.y; p.z = pos.z;
+    p.pos.x = pos.x; p.pos.y = pos.y; p.pos.z = pos.z;
     p.speed = shellSpeed;
 
     float yaw = yawDeg * 3.1415926f / 180.0f;
@@ -123,11 +119,7 @@ void spawnShell(svbmath::Vec3 pos, float yawDeg, float pitchDeg, shellType _shel
         p.dir = dir;
         p.turnSpeed = 5.0f;
     }
-    else {
-        p.vx = sin(yaw) * cos(pitch) * p.speed;
-        p.vy = -sin(pitch) * p.speed;
-        p.vz = cos(yaw) * cos(pitch) * p.speed;
-    }
+    else p.velocity = { sin(yaw) * cos(pitch) * p.speed, -sin(pitch) * p.speed,cos(yaw) * cos(pitch) * p.speed };
     
     p.isEnemy = isEnemy;
 
@@ -138,15 +130,14 @@ void spawnShell(svbmath::Vec3 pos, float yawDeg, float pitchDeg, shellType _shel
 void spawnBullet(svbmath::Vec3 pos, float yawDeg) {
     Projectile p(shellType::BULLET);
     p.type = ProjectileType::Bullet;
-    p.x = pos.x; p.y = pos.y; p.z = pos.z;
+    p.pos.x = pos.x; p.pos.y = pos.y; p.pos.z = pos.z;
     p.speed = 120.0f;
     p.damage = 1;
     p.lifeTime = 4.0f;
 
     float yaw = yawDeg * 3.1415926f / 180.0f;
-    p.vx = sin(yaw) * p.speed;
-    p.vy = 0.0f;
-    p.vz = cos(yaw) * p.speed;
+
+    p.velocity = { sin(yaw) * p.speed, 0.0f, cos(yaw) * p.speed };
 
     projectiles.push_back(p);
 }
@@ -157,7 +148,7 @@ void update(float dt,Sound& sound,std::unordered_map<int, Entity>& enemies,std::
 
         p.update(dt, player);
 
-        if (checkCollision(player.GetHullMax(), p.x, p.y, p.z) && p.isEnemy) {
+        if (checkCollision(player.GetHullMax(), p.pos) && p.isEnemy) {
 
             player.currentHP -= p.damage;
 
@@ -167,9 +158,9 @@ void update(float dt,Sound& sound,std::unordered_map<int, Entity>& enemies,std::
                 addToKillChat("Tank", "Player", getShellType(p.selectedShellType), 0, 0);
 
                 player.currentHP = player.HP;
-                player.x = player.spawns[player.selectedSpawn].x;
-                player.y = player.spawns[player.selectedSpawn].y;
-                player.z = player.spawns[player.selectedSpawn].z;
+                player.pos.x = player.spawns[player.selectedSpawn].x;
+                player.pos.y = player.spawns[player.selectedSpawn].y;
+                player.pos.z = player.spawns[player.selectedSpawn].z;
             }
 
             continue;
@@ -181,13 +172,13 @@ void update(float dt,Sound& sound,std::unordered_map<int, Entity>& enemies,std::
             if (!bounds.contains(id)) continue;
             if (healths[id].destroyed && renders[id].type != RenderType::Apartment) continue;
 
-            if (checkCollision(bounds[id], p.x, p.y, p.z) && !p.isEnemy) {
+            if (checkCollision(bounds[id], p.pos) && !p.isEnemy) {
 
                 onHit(p,id, &healths[id], context, sound, player, false);
                 break;
             }
         }
-        if (p.alive && p.y <= 0.0f && p.type != ProjectileType::Bullet) {
+        if (p.alive && p.pos.y <= 0.0f && p.type != ProjectileType::Bullet) {
             onHit(p, 0, nullptr, context, sound, player, true);
         }
     }
@@ -201,7 +192,7 @@ void updateProjectiles() {
         if (!p.alive) continue;
 
         glPushMatrix();
-        glTranslatef(p.x, p.y, p.z);
+        glTranslatef(p.pos.x, p.pos.y, p.pos.z);
 
         if (p.type == ProjectileType::Shell) drawShell();
         else drawBullet();
@@ -220,23 +211,23 @@ void updateArtillery(std::vector<Projectile>& artilleryProjectiles, Sound& sound
             if (!healths.contains(id) || healths[id].destroyed) continue;
             if (!bounds.contains(id)) continue;
 
-            if (checkCollision(bounds[id], p.x, p.y, p.z) && calculatePenetration(p.speed)) {
+            if (checkCollision(bounds[id], p.pos) && calculatePenetration(p.speed)) {
                 healths[id].current -= p.damage;
 
-                context.explosions.push_back(new ExplosionEffect(p.x, p.y, p.z, 200));
+                context.explosions.push_back(new ExplosionEffect(p.pos, 200));
 
                 p.alive = false;
                 exploded = true;
-                sound.setSourcePosition(sound.sources["ArtExplosion"], p.x, p.y, p.z);
+                sound.setSourcePosition(sound.sources["ArtExplosion"], p.pos);
                 alSourcePlay(sound.sources["ArtExplosion"]);
                 break;
             }
         }
-        if (!exploded && p.y <= 0.0f) {
-            addCrater(p.x, p.z);
+        if (!exploded && p.pos.y <= 0.0f) {
+            addCrater(p.pos.x, p.pos.z);
 
-            context.explosions.push_back(new ExplosionEffect(p.x, p.y, p.z, 200));
-            sound.setSourcePosition(sound.sources["ArtExplosion"], p.x, p.y, p.z);
+            context.explosions.push_back(new ExplosionEffect(p.pos, 200));
+            sound.setSourcePosition(sound.sources["ArtExplosion"], p.pos);
             alSourcePlay(sound.sources["ArtExplosion"]);
             p.alive = false;
         }

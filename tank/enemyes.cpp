@@ -690,7 +690,7 @@ void RenderSystem(std::vector<SmokeEffect*>& smokes) {
         auto& r = renders[e];
 
         glPushMatrix();
-        glTranslatef(t.x, t.y, t.z);
+        glTranslatef(t.pos.x, t.pos.y, t.pos.z);
         glRotatef(t.angle, 0, 1, 0);
 
         switch (r.type) {
@@ -721,14 +721,11 @@ void RenderSystem(std::vector<SmokeEffect*>& smokes) {
         case RenderType::Apartment: {
             auto& ap = apartments[e];
             float totalH = ap.floors * ap.floorHeight;
-            float x = transforms[e].x;
-            float y = transforms[e].y;
-            float z = transforms[e].z;
 
             if (ap.destroyed) {
                 drawDestroyedAppartament(ap, totalH);
                 drawSootEffect(0.0f, 0.1f, 0.0f, 40.0f, 5.0f);
-                if (!ap.smokeEnabled) { smokes.push_back(new SmokeEffect(x, y, z, 2000, 3.0f)); ap.smokeEnabled = true; }
+                if (!ap.smokeEnabled) { smokes.push_back(new SmokeEffect(transforms[e].pos, 2000, 3.0f)); ap.smokeEnabled = true; }
             }
             else drawAppartament(ap, totalH);
 
@@ -753,30 +750,30 @@ void BoundsSystem() {
 
         switch (r.type) {
         case RenderType::Soldat:
-            b = { t.x - 0.5f, t.y, t.z - 0.5f,
-                  t.x + 0.5f, t.y + 1.5f, t.z + 0.5f };
+            b = { t.pos.x - 0.5f, t.pos.y, t.pos.z - 0.5f,
+                  t.pos.x + 0.5f, t.pos.y + 1.5f, t.pos.z + 0.5f };
             break;
 
         case RenderType::Vehicle:
-            b = { t.x - 1, t.y - 0.6f, t.z - 1,
-                  t.x + 1, t.y + 0.6f, t.z + 1 };
+            b = { t.pos.x - 1, t.pos.y - 0.6f, t.pos.z - 1,
+                  t.pos.x + 1, t.pos.y + 0.6f, t.pos.z + 1 };
             break;
 
         case RenderType::Tank:
-            b = { t.x - 1, t.y - 0.6f, t.z - 1,
-                  t.x + 1, t.y + 1.5f, t.z + 2.8f };
+            b = { t.pos.x - 1, t.pos.y - 0.6f, t.pos.z - 1,
+                  t.pos.x + 1, t.pos.y + 1.5f, t.pos.z + 2.8f };
             break;
 
         case RenderType::Radar:
-            b = { t.x - 1, t.y, t.z - 1,
-                  t.x + 1, t.y + 2, t.z + 1 };
+            b = { t.pos.x - 1, t.pos.y, t.pos.z - 1,
+                  t.pos.x + 1, t.pos.y + 2, t.pos.z + 1 };
             break;
 
         case RenderType::Apartment: {
             auto& ap = apartments[e];
             float h = ap.floors * ap.floorHeight;
-            b = { t.x - ap.width, t.y, t.z - ap.depth,
-                  t.x + ap.width, t.y + h, t.z + ap.depth };
+            b = { t.pos.x - ap.width, t.pos.y, t.pos.z - ap.depth,
+                  t.pos.x + ap.width, t.pos.y + h, t.pos.z + ap.depth };
         }
                                   break;
         }
@@ -795,8 +792,8 @@ void HealthBarSystem() {
 
             std::string text = std::format("{}/{}", hp.current, hp.max);
 
-            RenderTextWorld(t.x, t.y + step * 1.3f, t.z, 1, 1, 1, getRenderTypeString(renders[entity].type).c_str());
-            RenderTextWorld(t.x, t.y + step, t.z, 1, 0, 0, text.c_str());
+            RenderTextWorld(t.pos.x, t.pos.y + step * 1.3f, t.pos.z, 1, 1, 1, getRenderTypeString(renders[entity].type).c_str());
+            RenderTextWorld(t.pos.x, t.pos.y + step, t.pos.z, 1, 0, 0, text.c_str());
         }
     }
 }
@@ -834,8 +831,8 @@ void Update(float dt, Tank& tank, Sound& sound) {
     DeathSystem(tank);
 
     for (auto& [id, bot] : tanks) {
-        svbmath::Vec3 enemyPos = { transforms[id].x, transforms[id].y, transforms[id].z };
-        svbmath::Vec3 tankPos = { tank.x, tank.y, tank.z };
+        svbmath::Vec3 enemyPos = transforms[id].pos;
+        svbmath::Vec3 tankPos = tank.pos;
 
         if (bot.finishReload > 0.0f) {
             bot.finishReload -= dt;
@@ -855,7 +852,7 @@ void Update(float dt, Tank& tank, Sound& sound) {
                 spawnShell({ enemyPos.x, enemyPos.y + 1.0f, enemyPos.z }, bot.turretAngle * 180.0f / PI, bot.gunAngle,
                     shellType::APFSDS, 100.0f, true);
 
-                sound.setSourcePosition(sound.sources["Shot"], enemyPos.x, enemyPos.y, enemyPos.z);
+                sound.setSourcePosition(sound.sources["Shot"], enemyPos);
                 alSourceStop(sound.sources["Shot"]);
                 alSourcePlay(sound.sources["Shot"]);
 
@@ -902,9 +899,9 @@ void generateEnemyes(std::unordered_map<int, Entity>& enemyes, int count) {
         }
     }
 }
-checkCol checkCollisionWithTank(float x, float y, float z) {
+checkCol checkCollisionWithTank(svbmath::Vec3& pos) {
     for (const auto& b : bounds) {
-        if (checkCollision(b.second, x, y, z)) {
+        if (checkCollision(b.second, pos)) {
             return {true, b.first};
         }
     }

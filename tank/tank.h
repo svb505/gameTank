@@ -74,9 +74,9 @@ public:
     int scoreToCount = 10;
     int currentHP = HP;
 
-    float baseX = 0.0f, baseY = 0.0f, baseZ = 0.0f;
-    float x = 0.0f, y = 0.0f, z = 0.0f;
-    float oldX = x, oldY = y, oldZ = z;
+    svbmath::Vec3 basePos = { 0.0f,0.0f,0.0f };
+    svbmath::Vec3 pos = { 0.0f,0.0f,0.0f };
+    svbmath::Vec3 oldPos = { 0.0f,0.0f,0.0f };
 
     float bodyYaw = -90.0f, turretYaw = -90.0f, gunPitch = 0.0f;  
 
@@ -96,7 +96,7 @@ public:
     void UpdateTrack(TrackBuffer& track, const svbmath::Vec3& tankPos, float dt);
     void Draw();
     void updateDirrections(float bR, float bY);
-    void updatePosition(float x, float z, float dt);
+    void updatePosition(svbmath::Vec3& pos, float dt);
     float returnImpactImpulse();
     svbmath::Vec3 RotateY(const svbmath::Vec3& v, float angleDeg);
     svbmath::Vec3 LocalToWorldTurret(const svbmath::Vec3& local);

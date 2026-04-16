@@ -1,7 +1,8 @@
 #include "effects.h"
+#include "svbmath.h"
 
-ExplosionEffect::ExplosionEffect(float x, float y, float z, int count, float durationSec,
-    float radius, float height) : centerX(x), centerY(y), centerZ(z), duration(durationSec),
+ExplosionEffect::ExplosionEffect(svbmath::Vec3 pos, int count, float durationSec,
+    float radius, float height) : centerX(pos.x), centerY(pos.y), centerZ(pos.z), duration(durationSec),
     elapsedTime(0), finished(false), radiusScale(radius), heightScale(height){
 
     particles.reserve(count);
@@ -33,7 +34,7 @@ ExplosionEffect::ExplosionEffect(float x, float y, float z, int count, float dur
             vz = sin(phi) * sin(theta) * speed;
         }
 
-        particles.push_back({ x, y, z, vx, vy, vz, durationSec });
+        particles.push_back({ {x, y, z}, {vx, vy, vz}, durationSec });
 
     }
 }
@@ -45,9 +46,9 @@ void ExplosionEffect::Update(float dt) {
     if (elapsedTime >= duration) finished = true;
 
     for (auto& p : particles) {
-        p.x += p.vx * dt;
-        p.y += p.vy * dt;
-        p.z += p.vz * dt;
+        p.pos.x += p.velovity.x * dt;
+        p.pos.y += p.velovity.y * dt;
+        p.pos.z += p.velovity.z * dt;
         p.life -= dt;
     }
 }
@@ -65,7 +66,7 @@ void ExplosionEffect::Draw() {
             float intensity = p.life / duration;
             if (intensity > 1.0f) intensity = 1.0f;
             glColor4f(1.0f, 0.5f, 0.0f, intensity);
-            glVertex3f(p.x, p.y, p.z);
+            glVertex3f(p.pos.x, p.pos.y, p.pos.z);
         }
     }
     glEnd();
@@ -75,8 +76,8 @@ void ExplosionEffect::Draw() {
 bool ExplosionEffect::IsFinished() const { return finished; }
 void ExplosionEffect::SetRadius(float r) { radiusScale = r; }
 void ExplosionEffect::SetHeight(float h) { heightScale = h; }
-SmokeEffect::SmokeEffect(float x, float y, float z, int count, float r,const std::vector<float>& _colors, 
-    float _size, float _speed, float hRadius) : centerX(x), centerY(y), centerZ(z), radius(r), maxParticles(count),
+SmokeEffect::SmokeEffect(svbmath::Vec3 pos, int count, float r,const std::vector<float>& _colors, 
+    float _size, float _speed, float hRadius) : centerX(pos.x), centerY(pos.y), centerZ(pos.z), radius(r), maxParticles(count),
     colors(_colors), size(_size), speed(_speed), heightRadius(hRadius){
 
     particles.reserve(maxParticles);
@@ -94,15 +95,15 @@ std::vector<SmokeEffect::Particle> SmokeEffect::getCoordinates() const {
     std::vector<Particle> coords;
     coords.reserve(particles.size());
 
-    for (auto& p : particles) coords.push_back({ p.x, p.y, p.z });
+    for (auto& p : particles) coords.push_back({ p.pos.x, p.pos.y, p.pos.z });
 
     return coords;
 }
 void SmokeEffect::Update(float dt) {
     for (auto& p : particles) {
-        p.y += p.riseSpeed * dt;
-        p.x += ((float)rand() / RAND_MAX - 0.5f) * 0.01f;
-        p.z += ((float)rand() / RAND_MAX - 0.5f) * 0.01f;
+        p.pos.y += p.riseSpeed * dt;
+        p.pos.x += ((float)rand() / RAND_MAX - 0.5f) * 0.01f;
+        p.pos.z += ((float)rand() / RAND_MAX - 0.5f) * 0.01f;
     }
 }
 void SmokeEffect::Draw() {
@@ -112,7 +113,7 @@ void SmokeEffect::Draw() {
     glPointSize(size);
     glBegin(GL_POINTS);
 
-    for (auto& p : particles) glVertex3f(p.x, p.y, p.z);
+    for (auto& p : particles) glVertex3f(p.pos.x, p.pos.y, p.pos.z);
 
     glEnd();
 
@@ -136,7 +137,7 @@ void updateSmokes(std::vector<SmokeEffect*>& smokes, float dt) {
 
         bool alive = false;
         for (auto& p : smoke->getCoordinates()) {
-            if (p.y <= 5.0f) {
+            if (p.pos.y <= 5.0f) {
                 alive = true;
                 break;
             }

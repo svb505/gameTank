@@ -2,40 +2,37 @@
 #include <windows.h>
 #include <GL/gl.h>
 #include <GLFW/glfw3.h>
-#include <map>
 #include <vector>
 #include <cmath>
 #include <ctime>
-#include <format>
-#include <GL/glu.h>
 #include <algorithm>
+
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 #include <AL/al.h>
 #include <AL/alc.h>
 #include <sndfile.h>
+
+#include "artillery.h"
+#include "camera.h"
 #include "tank.h"
-#include "projectileSystem.h"
 #include "text.h"
 #include "enemyes.h"
 #include "environnement.h"
 #include "effects.h"
+#include "projectileSystem.h"
 #include "HUD.h"
-#include "camera.h"
 #include "sounds.h"
+#include "smokeGranade.h"
 #include "replenishmentAmmo.h"
 #include "minimap.h"
 #include "lightning.h"
+#include "Logger.h"
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
 #include "GUI.h"
-#include "artillery.h"
-#include "Logger.h"
 #include "weather.h"
-#include "smokeGranade.h"
-#include "craters.h"
-#include "rangefinder.h"
 #include "killchat.h"
 #include "input.h"
 
@@ -191,23 +188,20 @@ int main(){
         if (fpsLimit) glfwSwapInterval(1);
         else glfwSwapInterval(0);
 
-        weat.getWeather(sound, cam);
-  
-        countFps(deltaTime,lastTime,currentTime,frames,fps,fpsTimer);
-
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        gui.render(fps, tank,art,sound,weat.weather,granades,badges,fpsLimit,enemyes,tank.turretLocked);
+        gui.render(fps, tank, art, sound, weat.weather, granades, badges, fpsLimit, enemyes, tank.turretLocked);
 
         ImGui::Render();
 
         sound.setListener(cam.cameraX, cam.cameraY, cam.cameraZ, cam.returnForwardVector());
 
-        if (tank.finishReload > 0.0f) tank.finishReload -= deltaTime;
-        if (tank.moveSpeed > 0.0f) tank.moveSpeed *= tank.REDUCTION_COEF;
-        
+        weat.getWeather(sound, cam);
+  
+        countFps(deltaTime,lastTime,currentTime,frames,fps,fpsTimer);
+
         processTankInput(window, deltaTime, enemyes,tank,sound,cam,ray,granades,cursorVisibility);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -216,7 +210,13 @@ int main(){
         drawGround(cam.cameraX, cam.cameraZ,weat.weather);
 
         tank.Draw();
-        tank.updatePosition(tank.x,tank.z,deltaTime);
+        tank.updatePosition(tank.pos,deltaTime);
+        tank.updateDirrections(tank.bodyRad, tank.bodyYaw);
+        tank.UpdateTrack(deltaTime, tank.pos, leftTrack, rightTrack);
+        tank.DrawTrack(leftTrack, rightTrack, 0.3f);
+
+        if (tank.finishReload > 0.0f) tank.finishReload -= deltaTime;
+        if (tank.moveSpeed > 0.0f) tank.moveSpeed *= tank.REDUCTION_COEF;
 
         repl.drawReplCircle(30);//replishement ammo
 
@@ -234,11 +234,7 @@ int main(){
 
         showDestroyText(deltaTime);
 
-        if (repl.isInCircle(tank.x, tank.z)) repl.startReplish(deltaTime,tank,ECRANH,ECRANW);
-
-        tank.updateDirrections(tank.bodyRad,tank.bodyYaw);
-        tank.UpdateTrack(deltaTime,{tank.x,tank.y,tank.z},leftTrack,rightTrack);
-        tank.DrawTrack(leftTrack, rightTrack, 0.3f);
+        if (repl.isInCircle(tank.pos.x, tank.pos.z)) repl.startReplish(deltaTime,tank,ECRANH,ECRANW);
 
         art.updateShells(deltaTime);
         art.drawAllShells();
@@ -255,17 +251,17 @@ int main(){
         granades.update(deltaTime,smokes,tank,sound);
         granades.drawAll(tank);
 
-        auto tankCollision = checkCollisionWithTank(tank.x, tank.y, tank.z);
+        auto tankCollision = checkCollisionWithTank(tank.pos);
 
         //Collision with enemy
         if (tankCollision.checked) { 
-            tank.x = tank.oldX; tank.y = tank.oldY; tank.z = tank.oldZ;
+            tank.pos = tank.oldPos;
 
             if (healths.contains(tankCollision.id)) {
                 healths[tankCollision.id].current -= tank.returnImpactImpulse();
             }
 
-            sound.setSourcePosition(sound.sources["Collision"], tank.x, tank.y, tank.z);
+            sound.setSourcePosition(sound.sources["Collision"], tank.pos);
             alSourcePlay(sound.sources["Collision"]);
         }
 

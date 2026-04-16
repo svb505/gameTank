@@ -188,7 +188,7 @@ void RenderBadges(int ww, int wh, float scale, Tank& tank,Camera cam) {
 
         float sx, sy;
 
-        WorldToScreen(t.x, t.z, tank.x, tank.z, cam.cameraYaw,cam,scale, ww, wh,sx, sy);
+        WorldToScreen(t.pos.x, t.pos.z, tank.pos.x, tank.pos.z, cam.cameraYaw,cam,scale, ww, wh,sx, sy);
 
         switch (r.type) {
         case RenderType::Soldat:

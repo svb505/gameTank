@@ -13,4 +13,4 @@ struct checkCol {
 
 bool RayIntersectsAABB(const svbmath::Vec3& rayOrigin, const svbmath::Vec3& rayDir,
     const Bounds& b, float& tNear, float& tFar);
-bool checkCollision(const Bounds& target, float x, float y, float z);
+bool checkCollision(const Bounds& target, svbmath::Vec3& pos);

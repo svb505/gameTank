@@ -28,9 +28,9 @@ void Draw3DAim(Tank& tank) {
     float barrelLength = 4.9f;
     float barrelHeight = 0.9f;
 
-    float barrelX = tank.x + sin(turretRad) * cos(pitchRad) * barrelLength;
-    float barrelY = tank.y + barrelHeight - sin(pitchRad) * barrelLength;
-    float barrelZ = tank.z + cos(turretRad) * cos(pitchRad) * barrelLength;
+    float barrelX = tank.pos.x + sin(turretRad) * cos(pitchRad) * barrelLength;
+    float barrelY = tank.pos.y + barrelHeight - sin(pitchRad) * barrelLength;
+    float barrelZ = tank.pos.z + cos(turretRad) * cos(pitchRad) * barrelLength;
 
     glPushAttrib(GL_ENABLE_BIT | GL_LINE_BIT);
     glDisable(GL_LIGHTING);

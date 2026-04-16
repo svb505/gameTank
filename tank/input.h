@@ -44,7 +44,7 @@ void processTankInput(GLFWwindow* window, float dt, std::unordered_map<int, Enti
 
     static std::vector<ShellBind> shellBinds = {
         {GLFW_KEY_1, shellType::APFSDS, 400},
-        {GLFW_KEY_2, shellType::HE, 200},
+        {GLFW_KEY_2, shellType::HE, 100},
         {GLFW_KEY_3, shellType::ATGM, 10},
         {GLFW_KEY_4, shellType::SMOKE, 200}
     };
@@ -60,16 +60,12 @@ void processTankInput(GLFWwindow* window, float dt, std::unordered_map<int, Enti
     if (isDown(window, GLFW_KEY_A)) { tank.bodyYaw += tank.rotateSpeed * dt; tank.moveSpeed *= tank.REDUCTION_COEF; }
     if (isDown(window, GLFW_KEY_D)) { tank.bodyYaw -= tank.rotateSpeed * dt; tank.moveSpeed *= tank.REDUCTION_COEF; }
     if (isDown(window, GLFW_KEY_W)) {
-        tank.oldX = tank.x;
-        tank.oldY = tank.y;
-        tank.oldZ = tank.z;
+        tank.oldPos = tank.pos;
 
         if (tank.moveSpeed <= tank.SPEED_LIMIT_FORWARD) tank.moveSpeed += tank.VELOCITY_COEF;
     }
     if (isDown(window, GLFW_KEY_S)) {
-        tank.oldX = tank.x;
-        tank.oldY = tank.y;
-        tank.oldZ = tank.z;
+        tank.oldPos = tank.pos;
 
         if (tank.moveSpeed >= tank.SPEED_LIMIT_BACK) tank.moveSpeed -= tank.VELOCITY_COEF / 2;
     }
@@ -80,17 +76,17 @@ void processTankInput(GLFWwindow* window, float dt, std::unordered_map<int, Enti
     if (isDown(window, GLFW_KEY_ENTER)) {
         float yaw = tank.bodyYaw + tank.turretYaw;
 
-        spawnBullet({ tank.x, tank.y + 1.0f, tank.z }, yaw);
+        spawnBullet({ tank.pos.x, tank.pos.y + 1.0f, tank.pos.z }, yaw);
 
         auto& src = sound.sources["MGun"];
-        sound.setSourcePosition(src, tank.x, tank.y + 1.6f, tank.z);
+        sound.setSourcePosition(src, tank.pos);
         alSourceStop(src);
         alSourcePlay(src);
     }
 
     if (isPressed(window, GLFW_KEY_R, prevR)) {
         Ray ray;
-        ray.origin = { tank.x, tank.y + 1.6f, tank.z };
+        ray.origin = { tank.pos.x, tank.pos.y + 1.6f, tank.pos.z };
 
         float yawRad = (tank.bodyYaw + tank.turretYaw) * 3.14159265f / 180.0f;
         float pitchRad = tank.gunPitch * 3.14159265f / 180.0f;
@@ -120,10 +116,10 @@ void processTankInput(GLFWwindow* window, float dt, std::unordered_map<int, Enti
     if (isPressed(window, GLFW_KEY_SPACE, prevFire) && tank.finishReload <= 0.0f && tank.totalShells > 0) {
         float yaw = tank.turretLocked ? tank.bodyYaw + tank.turretYaw : tank.turretYaw - 90.0f;
 
-        spawnShell({ tank.x, tank.y + 1.6f, tank.z }, yaw, tank.gunPitch, tank.selectedShell, tank.shellSpeed);
+        spawnShell({ tank.pos.x, tank.pos.y + 1.6f, tank.pos.z }, yaw, tank.gunPitch, tank.selectedShell, tank.shellSpeed);
 
         auto& src = sound.sources["Shot"];
-        sound.setSourcePosition(src, tank.x, tank.y + 1.6f, tank.z);
+        sound.setSourcePosition(src, tank.pos);
         alSourceStop(src);
         alSourcePlay(src);
 
