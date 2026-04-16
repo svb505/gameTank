@@ -1,7 +1,6 @@
 #include <windows.h>
 #include <GL/gl.h>
 #include <GLFW/glfw3.h>
-#include "Info.h"
 #include <unordered_map>
 #include "effects.h"
 #include "text.h"

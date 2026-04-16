@@ -8,7 +8,16 @@
 #include "tank.h"
 #include <vector>
 
+void drawHUD(int WW,int WH,float lastHit) {
+    glDisable(GL_DEPTH_TEST);
+    glDisable(GL_LIGHTING);
 
+    std::string dist = std::format("Distance: {:.1f} m", lastHit);
+    RenderTextHUD(WW / 2, WH / 2, 1, 1, 1, dist.c_str(), WW, WH);
+
+    glEnable(GL_LIGHTING);
+    glEnable(GL_DEPTH_TEST);
+}
 void Draw3DAim(Tank& tank) {
     float turretRad;
 

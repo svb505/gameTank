@@ -30,6 +30,7 @@ class Weather {
 private:
 	const int diapazone = 70;
 public:
+	std::string weather = "Clean";
 	int count = 130;
 	Weather() { particles.reserve(count); }
 	
@@ -43,4 +44,5 @@ public:
 	void update(Camera& cam, float dt);
 	void generateSnowPiles(int count, float areaSize);
 	void renderSnowPiles();
+	void getWeather(Sound& sound, Camera& cam);
 };

@@ -1,5 +1,6 @@
 #pragma once
 #include "tank.h"
+#include "svbmath.h"
 
 class Tank;
 class Camera {
@@ -27,5 +28,6 @@ public:
     float cameraPitch = 10.0f;
 
     void setupCamera(Tank& playerTank, bool& aimMode);
+    svbmath::Vec3 returnForwardVector();
 };
 	

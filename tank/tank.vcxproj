@@ -166,7 +166,7 @@
     <ClInclude Include="getnormal.h" />
     <ClInclude Include="GUI.h" />
     <ClInclude Include="HUD.h" />
-    <ClInclude Include="Info.h" />
+    <ClInclude Include="input.h" />
     <ClInclude Include="killchat.h" />
     <ClInclude Include="lightning.h" />
     <ClInclude Include="Logger.h" />

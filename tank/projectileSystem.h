@@ -8,14 +8,12 @@
 #include <map>
 #include <algorithm>
 #include "effects.h"
-#include "Info.h"
 #include "sounds.h"
 #include "shells.h"
 #include "artillery.h"
 #include "svbmath.h"
 
 
-struct Info;
 struct EffectsContext;
 
 extern std::map<shellType,std::string> shellTypes;

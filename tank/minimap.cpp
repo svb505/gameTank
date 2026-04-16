@@ -14,6 +14,7 @@
 
 float height = 80.0f;
 int step = 3;
+bool badges = false;
 
 void setHeight(float h) { height = h; }
 float getHeight() { return height; }

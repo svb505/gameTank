@@ -8,7 +8,6 @@
 #include <map>
 #include <algorithm>
 #include "effects.h"
-#include "Info.h"
 #include "sounds.h"
 #include "shells.h"
 #include "artillery.h"

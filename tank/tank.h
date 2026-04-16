@@ -101,8 +101,8 @@ public:
     svbmath::Vec3 RotateY(const svbmath::Vec3& v, float angleDeg);
     svbmath::Vec3 LocalToWorldTurret(const svbmath::Vec3& local);
     Bounds GetHullMax() const;
-    void DrawTrack(const TrackBuffer& track, float width);
-    void UpdateTrack(float dt, svbmath::Vec3 tankPos, svbmath::Vec3 tankRight, TrackBuffer& leftTrack, TrackBuffer& rightTrack);
+    void DrawTrack(const TrackBuffer& trackL, const TrackBuffer& trackR, float width);
+    void UpdateTrack(float dt, svbmath::Vec3 tankPos,TrackBuffer& leftTrack, TrackBuffer& rightTrack);
 private:
     void DrawBox(float w, float h, float d);
     void DrawCylinder(float r, float h, int seg = 16);

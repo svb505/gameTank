@@ -223,7 +223,11 @@ Bounds Tank::GetHullMax() const {
 
     return result;
 }
-void Tank::UpdateTrack(float dt, svbmath::Vec3 tankPos, svbmath::Vec3 tankRight, TrackBuffer& leftTrack, TrackBuffer& rightTrack) {
+void Tank::UpdateTrack(float dt, svbmath::Vec3 tankPos,TrackBuffer& leftTrack, TrackBuffer& rightTrack) {
+    svbmath::Vec3 forward = { dirX, 0.0f, dirZ };
+    svbmath::Vec3 up = { 0, 1, 0 };
+    svbmath::Vec3 tankRight = svbmath::Normalize(svbmath::Cross(forward, up));
+    
     float offset = 1.5f;
     float TRACK_Y_OFFSET = 0.02f;
 
@@ -236,37 +240,41 @@ void Tank::UpdateTrack(float dt, svbmath::Vec3 tankPos, svbmath::Vec3 tankRight,
     UpdateTrack(leftTrack, leftPos, dt);
     UpdateTrack(rightTrack, rightPos, dt);
 }
-void Tank::DrawTrack(const TrackBuffer& track, float width) {
-    if (track.count < 2) return;
+void Tank::DrawTrack(const TrackBuffer& trackL, const TrackBuffer& trackR, float width) {
+    if (trackL.count < 2 || trackR.count < 2) return;
+
+    TrackBuffer tracks[] = { trackL, trackR };
 
     svbmath::Vec3 up = { 0, 1, 0 };
 
     glDisable(GL_LIGHTING);
     glBegin(GL_QUADS);
 
-    for (int i = 0; i < track.count - 1; i++) {
-        const TrackPoint& p1 = track.points[
-            (track.head - track.count + i + MAX_TRACK_POINTS) % MAX_TRACK_POINTS
-        ];
-        const TrackPoint& p2 = track.points[
-            (track.head - track.count + i + 1 + MAX_TRACK_POINTS) % MAX_TRACK_POINTS
-        ];
+    for (auto& track : tracks) {
+        for (int i = 0; i < track.count - 1; i++) {
+            const TrackPoint& p1 = track.points[
+                (track.head - track.count + i + MAX_TRACK_POINTS) % MAX_TRACK_POINTS
+            ];
+            const TrackPoint& p2 = track.points[
+                (track.head - track.count + i + 1 + MAX_TRACK_POINTS) % MAX_TRACK_POINTS
+            ];
 
-        if (p1.life <= 0.0f || p2.life <= 0.0f) continue;
+            if (p1.life <= 0.0f || p2.life <= 0.0f) continue;
 
-        svbmath::Vec3 dir = svbmath::Normalize(p2.pos - p1.pos);
-        svbmath::Vec3 right = svbmath::Cross(dir, up) * width;
+            svbmath::Vec3 dir = svbmath::Normalize(p2.pos - p1.pos);
+            svbmath::Vec3 right = svbmath::Cross(dir, up) * width;
 
-        float alpha1 = p1.life;
-        float alpha2 = p2.life;
+            float alpha1 = p1.life;
+            float alpha2 = p2.life;
 
-        glColor4f(0.2f, 0.2f, 0.2f, alpha1);
-        glVertex3f(p1.pos.x - right.x, p1.pos.y, p1.pos.z - right.z);
-        glVertex3f(p1.pos.x + right.x, p1.pos.y, p1.pos.z + right.z);
+            glColor4f(0.2f, 0.2f, 0.2f, alpha1);
+            glVertex3f(p1.pos.x - right.x, p1.pos.y, p1.pos.z - right.z);
+            glVertex3f(p1.pos.x + right.x, p1.pos.y, p1.pos.z + right.z);
 
-        glColor4f(0.2f, 0.2f, 0.2f, alpha2);
-        glVertex3f(p2.pos.x + right.x, p2.pos.y, p2.pos.z + right.z);
-        glVertex3f(p2.pos.x - right.x, p2.pos.y, p2.pos.z - right.z);
+            glColor4f(0.2f, 0.2f, 0.2f, alpha2);
+            glVertex3f(p2.pos.x + right.x, p2.pos.y, p2.pos.z + right.z);
+            glVertex3f(p2.pos.x - right.x, p2.pos.y, p2.pos.z - right.z);
+        }
     }
 
     glEnd();

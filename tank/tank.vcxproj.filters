@@ -119,9 +119,6 @@
     <ClInclude Include="projectileSystem.h">
       <Filter>Исходные файлы</Filter>
     </ClInclude>
-    <ClInclude Include="Info.h">
-      <Filter>Исходные файлы</Filter>
-    </ClInclude>
     <ClInclude Include="camera.h">
       <Filter>Исходные файлы</Filter>
     </ClInclude>
@@ -180,6 +177,9 @@
       <Filter>Исходные файлы</Filter>
     </ClInclude>
     <ClInclude Include="killchat.h">
+      <Filter>Исходные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="input.h">
       <Filter>Исходные файлы</Filter>
     </ClInclude>
   </ItemGroup>

@@ -11,6 +11,30 @@
 #include "sounds.h"
 #include "svbmath.h"
 
+void Weather::getWeather(Sound& sound,Camera& cam) {
+	if (weather == "Clean") {
+		if (particles.size() > 0) {
+			alSourceStop(sound.sources["Rain"]);
+			sound.rainPlayed = false;
+			particles.clear();
+		}
+		snowPiles.clear();
+	}
+	else if (weather == "Rainly") {
+		snowPiles.clear();
+		if (!sound.rainPlayed) {
+			alSourcePlay(sound.sources["Rain"]);
+			sound.rainPlayed = true;
+		}
+		if (particles.size() < count) generate(Type::rainly, cam);
+	}
+	else if (weather == "Snowly") {
+		alSourceStop(sound.sources["Rain"]);
+		sound.rainPlayed = false;
+		if (particles.size() < count) generate(Type::snowly, cam);
+		if (snowPiles.size() == 0) generateSnowPiles(50, 100.0f);
+	}
+}
 void Weather::drawSphere(float radius, int stacks, int slices) {
 	for (int i = 0; i < stacks; i++) {
 		float lat0 = PI * (-0.5f + (float)i / stacks);

@@ -36,6 +36,21 @@ public:
 		for (auto& s : weathers) cstrsW.push_back(s.c_str());
 		for (auto& s : spawns) cstrsS.push_back(s.c_str());
 	}
+    void setup(GLFWwindow* window) {
+        IMGUI_CHECKVERSION();
+        ImGui::CreateContext();
+        ImGuiIO& io = ImGui::GetIO(); (void)io;
+
+        ImGui_ImplGlfw_InitForOpenGL(window, true);
+        ImGui_ImplOpenGL3_Init("#version 330");
+
+        ImGui::StyleColorsDark();
+    }
+    void destroy() {
+        ImGui_ImplOpenGL3_Shutdown();
+        ImGui_ImplGlfw_Shutdown();
+        ImGui::DestroyContext();
+    }
     void render(float& fps, Tank& tank, Artillery& art, Sound& sound,std::string& weather, SmokeGranade& g,bool& badges,
         bool& fpslimit, std::unordered_map<int, Entity>& enemyes,bool& locked){
         std::string buf = std::format("{} / {}", tank.currentHP, tank.HP);

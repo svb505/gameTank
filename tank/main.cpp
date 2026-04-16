@@ -16,7 +16,6 @@
 #include <sndfile.h>
 #include "tank.h"
 #include "projectileSystem.h"
-#include "Info.h"
 #include "text.h"
 #include "enemyes.h"
 #include "environnement.h"
@@ -38,6 +37,7 @@
 #include "craters.h"
 #include "rangefinder.h"
 #include "killchat.h"
+#include "input.h"
 
 #define COUNT 55
 #define ECRANW 1600
@@ -53,12 +53,11 @@ Weather weat;
 SmokeGranade granades;
 
 int lastHitID = -1;
-static float lastHitDistance = 0.0f;
+static float lastHitDist = 0.0f;
 
 bool firstMouse = true;
 bool cursorVisibility = false;
 bool fpsLimit = false;
-bool badges = false;
 
 static Ray debugRay;
 static bool drawDebugRay = false;
@@ -66,9 +65,7 @@ static bool drawDebugRay = false;
 double lastX = 800.0 / 2, lastY = 600.0 / 2;
 float sensitivity = 0.1f;
 
-std::string weather = "Clean";
-
-void mouse_callback(GLFWwindow* window, double xpos, double ypos){
+void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
     ImGuiIO& io = ImGui::GetIO();
     io.AddMousePosEvent((float)xpos, (float)ypos);
 
@@ -105,141 +102,6 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos){
     tank.turretYaw = fmod(tank.turretYaw + 360.0f, 360.0f);
 
     tank.gunPitch = std::clamp(tank.gunPitch, -10.0f, 10.0f);
-}
-void processTankInput(GLFWwindow* window, float dt,std::unordered_map<int, Entity>& enemyes){
-    static bool lastShift = false;
-    static bool lastFire = false;
-    static bool prevCtrl = false;
-    static bool prevAlt = false;
-    static bool prevG = false;
-    static bool prevR = false;
-
-    bool fire = glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS;
-    bool currCtrl = glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS;
-    bool currAlt = glfwGetKey(window, GLFW_KEY_LEFT_ALT) == GLFW_PRESS;
-    bool shift = glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS;
-    bool keyG = glfwGetKey(window, GLFW_KEY_G) == GLFW_PRESS;
-    bool keyR = glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS;
-
-    if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS){
-        tank.selectedShell = shellType::APFSDS;
-        tank.shellSpeed = 400;
-        tank.finishReload = tank.reloadTime;
-    }
-    if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS){
-        tank.selectedShell = shellType::HE;
-        tank.shellSpeed = 200;
-        tank.finishReload = tank.reloadTime;
-    }
-    if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS) {
-        tank.selectedShell = shellType::ATGM;
-        tank.shellSpeed = 10;
-        tank.finishReload = tank.reloadTime;
-    }
-    if (glfwGetKey(window, GLFW_KEY_4) == GLFW_PRESS) {
-        tank.selectedShell = shellType::SMOKE;
-        tank.shellSpeed = 200;
-        tank.finishReload = tank.reloadTime;
-    }
-    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
-       tank.bodyYaw += tank.rotateSpeed * dt;
-       tank.moveSpeed *= tank.REDUCTION_COEF;
-    }
-    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
-        tank.bodyYaw -= tank.rotateSpeed * dt;
-        tank.moveSpeed *= tank.REDUCTION_COEF;
-    }
-    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-        tank.oldX = tank.x; tank.oldY = tank.y; tank.oldZ = tank.z;
-        if (tank.moveSpeed <= tank.SPEED_LIMIT_FORWARD) tank.moveSpeed += tank.VELOCITY_COEF;
-    }
-    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-        tank.oldX = tank.x; tank.oldY = tank.y; tank.oldZ = tank.z;
-        if (tank.moveSpeed >= tank.SPEED_LIMIT_BACK) tank.moveSpeed -= tank.VELOCITY_COEF / 2;
-    }
-    if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS) {
-        //set minimap height
-        setHeight(getHeight() + step * dt * 60);
-    }
-    if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS) {
-        //set minimap height
-        setHeight(getHeight() - step * dt * 60);
-    }
-    if (glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_PRESS) {
-        float yaw = tank.bodyYaw + tank.turretYaw;
-
-        spawnBullet({ tank.x, tank.y + 1.0f, tank.z }, yaw);
-
-        sound.setSourcePosition(sound.sources["MGun"], tank.x, tank.y + 1.6f, tank.z);
-        alSourceStop(sound.sources["MGun"]);
-        alSourcePlay(sound.sources["MGun"]);
-    }
-    if (keyR && !prevR) {
-        Ray ray;
-        ray.origin = { tank.x, tank.y + 1.6f, tank.z };
-
-        float yawRad = (tank.bodyYaw + tank.turretYaw) * 3.14159265f / 180.0f;
-        float pitchRad = tank.gunPitch * 3.14159265f / 180.0f;
-
-        ray.direction = { sin(yawRad) * cos(pitchRad), sin(pitchRad), cos(yawRad) * cos(pitchRad) };
-
-        float maxDist = 300.0f;
-
-        int hitID = -1;
-        float hitDistance = Raycast(ray, enemyes, bounds, hitID, maxDist);
-
-        debugRay = ray;
-        drawDebugRay = true;
-
-        if (hitID != -1) { 
-            lastHitID = hitID;
-            lastHitDistance = hitDistance;
-        }
-        else {
-            lastHitID = -1; 
-            lastHitDistance = 0.0f;
-        }
-    }
-    if (keyG && !prevG) granades.strike();
-    if (currAlt && !prevAlt) {
-        if (cursorVisibility) {
-            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-            cursorVisibility = false;
-        }
-        else {
-            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-            cursorVisibility = true;
-        }
-    }
-    if (shift && !lastShift) tank.aimMode = !tank.aimMode;
-    if (fire && !lastFire && tank.finishReload <= 0.0f && tank.totalShells > 0) {
-        float yaw;
-
-        if (tank.turretLocked) yaw = tank.bodyYaw + tank.turretYaw;
-        else yaw = tank.turretYaw - 90.0f;
-
-        spawnShell({ tank.x,tank.y + 1.6f,tank.z }, yaw, tank.gunPitch,
-            tank.selectedShell,tank.shellSpeed);
-        
-        sound.setSourcePosition(sound.sources["Shot"], tank.x, tank.y + 1.6f, tank.z);
-        alSourceStop(sound.sources["Shot"]);
-        alSourcePlay(sound.sources["Shot"]);
-
-        --tank.totalShells;
-
-        tank.finishReload = tank.reloadTime; 
-    }
-    if (currCtrl && !prevCtrl) {
-        cam.zoomed = !cam.zoomed;
-        cam.fov = cam.zoomed ? 40.0f : 70.0f;
-    }
-
-    lastFire = fire;
-    prevCtrl = currCtrl;
-    lastShift = shift;
-    prevAlt = currAlt;
-    prevG = keyG;
-    prevR = keyR;
 }
 void countFps(double& deltaTime,double& lastTime,double& currentTime,int& frames,float& fps,float& fpsTimer) {
     deltaTime = currentTime - lastTime;
@@ -298,37 +160,27 @@ int main(){
     glMatrixMode(GL_MODELVIEW);
 
     std::unordered_map<int, Entity> enemyes;
-    std::vector<int> toDelete;
 
     std::vector<ExplosionEffect*> explosions;
     std::vector<SmokeEffect*> smokes;
 
     EffectsContext context{ explosions, smokes };
-    
+    RayContext ray{ debugRay, drawDebugRay, lastHitID, lastHitDist };
+
     TrackBuffer leftTrack;
     TrackBuffer rightTrack;
 
-    granades.spawn(tank);
-
     double lastTime = glfwGetTime();
     double deltaTime = 0.0;
-    float fpsTimer = 0.0f;
+    float fpsTimer = 0.0f,fps = 0.0f;
     int frames = 0;
-    float fps = 0.0f;
-
+    
     initLighting();
-
+    granades.spawn(tank);
     generateEnemyes(enemyes,COUNT);
     repl.setCoordinates(10.0f, static_cast<float>(rand() % 30),static_cast<float>((rand() % 50) - 50));
 
-    IMGUI_CHECKVERSION();
-    ImGui::CreateContext();
-    ImGuiIO& io = ImGui::GetIO(); (void)io;
-
-    ImGui_ImplGlfw_InitForOpenGL(window, true);
-    ImGui_ImplOpenGL3_Init("#version 330");
-
-    ImGui::StyleColorsDark();
+    gui.setup(window);
 
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     glfwSetCursorPosCallback(window, mouse_callback);
@@ -339,28 +191,7 @@ int main(){
         if (fpsLimit) glfwSwapInterval(1);
         else glfwSwapInterval(0);
 
-        if (weather == "Clean") { 
-            if (weat.particles.size() > 0) { 
-                alSourceStop(sound.sources["Rain"]);
-                sound.rainPlayed = false;
-                weat.particles.clear(); 
-            } 
-            weat.snowPiles.clear();
-        }
-        else if (weather == "Rainly") { 
-            weat.snowPiles.clear();
-            if (!sound.rainPlayed) { 
-                alSourcePlay(sound.sources["Rain"]);
-                sound.rainPlayed = true; 
-            } 
-            if (weat.particles.size() < weat.count) weat.generate(Type::rainly, cam); 
-        }
-        else if (weather == "Snowly") { 
-            alSourceStop(sound.sources["Rain"]);
-            sound.rainPlayed = false;
-            if (weat.particles.size() < weat.count) weat.generate(Type::snowly, cam); 
-            if (weat.snowPiles.size() == 0) weat.generateSnowPiles(50, 100.0f);
-        }
+        weat.getWeather(sound, cam);
   
         countFps(deltaTime,lastTime,currentTime,frames,fps,fpsTimer);
 
@@ -368,27 +199,21 @@ int main(){
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        gui.render(fps, tank,art,sound,weather,granades,badges,fpsLimit,enemyes,tank.turretLocked);
+        gui.render(fps, tank,art,sound,weat.weather,granades,badges,fpsLimit,enemyes,tank.turretLocked);
 
         ImGui::Render();
 
-        float radYaw = cam.cameraYaw * 3.14159265f / 180.0f;
-        float radPitch = cam.angle * 3.14159265f / 180.0f;
-        float fx = cos(radPitch) * sin(radYaw);
-        float fy = sin(radPitch);
-        float fz = -cos(radPitch) * cos(radYaw);
-
-        sound.setListener(cam.cameraX, cam.cameraY, cam.cameraZ, fx, fy, fz);
+        sound.setListener(cam.cameraX, cam.cameraY, cam.cameraZ, cam.returnForwardVector());
 
         if (tank.finishReload > 0.0f) tank.finishReload -= deltaTime;
         if (tank.moveSpeed > 0.0f) tank.moveSpeed *= tank.REDUCTION_COEF;
-
-        processTankInput(window, (float)deltaTime, enemyes);
+        
+        processTankInput(window, deltaTime, enemyes,tank,sound,cam,ray,granades,cursorVisibility);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         drawSky();
         cam.setupCamera(tank, tank.aimMode);
-        drawGround(cam.cameraX, cam.cameraZ,weather);
+        drawGround(cam.cameraX, cam.cameraZ,weat.weather);
 
         tank.Draw();
         tank.updatePosition(tank.x,tank.z,deltaTime);
@@ -405,34 +230,22 @@ int main(){
         updateKillChat(deltaTime); 
         showKillChat(ECRANW, ECRANH); 
 
-        glDisable(GL_DEPTH_TEST);
-        glDisable(GL_LIGHTING);
-
-        std::string dist = std::format("Distance: {:.1f} m", lastHitDistance);
-        RenderTextHUD(ECRANW / 2, ECRANH / 2, 1, 1, 1, dist.c_str(), ECRANW, ECRANH);
-
-        glEnable(GL_LIGHTING);
-        glEnable(GL_DEPTH_TEST);
+        drawHUD(ECRANW,ECRANH,lastHitDist);
 
         showDestroyText(deltaTime);
 
         if (repl.isInCircle(tank.x, tank.z)) repl.startReplish(deltaTime,tank,ECRANH,ECRANW);
 
-        svbmath::Vec3 forward = { tank.dirX, 0.0f, tank.dirZ };
-        svbmath::Vec3 up = { 0, 1, 0 };
-        svbmath::Vec3 tankRight = svbmath::Normalize(svbmath::Cross(forward, up));
-
         tank.updateDirrections(tank.bodyRad,tank.bodyYaw);
-        tank.UpdateTrack(deltaTime,{tank.x,tank.y,tank.z},tankRight,leftTrack,rightTrack);
-        tank.DrawTrack(leftTrack, 0.3f);
-        tank.DrawTrack(rightTrack, 0.3f);
+        tank.UpdateTrack(deltaTime,{tank.x,tank.y,tank.z},leftTrack,rightTrack);
+        tank.DrawTrack(leftTrack, rightTrack, 0.3f);
 
         art.updateShells(deltaTime);
         art.drawAllShells();
         art.deleteIfAlived();
 
         //Update projectiles
-        update((float)deltaTime, sound, enemyes, healths, bounds, context, tank);
+        update(deltaTime, sound, enemyes, healths, bounds, context, tank);
         updateProjectiles();
         updateArtillery(art.shells,sound,enemyes, context);
         
@@ -458,16 +271,14 @@ int main(){
 
         Draw3DAim(tank);
 
-        drawMiniMap(ECRANW, ECRANH, tank, context, cam, weather,badges,deltaTime);
+        drawMiniMap(ECRANW, ECRANH, tank, context, cam, weat.weather,badges,deltaTime);
 
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
 
-    ImGui_ImplOpenGL3_Shutdown();
-    ImGui_ImplGlfw_Shutdown();
-    ImGui::DestroyContext();
+    gui.destroy();
     glfwDestroyWindow(window);
     glfwTerminate();
 

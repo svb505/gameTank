@@ -9,6 +9,7 @@ class Camera;
 
 extern float height;
 extern int step;
+extern bool badges;
 
 void setHeight(float h);
 float getHeight();

@@ -41,3 +41,12 @@ void Camera::setupCamera(Tank& playerTank, bool& aimMode) {
             0, 1, 0);
     }
 }
+svbmath::Vec3 Camera::returnForwardVector() {
+    float radYaw = cameraYaw * 3.14159265f / 180.0f;
+    float radPitch = angle * 3.14159265f / 180.0f;
+    float fx = cos(radPitch) * sin(radYaw);
+    float fy = sin(radPitch);
+    float fz = -cos(radPitch) * cos(radYaw);
+
+    return {fx,fy,fz};
+}
