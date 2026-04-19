@@ -93,6 +93,9 @@
     <ClCompile Include="killchat.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="database.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="tank.h">
@@ -180,6 +183,9 @@
       <Filter>Исходные файлы</Filter>
     </ClInclude>
     <ClInclude Include="input.h">
+      <Filter>Исходные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="database.h">
       <Filter>Исходные файлы</Filter>
     </ClInclude>
   </ItemGroup>

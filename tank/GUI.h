@@ -7,6 +7,7 @@
 #include "smokeGranade.h"
 #include "profiler.h"
 #include "enemyes.h"
+#include "database.h"
 
 class GUI {
 private:
@@ -31,6 +32,7 @@ private:
 	bool artWindow = false;
 	bool mlrsWindow = false;
     bool devWindow = false;
+    bool statWindow = false;
 public:
 	GUI() {
 		for (auto& s : weathers) cstrsW.push_back(s.c_str());
@@ -64,6 +66,7 @@ public:
 
         ImGui::Begin("Settings & Info");
 
+        if (ImGui::Button("Show statistick")) statWindow = true;
         if (ImGui::Button("Aimer artillery strike")) artWindow = true;
         if (ImGui::Button("Developper window")) devWindow = true;
 
@@ -116,6 +119,26 @@ public:
 
         ImGui::End();
 
+        if (statWindow) {
+            if (!dbIsExists()) ImGui::Text("DB is not exists");
+            else {
+                ImGui::Begin("Statistick", &statWindow);
+
+                PlayerContext ctx;
+
+                ctx = getData();
+
+                for (const auto& c : ctx.players) {
+                    float kd = (c.deaths == 0) ? (float)c.score : (float)c.score / (float)c.deaths;
+
+                    ImGui::Text("Total kills: %d",c.score);
+                    ImGui::Text("Total deaths: %d",c.deaths);
+                    ImGui::Text("KD: %.1f",kd);
+                }
+
+                ImGui::End();
+            }
+        }
         if (devWindow) {
             ImGui::Begin("Dev. Window", &devWindow);
 

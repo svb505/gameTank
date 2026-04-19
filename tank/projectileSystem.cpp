@@ -44,6 +44,8 @@ void onHit(Projectile& p, int id, Health* health,EffectsContext& context,Sound& 
             health->current -= p.damage;
 
             if (wasAlive && health->current <= 0.0f) {
+                player.kills++;
+
                 health->destroyed = true;
                 g_destroyText = "Target Destroyed";
 
@@ -157,6 +159,7 @@ void update(float dt,Sound& sound,std::unordered_map<int, Entity>& enemies,std::
             if (player.currentHP <= 0) {
                 addToKillChat("Tank", "Player", getShellType(p.selectedShellType), 0, 0);
 
+                player.death++;
                 player.currentHP = player.HP;
                 player.pos.x = player.spawns[player.selectedSpawn].x;
                 player.pos.y = player.spawns[player.selectedSpawn].y;

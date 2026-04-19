@@ -68,6 +68,7 @@ public:
     const float REDUCTION_COEF = 0.995f;
     const float VELOCITY_COEF = 0.2f;
 
+    int death = 0;
     int selectedSpawn = 0;
     int HP = 200;
     int score = 0;

@@ -131,6 +131,7 @@
     <ClCompile Include="bounds.cpp" />
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="craters.cpp" />
+    <ClCompile Include="database.cpp" />
     <ClCompile Include="effects.cpp" />
     <ClCompile Include="enemyes.cpp" />
     <ClCompile Include="environnement.cpp" />
@@ -159,6 +160,7 @@
     <ClInclude Include="bounds.h" />
     <ClInclude Include="camera.h" />
     <ClInclude Include="craters.h" />
+    <ClInclude Include="database.h" />
     <ClInclude Include="effects.h" />
     <ClInclude Include="enemyes.h" />
     <ClInclude Include="environnement.h" />

@@ -35,6 +35,7 @@
 #include "weather.h"
 #include "killchat.h"
 #include "input.h"
+#include "database.h"
 
 #define COUNT 55
 #define ECRANW 1600
@@ -62,6 +63,10 @@ static bool drawDebugRay = false;
 double lastX = 800.0 / 2, lastY = 600.0 / 2;
 float sensitivity = 0.1f;
 
+void windowCloseCallback(GLFWwindow* window) {
+    createDb();
+    saveData(tank.kills, tank.death);
+}
 void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
     ImGuiIO& io = ImGui::GetIO();
     io.AddMousePosEvent((float)xpos, (float)ypos);
@@ -181,6 +186,8 @@ int main(){
 
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     glfwSetCursorPosCallback(window, mouse_callback);
+
+    glfwSetWindowCloseCallback(window, windowCloseCallback);
 
     while (!glfwWindowShouldClose(window)){
         double currentTime = glfwGetTime();
