@@ -7,7 +7,7 @@ Each enemy has its own HP pool, and each shell deals damage.
 small **AI** for enemy tanks that **turns the turret towards the player** if he is within range and **shoots at him**.
 tank crashes into objects and destroys them, **lighting**, a **minimap** with dynamic data (your position, enemies around, effects, etc.), 
 **Arced projectile trajectory**, **ammo limitation**, the **ability to replenish ammo** at a special point, and **calling an artillery**
-strike at specific coordinates with a margin of error.
+strike at specific coordinates with a margin of errorь **data base** for kills and death.
 
 ## Technical nuances: 
   - Each logical system is implemented in a separate file
@@ -19,6 +19,7 @@ strike at specific coordinates with a margin of error.
   - Renderer: gl, opengl, glfw3, glu
   - Sound: ALuint
   - GUI: ImGui
+  - Data Base: SQLite3 
   - Other: chrono, cstdint, cstdlib, algorithm, ctime, stbimage
 
 ## Required:
