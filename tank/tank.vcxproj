@@ -138,6 +138,7 @@
     <ClCompile Include="getheight.cpp" />
     <ClCompile Include="getnormal.cpp" />
     <ClCompile Include="HUD.cpp" />
+    <ClCompile Include="json_parser.cpp" />
     <ClCompile Include="killchat.cpp" />
     <ClCompile Include="lightning.cpp" />
     <ClCompile Include="Logger.cpp" />
@@ -166,9 +167,11 @@
     <ClInclude Include="environnement.h" />
     <ClInclude Include="getheight.h" />
     <ClInclude Include="getnormal.h" />
+    <ClInclude Include="glfw_oglSetup.h" />
     <ClInclude Include="GUI.h" />
     <ClInclude Include="HUD.h" />
     <ClInclude Include="input.h" />
+    <ClInclude Include="json_parser.h" />
     <ClInclude Include="killchat.h" />
     <ClInclude Include="lightning.h" />
     <ClInclude Include="Logger.h" />

@@ -7,6 +7,7 @@
 #include "projectile.h"
 #include "bounds.h"
 #include "svbmath.h"
+#include "json_parser.h"
 
 constexpr int MAX_TRACK_POINTS = 64;
 
@@ -82,7 +83,7 @@ public:
     float bodyYaw = -90.0f, turretYaw = -90.0f, gunPitch = 0.0f;  
 
     int maxShells = 26, totalShells = 26;
-    float reloadTime = 6.5f, finishReload = 0.0f;
+    float reloadTime = getFloatFromJson("tankReload"), finishReload = 0.0f;
 
     bool aimMode = false;
     int kills = 0;
@@ -90,7 +91,8 @@ public:
     shellType selectedShell;
     int shellSpeed = 400;
 
-    float moveSpeed = 0.0f, rotateSpeed = 60.0f, turretSpeed = 60.0f, gunSpeed = 30.0f;
+    float moveSpeed = 0.0f, rotateSpeed = 60.0f;
+    float turretSpeed = getFloatFromJson("tankTurretSpeed"), gunSpeed = getFloatFromJson("tankGunSpeed");
 
     float bodyRad = (bodyYaw + 90.0f) * 3.1415926f / 180.0f, dirX = -sin(bodyRad), dirZ = -cos(bodyRad);
 

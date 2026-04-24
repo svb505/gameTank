@@ -36,6 +36,7 @@
 #include "killchat.h"
 #include "input.h"
 #include "database.h"
+#include "glfw_oglSetup.h"
 
 #define COUNT 55
 #define ECRANW 1600
@@ -154,12 +155,7 @@ int main(){
 
     glEnable(GL_DEPTH_TEST);
 
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-
-    glFrustum(cam.left, cam.right, cam.bottom, cam.top, cam.nearPlane, cam.farPlane);
-
-    glMatrixMode(GL_MODELVIEW);
+    setMatrix(cam.left, cam.right, cam.bottom, cam.top, cam.nearPlane, cam.farPlane);
 
     std::unordered_map<int, Entity> enemyes;
 

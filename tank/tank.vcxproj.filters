@@ -96,6 +96,9 @@
     <ClCompile Include="database.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="json_parser.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="tank.h">
@@ -186,6 +189,12 @@
       <Filter>Исходные файлы</Filter>
     </ClInclude>
     <ClInclude Include="database.h">
+      <Filter>Исходные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="glfw_oglSetup.h">
+      <Filter>Исходные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="json_parser.h">
       <Filter>Исходные файлы</Filter>
     </ClInclude>
   </ItemGroup>
