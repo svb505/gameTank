@@ -37,6 +37,7 @@
 #include "input.h"
 #include "database.h"
 #include "glfw_oglSetup.h"
+#include "variables.h"
 
 #define COUNT 55
 #define ECRANW 1600
@@ -50,19 +51,6 @@ GUI gui;
 Artillery art;
 Weather weat;
 SmokeGranade granades;
-
-int lastHitID = -1;
-static float lastHitDist = 0.0f;
-
-bool firstMouse = true;
-bool cursorVisibility = false;
-bool fpsLimit = false;
-
-static Ray debugRay;
-static bool drawDebugRay = false;
-
-double lastX = 800.0 / 2, lastY = 600.0 / 2;
-float sensitivity = 0.1f;
 
 void windowCloseCallback(GLFWwindow* window) {
     createDb();
@@ -195,7 +183,7 @@ int main(){
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        gui.render(fps, tank, art, sound, weat.weather, granades, badges, fpsLimit, enemyes, tank.turretLocked);
+        gui.render(fps, tank, art, sound, weat.weather, granades, badges, enemyes, tank.turretLocked);
 
         ImGui::Render();
 

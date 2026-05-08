@@ -116,12 +116,14 @@ void processTankInput(GLFWwindow* window, float dt, std::unordered_map<int, Enti
     if (isPressed(window, GLFW_KEY_SPACE, prevFire) && tank.finishReload <= 0.0f && tank.totalShells > 0) {
         float yaw = tank.turretLocked ? tank.bodyYaw + tank.turretYaw : tank.turretYaw - 90.0f;
 
-        spawnShell({ tank.pos.x, tank.pos.y + 1.6f, tank.pos.z }, yaw, tank.gunPitch, tank.selectedShell, tank.shellSpeed);
+        float posY = tank.pos.y + tank.params.hullH + tank.params.turretY - tank.params.gunOffsetY;
 
-        auto& src = sound.sources["Shot"];
-        sound.setSourcePosition(src, tank.pos);
-        alSourceStop(src);
-        alSourcePlay(src);
+        spawnShell({ tank.pos.x, posY, tank.pos.z }, yaw, tank.gunPitch, tank.selectedShell, tank.shellSpeed);
+
+   
+        sound.setSourcePosition(sound.sources["Shot"], tank.pos);
+        alSourceStop(sound.sources["Shot"]);
+        alSourcePlay(sound.sources["Shot"]);
 
         --tank.totalShells;
         tank.finishReload = tank.reloadTime;

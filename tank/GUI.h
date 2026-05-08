@@ -8,6 +8,7 @@
 #include "profiler.h"
 #include "enemyes.h"
 #include "database.h"
+#include "variables.h"
 
 class GUI {
 private:
@@ -54,7 +55,7 @@ public:
         ImGui::DestroyContext();
     }
     void render(float& fps, Tank& tank, Artillery& art, Sound& sound,std::string& weather, SmokeGranade& g,bool& badges,
-        bool& fpslimit, std::unordered_map<int, Entity>& enemyes,bool& locked){
+        std::unordered_map<int, Entity>& enemyes,bool& locked){
         std::string buf = std::format("{} / {}", tank.currentHP, tank.HP);
 
         if (tank.selectedShell == shellType::APFSDS) selectedShell = "APFSDS";
@@ -88,7 +89,7 @@ public:
         ImGui::Dummy(ImVec2(0.0f, 10.0f));
 
         ImGui::Text("FPS: %.0f", fps);
-        ImGui::Checkbox("FPS Limit", &fpslimit);
+        ImGui::Checkbox("FPS Limit", &fpsLimit);
 
         ImGui::Text("My HP: %s", buf.c_str());
 

@@ -99,6 +99,12 @@
     <ClCompile Include="json_parser.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="variables.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="texture.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="tank.h">
@@ -195,6 +201,12 @@
       <Filter>Исходные файлы</Filter>
     </ClInclude>
     <ClInclude Include="json_parser.h">
+      <Filter>Исходные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="variables.h">
+      <Filter>Исходные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="texture.h">
       <Filter>Исходные файлы</Filter>
     </ClInclude>
   </ItemGroup>
