@@ -13,7 +13,6 @@
 #include "artillery.h"
 #include "svbmath.h"
 
-
 struct EffectsContext;
 
 extern std::map<shellType,std::string> shellTypes;

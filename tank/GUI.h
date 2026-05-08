@@ -9,6 +9,7 @@
 #include "enemyes.h"
 #include "database.h"
 #include "variables.h"
+#include "texture.h"
 
 class GUI {
 private:
@@ -58,21 +59,21 @@ public:
         std::unordered_map<int, Entity>& enemyes,bool& locked){
         std::string buf = std::format("{} / {}", tank.currentHP, tank.HP);
 
-        if (tank.selectedShell == shellType::APFSDS) selectedShell = "APFSDS";
-        else if (tank.selectedShell == shellType::SMOKE) selectedShell = "SMOKE";
-        else if (tank.selectedShell == shellType::ATGM) selectedShell = "ATGM";
-        else selectedShell = "HE";
+        selectedShell = shellTypes[tank.selectedShell];
 
         bool canUseMlrs = (tank.kills > 0 && tank.kills % 5 == 0);
 
         ImGui::Begin("Settings & Info");
 
-        if (ImGui::Button("Show statistick")) statWindow = true;
-        if (ImGui::Button("Aimer artillery strike")) artWindow = true;
         if (ImGui::Button("Developper window")) devWindow = true;
+        ImGui::SameLine();
+        if (ImGui::Button("Show statistick")) statWindow = true;
 
+        if (ImGui::ImageButton("artillery",(ImTextureID)(intptr_t)iconTextures["ARTILLERY"], ImVec2(60, 60))) artWindow = true;
+        
+        ImGui::SameLine();
         ImGui::BeginDisabled(!canUseMlrs);
-        if (ImGui::Button("Aimer MLRS strike")) mlrsWindow = true;
+        if (ImGui::ImageButton("mlrs",(ImTextureID)(intptr_t)iconTextures["MLRS"], ImVec2(60, 60))) mlrsWindow = true;
         ImGui::EndDisabled();
 
         if (!canUseMlrs && ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled)){
@@ -82,40 +83,42 @@ public:
         ImGui::Separator();
 
         ImGui::Checkbox("Badges in minimap", &badges);
-
-        ImGui::Dummy(ImVec2(0.0f, 10.0f));
-        ImGui::Checkbox("Show Health Bars of enemyes", &showBars);
-
-        ImGui::Dummy(ImVec2(0.0f, 10.0f));
-
-        ImGui::Text("FPS: %.0f", fps);
-        ImGui::Checkbox("FPS Limit", &fpsLimit);
-
-        ImGui::Text("My HP: %s", buf.c_str());
-
-        ImGui::Dummy(ImVec2(0.0f, 10.0f));
+        ImGui::SameLine();
         ImGui::Checkbox("Lock turret", &locked);
+        ImGui::Checkbox("FPS Limit", &fpsLimit);
+        ImGui::SameLine();
+        ImGui::Checkbox("Show Health Bars of enemyes", &showBars);
         ImGui::Dummy(ImVec2(0.0f, 10.0f));
-        ImGui::Text("Smoke grenades %d / %d", (int)g.granades.size(), g.maxCount);
         
+        ImGui::Text("FPS: %.0f", fps);
+        ImGui::Dummy(ImVec2(0.0f, 10.0f));
+        ImGui::Text("My HP: %s", buf.c_str());
+        ImGui::Dummy(ImVec2(0.0f, 10.0f));
+        
+        ImGui::Text("%d / %d", (int)g.granades.size(), g.maxCount);
+        ImGui::Image((ImTextureID)(intptr_t)iconTextures["SMOKEGR"], ImVec2(60, 60));
+
         ImGui::Dummy(ImVec2(0.0f, 10.0f));
         if (ImGui::Combo("Select weather", &idxW, cstrsW.data(), cstrsW.size())) weather = weathers[idxW];
         
         ImGui::Dummy(ImVec2(0.0f, 10.0f));
-        
         if (ImGui::Combo("Select spawn", &idxS, cstrsS.data(), cstrsS.size())) tank.selectedSpawn = std::stoi(spawns[idxS]);
 
         ImGui::Separator();
 
         ImGui::Text("Speed: %.1f", tank.moveSpeed);
         ImGui::Dummy(ImVec2(0.0f, 10.0f));
+
         ImGui::Text("Total shells: %d", tank.totalShells);
-        ImGui::Text("Selected shell: %s", selectedShell);
+        ImGui::Image((ImTextureID)(intptr_t)iconTextures[selectedShell], ImVec2(70, 60));
+
         ImGui::Text("Reload time: %.1f", tank.finishReload);
         ImGui::Dummy(ImVec2(0.0f, 10.0f));
+
         ImGui::Text("Kills: %d", tank.kills);
         ImGui::Text("Score: %d", tank.score);
         ImGui::Dummy(ImVec2(0.0f, 10.0f));
+
         ImGui::Text("Control: %s", controlString.c_str());
 
         ImGui::End();

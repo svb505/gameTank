@@ -17,6 +17,7 @@
 #include "text.h"
 #include "craters.h"
 #include "killchat.h"
+#include "texture.h"
 
 std::vector<Projectile> projectiles = {};
 std::map<shellType, std::string> shellTypes = { {shellType::APFSDS,"APFSDS"},{shellType::HE,"HE"},

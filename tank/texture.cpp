@@ -1,8 +1,21 @@
+#include <windows.h>
+#include <GL/gl.h>
 #include "texture.h"
-#include <glad/glad.h>
 #include "stb_image.h"
 #include "Logger.h"
+#include <map>
 
+std::map<std::string, GLuint> iconTextures;
+
+void LoadAllTextures() {
+    iconTextures["APFSDS"] = LoadTexture("icons/APFSDS.png");
+    iconTextures["HE"] = LoadTexture("icons/HE.png");
+    iconTextures["SMOKE"] = LoadTexture("icons/SMOKE.png");
+    iconTextures["ATGM"] = LoadTexture("icons/ATGM.png");
+    iconTextures["SMOKEGR"] = LoadTexture("icons/SMOKE_GRANADE.png");
+    iconTextures["MLRS"] = LoadTexture("icons/mlrs.png");
+    iconTextures["ARTILLERY"] = LoadTexture("icons/artillery.png");
+}
 GLuint LoadTexture(const char* filename){
     int width, height, channels;
 

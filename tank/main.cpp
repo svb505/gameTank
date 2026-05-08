@@ -162,6 +162,7 @@ int main(){
     int frames = 0;
     
     initLighting();
+    LoadAllTextures();
     granades.spawn(tank);
     generateEnemyes(enemyes,COUNT);
     repl.setCoordinates(10.0f, static_cast<float>(rand() % 30),static_cast<float>((rand() % 50) - 50));
