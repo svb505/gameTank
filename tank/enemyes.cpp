@@ -11,6 +11,7 @@
 #include "projectileSystem.h"
 #include "sounds.h"
 #include "Logger.h"
+#include "texture.h"
 
 bool showBars = true;
 
@@ -337,7 +338,11 @@ void RadarSystem(float dt) {
         if (transforms[entity].angle >= 360.0f) transforms[entity].angle -= 360.0f;
     }
 }
-void drawDestroyedAppartament(ApartmentComponent& ap, float totalH) {
+void drawDestroyedAppartament(ApartmentComponent& ap, float totalH){
+    GLuint wallTexture = allTextures["betonD"];
+    GLuint windowTexture = allTextures["windowDestroyed"];
+    GLuint doorTexture = allTextures["door"];
+
     float halfW = ap.width;
     float halfD = ap.depth;
 
@@ -346,72 +351,134 @@ void drawDestroyedAppartament(ApartmentComponent& ap, float totalH) {
 
     glPushMatrix();
 
-    // ================= FRONT =================
-    glColor3f(0.55f, 0.55f, 0.55f);
+    glEnable(GL_TEXTURE_2D);
+    glColor3f(1.0f, 1.0f, 1.0f);
 
-    //Left
+    // ================= FRONT LEFT =================
+    glBindTexture(GL_TEXTURE_2D, wallTexture);
+
     glBegin(GL_QUADS);
+
+    glTexCoord2f(0.0f, 0.0f);
     glVertex3f(-halfW, 0, halfD);
+
+    glTexCoord2f(1.0f, 0.0f);
     glVertex3f(0.0f, 0, halfD);
+
+    glTexCoord2f(1.0f, 1.0f);
     glVertex3f(0.0f, leftTop, halfD);
+
+    glTexCoord2f(0.0f, 1.0f);
     glVertex3f(-halfW, leftTop, halfD);
+
     glEnd();
 
-    // right
+
+    // ================= FRONT RIGHT =================
     glBegin(GL_QUADS);
+
+    glTexCoord2f(0.0f, 0.0f);
     glVertex3f(0.0f, 0, halfD);
+
+    glTexCoord2f(1.0f, 0.0f);
     glVertex3f(halfW, 0, halfD);
+
+    glTexCoord2f(1.0f, 1.0f);
     glVertex3f(halfW, rightTop, halfD);
+
+    glTexCoord2f(0.0f, 1.0f);
     glVertex3f(0.0f, rightTop, halfD);
+
     glEnd();
 
 
     // ================= BACK =================
     glBegin(GL_QUADS);
+
+    glTexCoord2f(0.0f, 0.0f);
     glVertex3f(-halfW, 0, -halfD);
+
+    glTexCoord2f(2.0f, 0.0f);
     glVertex3f(halfW, 0, -halfD);
+
+    glTexCoord2f(2.0f, 2.0f);
     glVertex3f(halfW, rightTop, -halfD);
+
+    glTexCoord2f(0.0f, 2.0f);
     glVertex3f(-halfW, leftTop, -halfD);
+
     glEnd();
 
 
     // ================= LEFT WALL =================
     glBegin(GL_QUADS);
+
+    glTexCoord2f(0.0f, 0.0f);
     glVertex3f(-halfW, 0, -halfD);
+
+    glTexCoord2f(2.0f, 0.0f);
     glVertex3f(-halfW, 0, halfD);
+
+    glTexCoord2f(2.0f, 2.0f);
     glVertex3f(-halfW, leftTop, halfD);
+
+    glTexCoord2f(0.0f, 2.0f);
     glVertex3f(-halfW, leftTop, -halfD);
+
     glEnd();
 
 
     // ================= RIGHT WALL =================
     glBegin(GL_QUADS);
+
+    glTexCoord2f(0.0f, 0.0f);
     glVertex3f(halfW, 0, -halfD);
+
+    glTexCoord2f(2.0f, 0.0f);
     glVertex3f(halfW, 0, halfD);
+
+    glTexCoord2f(2.0f, 2.0f);
     glVertex3f(halfW, rightTop, halfD);
+
+    glTexCoord2f(0.0f, 2.0f);
     glVertex3f(halfW, rightTop, -halfD);
+
     glEnd();
 
 
     // ================= BROKEN TOP =================
-    glColor3f(0.35f, 0.35f, 0.35f);
+    glBindTexture(GL_TEXTURE_2D, wallTexture);
 
     glBegin(GL_TRIANGLES);
 
-    // Верхняя наклонная поверхность
+    glTexCoord2f(0.0f, 0.0f);
     glVertex3f(-halfW, leftTop, halfD);
+
+    glTexCoord2f(0.0f, 1.0f);
     glVertex3f(-halfW, leftTop, -halfD);
+
+    glTexCoord2f(1.0f, 1.0f);
     glVertex3f(halfW, rightTop, -halfD);
 
+
+    glTexCoord2f(0.0f, 0.0f);
     glVertex3f(-halfW, leftTop, halfD);
+
+    glTexCoord2f(1.0f, 1.0f);
     glVertex3f(halfW, rightTop, -halfD);
+
+    glTexCoord2f(1.0f, 0.0f);
     glVertex3f(halfW, rightTop, halfD);
 
     glEnd();
 
+    glDisable(GL_TEXTURE_2D);
+
 
     // ================= WINDOWS =================
-    glColor3f(0.1f, 0.1f, 0.1f);
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, windowTexture);
+    glColor3f(1, 1, 1);
 
     for (int f = 0; f < ap.floors; f++)
     {
@@ -423,29 +490,54 @@ void drawDestroyedAppartament(ApartmentComponent& ap, float totalH) {
             float x = i * 0.7f;
 
             glBegin(GL_QUADS);
+
+            glTexCoord2f(0, 0);
             glVertex3f(x - 0.2f, y, halfD + 0.01f);
+
+            glTexCoord2f(1, 0);
             glVertex3f(x + 0.2f, y, halfD + 0.01f);
+
+            glTexCoord2f(1, 1);
             glVertex3f(x + 0.2f, y + 0.3f, halfD + 0.01f);
+
+            glTexCoord2f(0, 1);
             glVertex3f(x - 0.2f, y + 0.3f, halfD + 0.01f);
+
             glEnd();
         }
     }
 
+    glDisable(GL_TEXTURE_2D);
+
 
     // ================= CROOKED DOOR =================
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, doorTexture);
+    glColor3f(1, 1, 1);
+
     glPushMatrix();
     glTranslatef(-0.5f, 0, halfD + 0.02f);
     glRotatef(-10, 0, 0, 1);
 
-    glColor3f(0.25f, 0.15f, 0.08f);
     glBegin(GL_QUADS);
+
+    glTexCoord2f(0, 0);
     glVertex3f(0, 0, 0);
+
+    glTexCoord2f(1, 0);
     glVertex3f(1.0f, 0, 0);
+
+    glTexCoord2f(1, 1);
     glVertex3f(1.0f, 1.0f, 0);
+
+    glTexCoord2f(0, 1);
     glVertex3f(0, 1.0f, 0);
+
     glEnd();
 
     glPopMatrix();
+
+    glDisable(GL_TEXTURE_2D);
 
 
     // ================= RUBBLE =================
@@ -469,65 +561,158 @@ void drawAppartament(ApartmentComponent& ap, float totalH) {
         glPushMatrix();
         glRotatef(1, 0, 1, 0);
 
+        GLuint betonTexture = allTextures["beton"];
+        GLuint windowTexture = allTextures["window"];
+        GLuint doorTexture = allTextures["door"];
+
         // ================= BODY =================
-        glColor3f(0.75f, 0.75f, 0.7f);
+        glEnable(GL_TEXTURE_2D);
+
+        glBindTexture(GL_TEXTURE_2D, betonTexture);
+
+        glColor3f(1.0f, 1.0f, 1.0f);
+
         glBegin(GL_QUADS);
-        // Front
+
+        // ---------- FRONT ----------
+        glTexCoord2f(0.0f, 0.0f);
         glVertex3f(-ap.width, 0, ap.depth);
-        glVertex3f(ap.width, 0, ap.depth);
-        glVertex3f(ap.width, totalH, ap.depth);
-        glVertex3f(-ap.width, totalH, ap.depth);
 
-        // Back
-        glVertex3f(-ap.width, 0, -ap.depth);
-        glVertex3f(-ap.width, totalH, -ap.depth);
-        glVertex3f(ap.width, totalH, -ap.depth);
-        glVertex3f(ap.width, 0, -ap.depth);
-
-        // Left
-        glVertex3f(-ap.width, 0, -ap.depth);
-        glVertex3f(-ap.width, 0, ap.depth);
-        glVertex3f(-ap.width, totalH, ap.depth);
-        glVertex3f(-ap.width, totalH, -ap.depth);
-
-        // Right
-        glVertex3f(ap.width, 0, -ap.depth);
-        glVertex3f(ap.width, totalH, -ap.depth);
-        glVertex3f(ap.width, totalH, ap.depth);
+        glTexCoord2f(4.0f, 0.0f);
         glVertex3f(ap.width, 0, ap.depth);
 
-        // Roof
-        glColor3f(0.5f, 0.5f, 0.5f);
-        glVertex3f(-ap.width, totalH, -ap.depth);
-        glVertex3f(-ap.width, totalH, ap.depth);
+        glTexCoord2f(4.0f, 8.0f);
         glVertex3f(ap.width, totalH, ap.depth);
+
+        glTexCoord2f(0.0f, 8.0f);
+        glVertex3f(-ap.width, totalH, ap.depth);
+
+
+        // ---------- BACK ----------
+        glTexCoord2f(0.0f, 0.0f);
+        glVertex3f(-ap.width, 0, -ap.depth);
+
+        glTexCoord2f(0.0f, 8.0f);
+        glVertex3f(-ap.width, totalH, -ap.depth);
+
+        glTexCoord2f(4.0f, 8.0f);
+        glVertex3f(ap.width, totalH, -ap.depth);
+
+        glTexCoord2f(4.0f, 0.0f);
+        glVertex3f(ap.width, 0, -ap.depth);
+
+
+        // ---------- LEFT ----------
+        glTexCoord2f(0.0f, 0.0f);
+        glVertex3f(-ap.width, 0, -ap.depth);
+
+        glTexCoord2f(4.0f, 0.0f);
+        glVertex3f(-ap.width, 0, ap.depth);
+
+        glTexCoord2f(4.0f, 8.0f);
+        glVertex3f(-ap.width, totalH, ap.depth);
+
+        glTexCoord2f(0.0f, 8.0f);
+        glVertex3f(-ap.width, totalH, -ap.depth);
+
+
+        // ---------- RIGHT ----------
+        glTexCoord2f(0.0f, 0.0f);
+        glVertex3f(ap.width, 0, -ap.depth);
+
+        glTexCoord2f(0.0f, 8.0f);
+        glVertex3f(ap.width, totalH, -ap.depth);
+
+        glTexCoord2f(4.0f, 8.0f);
+        glVertex3f(ap.width, totalH, ap.depth);
+
+        glTexCoord2f(4.0f, 0.0f);
+        glVertex3f(ap.width, 0, ap.depth);
+
+
+        // ---------- ROOF ----------
+        glTexCoord2f(0.0f, 0.0f);
+        glVertex3f(-ap.width, totalH, -ap.depth);
+
+        glTexCoord2f(0.0f, 4.0f);
+        glVertex3f(-ap.width, totalH, ap.depth);
+
+        glTexCoord2f(4.0f, 4.0f);
+        glVertex3f(ap.width, totalH, ap.depth);
+
+        glTexCoord2f(4.0f, 0.0f);
         glVertex3f(ap.width, totalH, -ap.depth);
 
         glEnd();
 
+        glDisable(GL_TEXTURE_2D);
+
         // ================= WINDOWS =================
-        glColor3f(0.2f, 0.4f, 0.8f);
+
+        glEnable(GL_TEXTURE_2D);
+
+        glBindTexture(GL_TEXTURE_2D, windowTexture);
+
+        glColor3f(1.0f, 1.0f, 1.0f);
+
         for (int f = 0; f < ap.floors; f++) {
+
             float y = f * ap.floorHeight + 0.15f;
+
             for (int i = -3; i <= 3; i += 2) {
+
+                float x1 = i * 0.6f - 0.2f;
+                float x2 = i * 0.6f + 0.2f;
+
+                float y1 = y;
+                float y2 = y + 0.25f;
+
                 glBegin(GL_QUADS);
-                glVertex3f(i * 0.6f - 0.2f, y, ap.depth + 0.01f);
-                glVertex3f(i * 0.6f + 0.2f, y, ap.depth + 0.01f);
-                glVertex3f(i * 0.6f + 0.2f, y + 0.25f, ap.depth + 0.01f);
-                glVertex3f(i * 0.6f - 0.2f, y + 0.25f, ap.depth + 0.01f);
+
+                glTexCoord2f(0.0f, 0.0f);
+                glVertex3f(x1, y1, ap.depth + 0.01f);
+
+                glTexCoord2f(1.0f, 0.0f);
+                glVertex3f(x2, y1, ap.depth + 0.01f);
+
+                glTexCoord2f(1.0f, 1.0f);
+                glVertex3f(x2, y2, ap.depth + 0.01f);
+
+                glTexCoord2f(0.0f, 1.0f);
+                glVertex3f(x1, y2, ap.depth + 0.01f);
+
                 glEnd();
             }
         }
 
-        // ================= DOORS =================
-        glColor3f(0.3f, 0.2f, 0.1f);
+        glDisable(GL_TEXTURE_2D);
+
+
+        // ================= DOOR =================
+
+        glEnable(GL_TEXTURE_2D);
+
+        glBindTexture(GL_TEXTURE_2D, doorTexture);
+
+        glColor3f(1.0f, 1.0f, 1.0f);
+
         glBegin(GL_QUADS);
+
+        glTexCoord2f(0.0f, 0.0f);
         glVertex3f(-0.5f, 0, ap.depth + 0.02f);
+
+        glTexCoord2f(1.0f, 0.0f);
         glVertex3f(0.5f, 0, ap.depth + 0.02f);
+
+        glTexCoord2f(1.0f, 1.0f);
         glVertex3f(0.5f, 0.8f, ap.depth + 0.02f);
+
+        glTexCoord2f(0.0f, 1.0f);
         glVertex3f(-0.5f, 0.8f, ap.depth + 0.02f);
+
         glEnd();
 
+        glDisable(GL_TEXTURE_2D);
         glPopMatrix();
     }
     if (ap.LOD == 2) {
@@ -540,103 +725,158 @@ void drawAppartament(ApartmentComponent& ap, float totalH) {
         float totalH = ap.floors * ap.floorHeight;
 
         // ================= BODY =================
-        glColor3f(0.75f, 0.7f, 0.65f);
+        GLuint betonTexture = allTextures["beton"];
+        GLuint windowTexture = allTextures["window"];
+        GLuint doorTexture = allTextures["door"];
+
+        // ================= BODY =================
+        glEnable(GL_TEXTURE_2D);
+
+        glBindTexture(GL_TEXTURE_2D, betonTexture);
+
+        glColor3f(1.0f, 1.0f, 1.0f);
+
         glBegin(GL_QUADS);
 
-        // Front
+        // ---------- FRONT ----------
+        glTexCoord2f(0.0f, 0.0f);
         glVertex3f(-ap.width, 0, ap.depth);
-        glVertex3f(ap.width, 0, ap.depth);
-        glVertex3f(ap.width, totalH, ap.depth);
-        glVertex3f(-ap.width, totalH, ap.depth);
 
-        // Back
-        glVertex3f(-ap.width, 0, -ap.depth);
-        glVertex3f(-ap.width, totalH, -ap.depth);
-        glVertex3f(ap.width, totalH, -ap.depth);
-        glVertex3f(ap.width, 0, -ap.depth);
-
-        // Left
-        glVertex3f(-ap.width, 0, -ap.depth);
-        glVertex3f(-ap.width, 0, ap.depth);
-        glVertex3f(-ap.width, totalH, ap.depth);
-        glVertex3f(-ap.width, totalH, -ap.depth);
-
-        // Right
-        glVertex3f(ap.width, 0, -ap.depth);
-        glVertex3f(ap.width, totalH, -ap.depth);
-        glVertex3f(ap.width, totalH, ap.depth);
+        glTexCoord2f(4.0f, 0.0f);
         glVertex3f(ap.width, 0, ap.depth);
 
-        // Roof
-        glColor3f(0.5f, 0.45f, 0.45f);
-        glVertex3f(-ap.width, totalH, -ap.depth);
-        glVertex3f(-ap.width, totalH, ap.depth);
+        glTexCoord2f(4.0f, 8.0f);
         glVertex3f(ap.width, totalH, ap.depth);
+
+        glTexCoord2f(0.0f, 8.0f);
+        glVertex3f(-ap.width, totalH, ap.depth);
+
+
+        // ---------- BACK ----------
+        glTexCoord2f(0.0f, 0.0f);
+        glVertex3f(-ap.width, 0, -ap.depth);
+
+        glTexCoord2f(0.0f, 8.0f);
+        glVertex3f(-ap.width, totalH, -ap.depth);
+
+        glTexCoord2f(4.0f, 8.0f);
+        glVertex3f(ap.width, totalH, -ap.depth);
+
+        glTexCoord2f(4.0f, 0.0f);
+        glVertex3f(ap.width, 0, -ap.depth);
+
+
+        // ---------- LEFT ----------
+        glTexCoord2f(0.0f, 0.0f);
+        glVertex3f(-ap.width, 0, -ap.depth);
+
+        glTexCoord2f(4.0f, 0.0f);
+        glVertex3f(-ap.width, 0, ap.depth);
+
+        glTexCoord2f(4.0f, 8.0f);
+        glVertex3f(-ap.width, totalH, ap.depth);
+
+        glTexCoord2f(0.0f, 8.0f);
+        glVertex3f(-ap.width, totalH, -ap.depth);
+
+
+        // ---------- RIGHT ----------
+        glTexCoord2f(0.0f, 0.0f);
+        glVertex3f(ap.width, 0, -ap.depth);
+
+        glTexCoord2f(0.0f, 8.0f);
+        glVertex3f(ap.width, totalH, -ap.depth);
+
+        glTexCoord2f(4.0f, 8.0f);
+        glVertex3f(ap.width, totalH, ap.depth);
+
+        glTexCoord2f(4.0f, 0.0f);
+        glVertex3f(ap.width, 0, ap.depth);
+
+
+        // ---------- ROOF ----------
+        glTexCoord2f(0.0f, 0.0f);
+        glVertex3f(-ap.width, totalH, -ap.depth);
+
+        glTexCoord2f(0.0f, 4.0f);
+        glVertex3f(-ap.width, totalH, ap.depth);
+
+        glTexCoord2f(4.0f, 4.0f);
+        glVertex3f(ap.width, totalH, ap.depth);
+
+        glTexCoord2f(4.0f, 0.0f);
         glVertex3f(ap.width, totalH, -ap.depth);
 
         glEnd();
 
+        glDisable(GL_TEXTURE_2D);
 
         // ================= WINDOWS =================
+
+        glEnable(GL_TEXTURE_2D);
+
+        glBindTexture(GL_TEXTURE_2D, windowTexture);
+
+        glColor3f(1.0f, 1.0f, 1.0f);
+
         for (int f = 0; f < ap.floors; f++) {
+
             float y = f * ap.floorHeight + 0.15f;
 
             for (int i = -3; i <= 3; i += 2) {
 
                 float x1 = i * 0.6f - 0.2f;
                 float x2 = i * 0.6f + 0.2f;
+
+                float y1 = y;
                 float y2 = y + 0.25f;
 
-                int state = rand() % 3;
+                glBegin(GL_QUADS);
 
-                if (state == 0) {
-                    // нормальное окно
-                    glColor3f(0.2f, 0.4f, 0.8f);
-                    glBegin(GL_QUADS);
-                    glVertex3f(x1, y, ap.depth + 0.01f);
-                    glVertex3f(x2, y, ap.depth + 0.01f);
-                    glVertex3f(x2, y2, ap.depth + 0.01f);
-                    glVertex3f(x1, y2, ap.depth + 0.01f);
-                    glEnd();
-                }
-                else if (state == 1) {
-                    // выбитое окно (черная дыра)
-                    glColor3f(0.05f, 0.05f, 0.05f);
-                    glBegin(GL_QUADS);
-                    glVertex3f(x1, y, ap.depth + 0.01f);
-                    glVertex3f(x2, y, ap.depth + 0.01f);
-                    glVertex3f(x2, y2, ap.depth + 0.01f);
-                    glVertex3f(x1, y2, ap.depth + 0.01f);
-                    glEnd();
-                }
-                else {
-                    // разбитое стекло (осколок)
-                    glColor3f(0.2f, 0.4f, 0.8f);
-                    glBegin(GL_TRIANGLES);
-                    glVertex3f(x1, y, ap.depth + 0.01f);
-                    glVertex3f(x2, y, ap.depth + 0.01f);
-                    glVertex3f(x1, y2, ap.depth + 0.01f);
-                    glEnd();
+                glTexCoord2f(0.0f, 0.0f);
+                glVertex3f(x1, y1, ap.depth + 0.01f);
 
-                    glColor3f(0.05f, 0.05f, 0.05f);
-                    glBegin(GL_TRIANGLES);
-                    glVertex3f(x2, y, ap.depth + 0.01f);
-                    glVertex3f(x2, y2, ap.depth + 0.01f);
-                    glVertex3f(x1, y2, ap.depth + 0.01f);
-                    glEnd();
-                }
+                glTexCoord2f(1.0f, 0.0f);
+                glVertex3f(x2, y1, ap.depth + 0.01f);
+
+                glTexCoord2f(1.0f, 1.0f);
+                glVertex3f(x2, y2, ap.depth + 0.01f);
+
+                glTexCoord2f(0.0f, 1.0f);
+                glVertex3f(x1, y2, ap.depth + 0.01f);
+
+                glEnd();
             }
         }
 
+        glDisable(GL_TEXTURE_2D);
+
 
         // ================= DOOR =================
-        glColor3f(0.3f, 0.2f, 0.1f);
+
+        glEnable(GL_TEXTURE_2D);
+
+        glBindTexture(GL_TEXTURE_2D, doorTexture);
+
+        glColor3f(1.0f, 1.0f, 1.0f);
+
         glBegin(GL_QUADS);
+
+        glTexCoord2f(0.0f, 0.0f);
         glVertex3f(-0.5f, 0, ap.depth + 0.02f);
+
+        glTexCoord2f(1.0f, 0.0f);
         glVertex3f(0.5f, 0, ap.depth + 0.02f);
+
+        glTexCoord2f(1.0f, 1.0f);
         glVertex3f(0.5f, 0.8f, ap.depth + 0.02f);
+
+        glTexCoord2f(0.0f, 1.0f);
         glVertex3f(-0.5f, 0.8f, ap.depth + 0.02f);
+
         glEnd();
+
+        glDisable(GL_TEXTURE_2D);
 
 
         // ================= FIRE MARKS =================

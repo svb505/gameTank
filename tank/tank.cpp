@@ -10,6 +10,7 @@
 #include "bounds.h"
 #include "svbmath.h"
 #include "tank.h"
+#include "texture.h"
 
 void Tank::UpdateTrack(TrackBuffer& track, const svbmath::Vec3& pos, float dt) {
     float minDist = 0.3f;

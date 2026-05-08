@@ -4,7 +4,7 @@
 #include <string>
 #include <map>
 
-extern std::map<std::string, GLuint> iconTextures;
+extern std::map<std::string, GLuint> allTextures;
 
 void LoadAllTextures();
 GLuint LoadTexture(const char* filename);

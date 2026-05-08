@@ -1,5 +1,5 @@
 {
-    "tankReload":6.5,
+    "tankReload":1.0,
     "tankTurretSpeed":60.0,
     "tankGunSpeed":30.0
 }
