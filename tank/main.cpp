@@ -38,6 +38,7 @@
 #include "database.h"
 #include "glfw_oglSetup.h"
 #include "variables.h"
+#include "craters.h"
 
 #define COUNT 55
 #define ECRANW 1600
@@ -231,6 +232,8 @@ int main(){
         art.updateShells(deltaTime);
         art.drawAllShells();
         art.deleteIfAlived();
+
+        std::cout << craters.size() << std::endl;
 
         //Update projectiles
         update(deltaTime, sound, enemyes, healths, bounds, context, tank);

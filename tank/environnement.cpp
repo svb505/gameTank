@@ -104,66 +104,71 @@ void drawSky(){
     glDisable(GL_TEXTURE_2D);
     glEnable(GL_DEPTH_TEST);
 }
-void drawGround(float camX, float camZ, std::string weather) { 
-    float step = 2.0f; 
-    float x0 = camX; 
-    float z0 = camZ; 
+void drawGround(float camX, float camZ, std::string& weather) {
+    float step = 4.0f;
+    float x0 = camX;
+    float z0 = camZ;
+
+    bool snowly = (weather == "Snowly");
+
+    glBegin(GL_QUADS);
+
     for (float x = -size; x < size; x += step) {
-        for (float z = -size; z < size; z += step) { 
-            float x1 = x0 + x; 
-            float z1 = z0 + z; 
-            float x2 = x1 + step; 
-            float z2 = z1 + step; 
+        for (float z = -size; z < size; z += step) {
 
-            float y1 = getHeight(x1, z1); 
-            float y2 = getHeight(x2, z1); 
-            float y3 = getHeight(x2, z2); 
-            float y4 = getHeight(x1, z2); 
-            
-            glBegin(GL_QUADS); 
-            auto calcColor = [&](float vx, float vz) { 
-                float r = 0.0f, g = 102.0f / 255, b = 0.0f; 
-                bool inCrater = false; 
-                for (auto& c : craters) { 
-                    float dx = vx - c.x; 
-                    float dz = vz - c.z; 
-                    float dist = sqrt(dx * dx + dz * dz); 
+            float x1 = x0 + x;
+            float z1 = z0 + z;
 
-                    if (dist < c.radius) { 
-                        inCrater = true;
-                        break; 
-                    } 
-                } 
-                if (weather == "Snowly") { 
-                    if (inCrater) { r = 200.0f / 255; g = 180.0f / 255; b = 150.0f / 255; } 
-                    else { r = 1.0f; g = 1.0f; b = 1.0f; } 
-                } else { 
-                    if (inCrater) { r = 153.0f / 255; g = 76.0f / 255; b = 0.0f;} 
-                    else { r = 0.0f; g = 102.0f / 255; b = 0.0f; } 
-                } 
-                glColor3f(r, g, b); 
-                }; 
-            auto n1 = getNormal(x1, z1); 
+            float x2 = x1 + step;
+            float z2 = z1 + step;
 
-            glNormal3f(n1.x, n1.y, n1.z); 
-            calcColor(x1, z1); 
-            glVertex3f(x1, y1, z1); 
+            float y1 = getHeight(x1, z1);
+            float y2 = getHeight(x2, z1);
+            float y3 = getHeight(x2, z2);
+            float y4 = getHeight(x1, z2);
 
-            auto n2 = getNormal(x2, z1); 
-            glNormal3f(n2.x, n2.y, n2.z); 
-            calcColor(x2, z1); 
-            glVertex3f(x2, y2, z1); 
+            float centerX = (x1 + x2) * 0.5f;
+            float centerZ = (z1 + z2) * 0.5f;
 
-            auto n3 = getNormal(x2, z2); 
-            glNormal3f(n3.x, n3.y, n3.z); 
-            calcColor(x2, z2); 
-            glVertex3f(x2, y3, z2); 
+            bool inCrater = false;
 
-            auto n4 = getNormal(x1, z2); 
-            glNormal3f(n4.x, n4.y, n4.z); 
-            calcColor(x1, z2); 
-            glVertex3f(x1, y4, z2); 
-            glEnd(); 
-        } 
-    } 
+            for (const auto& c : craters) {
+                float dx = centerX - c.x;
+                float dz = centerZ - c.z;
+
+                if (dx * dx + dz * dz < c.radius * c.radius) {
+                    inCrater = true;
+                    break;
+                }
+            }
+
+            if (snowly) {
+                if (inCrater) glColor3f(200.0f / 255.0f, 180.0f / 255.0f, 150.0f / 255.0f);
+                else glColor3f(1.0f, 1.0f, 1.0f);
+            }
+            else {
+                if (inCrater) glColor3f(153.0f / 255.0f, 76.0f / 255.0f, 0.0f);
+                else glColor3f(0.0f, 102.0f / 255.0f, 0.0f);
+            }
+
+            svbmath::Vec3 n1 = svbmath::Normalize(svbmath::Vec3(y1 - y2, 2.0f, y1 - y4));
+            svbmath::Vec3 n2 = svbmath::Normalize(svbmath::Vec3(y1 - y2, 2.0f, y2 - y3));
+            svbmath::Vec3 n3 = svbmath::Normalize(svbmath::Vec3(y4 - y3, 2.0f, y2 - y3));
+            svbmath::Vec3 n4 = svbmath::Normalize(svbmath::Vec3(y4 - y3, 2.0f, y1 - y4));
+
+            glNormal3f(n1.x, n1.y, n1.z);
+            glVertex3f(x1, y1, z1);
+
+            glNormal3f(n2.x, n2.y, n2.z);
+            glVertex3f(x2, y2, z1);
+
+            glNormal3f(n3.x, n3.y, n3.z);
+            glVertex3f(x2, y3, z2);
+
+            glNormal3f(n4.x, n4.y, n4.z);
+            glVertex3f(x1, y4, z2);
+        }
+    }
+
+    glEnd();
 }

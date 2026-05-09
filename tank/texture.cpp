@@ -21,11 +21,10 @@ void LoadAllTextures() {
     allTextures["betonD"] = LoadTexture("textures/betonD.jpg");
     allTextures["window"] = LoadTexture("textures/window.png");
     allTextures["windowDestroyed"] = LoadTexture("textures/windowDestroyed.jpg");
-    allTextures["door"] = LoadTexture("textures/door.png");
+    allTextures["door"] = LoadTexture("textures/door.jpg");
     allTextures["cloudy"] = LoadTexture("textures/cloudy.jpg");
     allTextures["fire"] = LoadTexture("textures/fire.jpg");
     allTextures["smoke"] = LoadTexture("textures/smoke.jpg");
-    allTextures["tank"] = LoadTexture("textures/tank.jpg");
 }
 GLuint LoadTexture(const char* filename){
     if (loadedTextures.contains(filename)) return loadedTextures[filename];
