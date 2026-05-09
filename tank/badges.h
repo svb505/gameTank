@@ -4,7 +4,7 @@
 class Camera;
 class Tank;
 
-void DrawSpawnMarker2D(const svbmath::Vec3& pos, float size = 1.0f, float r = 1.0f, float g = 0.0f, float b = 0.0f);
+void DrawSpawnMarker2D(const svbmath::Vec3& pos, bool selected, float size = 1.0f, float r = 1.0f, float g = 0.0f, float b = 0.0f);
 void drawSoldier(float x, float y, float size);
 void drawCar(float x, float y, float size);
 void drawRadar(float x, float y, float size, float angle);

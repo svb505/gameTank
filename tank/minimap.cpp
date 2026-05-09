@@ -20,6 +20,7 @@ void setHeight(float h) { height = h; }
 float getHeight() { return height; }
 void drawMiniMap(int ECRANW, int ECRANH, Tank& playerTank, EffectsContext& context, Camera& cam, std::string weather,
     bool badges, float dt) {
+    glDisable(GL_LIGHTING);
 
     float size = height * 0.6f;
     int miniW = ECRANW / 4;
@@ -54,7 +55,8 @@ void drawMiniMap(int ECRANW, int ECRANH, Tank& playerTank, EffectsContext& conte
     drawGrid(cam.cameraX, cam.cameraZ);
     drawGridText(cam.cameraX, cam.cameraZ);
 
-    for (auto& s : playerTank.spawns) DrawSpawnMarker2D(s.second, 5.0f, 1.0f, 0.5f);
+    for (auto& s : playerTank.spawns) DrawSpawnMarker2D(s.second,playerTank.selectedSpawn == s.first,
+        5.0f, 1.0f, 0.5f);
 
     if (!badges) {
         playerTank.Draw();
@@ -87,4 +89,6 @@ void drawMiniMap(int ECRANW, int ECRANH, Tank& playerTank, EffectsContext& conte
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     gluPerspective(cam.fov, (float)ECRANW / ECRANH, cam.nearPlane, cam.farPlane);
+
+    glEnable(GL_LIGHTING);
 }

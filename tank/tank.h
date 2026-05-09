@@ -70,7 +70,7 @@ public:
     const float VELOCITY_COEF = 0.2f;
 
     int death = 0;
-    int selectedSpawn = 0;
+    int selectedSpawn = 1;
     int HP = 200;
     int score = 0;
     int scoreToCount = 10;

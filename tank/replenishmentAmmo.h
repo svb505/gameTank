@@ -41,6 +41,8 @@ public:
 		return (dx * dx + dz * dz) <= (radius * radius);
 	}
 	void startReplish(float dt,Tank& tank,int wH,int wW) {
+		glDisable(GL_LIGHTING);
+
 		if (tank.totalShells < tank.maxShells) {
 			replishTime -= dt;
 			RenderTextHUD((float)wW / 2, (float)wH / 2, 1, 1, 1, std::format("Replish ammo: {:.1f} s", replishTime).c_str(),wW,wH);
@@ -48,9 +50,11 @@ public:
 		}
 		if (tank.currentHP < tank.HP) {
 			repairTime -= dt;
-			RenderTextHUD((float)wW / 2, (float)wH / 2 + 50, 1, 1, 1, std::format("Repair: {:.1f} s", repairTime).c_str(), wW, wH);
+			RenderTextHUD((float)wW / 2, (float)wH / 2 + 40, 1, 1, 1, std::format("Repair: {:.1f} s", repairTime).c_str(), wW, wH);
 			if (repairTime <= 0) { tank.currentHP = tank.HP; repairTime = 3.0f; }
 		}
+
+		glEnable(GL_LIGHTING);
 	}
 };
 

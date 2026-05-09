@@ -13,7 +13,7 @@ void drawHUD(int WW,int WH,float lastHit) {
     glDisable(GL_LIGHTING);
 
     std::string dist = std::format("Distance: {:.1f} m", lastHit);
-    RenderTextHUD(WW / 2, WH / 2, 1, 1, 1, dist.c_str(), WW, WH);
+    RenderTextHUD(WW / 2, WH / 2 - 100, 1, 1, 1, dist.c_str(), WW, WH);
 
     glEnable(GL_LIGHTING);
     glEnable(GL_DEPTH_TEST);

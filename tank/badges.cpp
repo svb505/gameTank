@@ -8,12 +8,13 @@
 #include "camera.h"
 #include <cmath>
 
-void DrawSpawnMarker2D(const svbmath::Vec3& pos, float size, float r, float g, float b) {
+void DrawSpawnMarker2D(const svbmath::Vec3& pos, bool selected, float size, float r, float g, float b) {
     glPushMatrix();
 
     glTranslatef(pos.x, pos.y + 0.05f, pos.z);
 
-    glColor3f(r, g, b);
+    if (!selected) glColor3f(r, g, b);
+    else glColor3f(0.0f, 0.0f, 1.0f);
 
     glBegin(GL_LINES);
     glVertex3f(-size * 0.5f, 0.0f, -size * 0.5f);

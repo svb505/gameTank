@@ -10,6 +10,8 @@
 #include "rangefinder.h"
 #include "minimap.h"
 #include "smokeGranade.h"
+#include <format>
+#include "text.h"
 
 inline bool isDown(GLFWwindow* w, int key) {
     return glfwGetKey(w, key) == GLFW_PRESS;
@@ -34,7 +36,7 @@ struct RayContext {
 };
 
 void processTankInput(GLFWwindow* window, float dt, std::unordered_map<int, Entity>& enemyes,Tank& tank,Sound& sound,
-    Camera& cam,RayContext& context,SmokeGranade& granades,bool& cursorVisibility) {
+    Camera& cam,RayContext& context,SmokeGranade& granades,bool& cursorVisibility,int EW,int EH) {
     static bool prevCtrl = false;
     static bool prevAlt = false;
     static bool prevShift = false;
