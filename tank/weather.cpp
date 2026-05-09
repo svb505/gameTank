@@ -22,6 +22,9 @@ void Weather::getWeather(Sound& sound,Camera& cam) {
 	}
 	else if (weather == "Rainly") {
 		snowPiles.clear();
+
+		changeTypeOfParticle(Type::snowly, Type::rainly);
+
 		if (!sound.rainPlayed) {
 			alSourcePlay(sound.sources["Rain"]);
 			sound.rainPlayed = true;
@@ -31,6 +34,9 @@ void Weather::getWeather(Sound& sound,Camera& cam) {
 	else if (weather == "Snowly") {
 		alSourceStop(sound.sources["Rain"]);
 		sound.rainPlayed = false;
+
+		changeTypeOfParticle(Type::rainly, Type::snowly);
+
 		if (particles.size() < count) generate(Type::snowly, cam);
 		if (snowPiles.size() == 0) generateSnowPiles(50, 100.0f);
 	}
@@ -157,5 +163,10 @@ void Weather::renderSnowPiles() {
 		drawSnowPile(s.height,s.height);
 
 		glPopMatrix();
+	}
+}
+void Weather::changeTypeOfParticle(const Type& oldType, const Type& newType) {
+	for (auto& p : particles) {
+		if (p.type == oldType) p.type = newType;
 	}
 }

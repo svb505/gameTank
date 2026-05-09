@@ -29,6 +29,7 @@ struct SnowPiles {
 class Weather {
 private:
 	const int diapazone = 70;
+	bool isCleared = false;
 public:
 	std::string weather = "Clean";
 	int count = 130;
@@ -45,4 +46,5 @@ public:
 	void generateSnowPiles(int count, float areaSize);
 	void renderSnowPiles();
 	void getWeather(Sound& sound, Camera& cam);
+	void changeTypeOfParticle(const Type& oldType, const Type& newType);
 };
