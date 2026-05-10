@@ -74,6 +74,8 @@ extern std::unordered_map<Entity, Bounds> bounds;
 Entity CreateEntity();
 void drawTank(TankComponent& tank, float bodyH);
 void DrawCube(float w, float h, float d);
+void drawVehicle();
+void drawSoldier();
 void RadarSystem(float dt);
 void drawDestroyedTank(TankComponent& tank, float bodyH);
 void drawDestroyedAppartament(ApartmentComponent& ap, float totalH);

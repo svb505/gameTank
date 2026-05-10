@@ -8,23 +8,18 @@
 
 std::unordered_map<std::string, GLuint> loadedTextures;
 std::map<std::string, GLuint> allTextures;
+std::unordered_map<std::string, std::string> texturesNamesAndPaths = {
+    {"APFSDS","textures/APFSDS.png"},{"HE","textures/HE.png"},{"SMOKE","textures/SMOKE.png"},
+    {"ATGM","textures/ATGM.png"},{"SMOKEGR","textures/SMOKE_GRANADE.png"},{"MLRS","textures/mlrs.png"},
+    {"ARTILLERY","textures/artillery.png"},{"beton","textures/beton.jpg"},{"betonD","textures/betonD.jpg"},
+    {"door","textures/door.jpg"},{"window","textures/window.png"},{"windowDestroyed","textures/windowDestroyed.jpg"},
+    {"cloudy","textures/cloudy.jpg"},{"fire","textures/fire.jpg"},{"smoke","textures/smoke.jpg"}
+};
 
 void LoadAllTextures() {
-    allTextures["APFSDS"] = LoadTexture("textures/APFSDS.png");
-    allTextures["HE"] = LoadTexture("textures/HE.png");
-    allTextures["SMOKE"] = LoadTexture("textures/SMOKE.png");
-    allTextures["ATGM"] = LoadTexture("textures/ATGM.png");
-    allTextures["SMOKEGR"] = LoadTexture("textures/SMOKE_GRANADE.png");
-    allTextures["MLRS"] = LoadTexture("textures/mlrs.png");
-    allTextures["ARTILLERY"] = LoadTexture("textures/artillery.png");
-    allTextures["beton"] = LoadTexture("textures/beton.jpg");
-    allTextures["betonD"] = LoadTexture("textures/betonD.jpg");
-    allTextures["window"] = LoadTexture("textures/window.png");
-    allTextures["windowDestroyed"] = LoadTexture("textures/windowDestroyed.jpg");
-    allTextures["door"] = LoadTexture("textures/door.jpg");
-    allTextures["cloudy"] = LoadTexture("textures/cloudy.jpg");
-    allTextures["fire"] = LoadTexture("textures/fire.jpg");
-    allTextures["smoke"] = LoadTexture("textures/smoke.jpg");
+    for (auto t : texturesNamesAndPaths) {
+        allTextures[t.first] = LoadTexture(t.second.c_str());
+    }
 }
 GLuint LoadTexture(const char* filename){
     if (loadedTextures.contains(filename)) return loadedTextures[filename];
@@ -44,7 +39,7 @@ GLuint LoadTexture(const char* filename){
 
     if (channels == 1) format = GL_RED;
     else if (channels == 3) format = GL_RGB;
-    else if (channels == 4)format = GL_RGBA;
+    else if (channels == 4) format = GL_RGBA;
     else{
         LOG_ERROR("Unsupported image format");
         stbi_image_free(data);

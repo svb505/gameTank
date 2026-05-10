@@ -35,7 +35,41 @@ Entity CreateEntity() {
     entities.push_back(e);
     return e;
 }
-
+void DrawCube(float w, float h, float d) { 
+    glBegin(GL_QUADS); 
+    
+    glVertex3f(-w, -h, d); 
+    glVertex3f(w, -h, d); 
+    glVertex3f(w, h, d); 
+    glVertex3f(-w, h, d); 
+    
+    glVertex3f(-w, -h, -d); 
+    glVertex3f(-w, h, -d); 
+    glVertex3f(w, h, -d); 
+    glVertex3f(w, -h, -d); 
+    
+    glVertex3f(-w, -h, -d); 
+    glVertex3f(-w, -h, d); 
+    glVertex3f(-w, h, d); 
+    glVertex3f(-w, h, -d); 
+    
+    glVertex3f(w, -h, -d); 
+    glVertex3f(w, h, -d); 
+    glVertex3f(w, h, d); 
+    glVertex3f(w, -h, d); 
+    
+    glVertex3f(-w, h, -d); 
+    glVertex3f(-w, h, d); 
+    glVertex3f(w, h, d); 
+    glVertex3f(w, h, -d); 
+    
+    glVertex3f(-w, -h, -d);
+    glVertex3f(w, -h, -d); 
+    glVertex3f(w, -h, d); 
+    glVertex3f(-w, -h, d); 
+    
+    glEnd(); 
+}
 void drawSootEffect(float x, float y, float z, int segments, float radius) {
     glPushMatrix();
     glTranslatef(x, y, z);
@@ -297,40 +331,213 @@ void drawTank(TankComponent& tank, float bodyH) {
     glPopMatrix(); // turret
     glPopMatrix(); // tank
 }
-void DrawCube(float w, float h, float d) {
+void drawSoldier() {
+    glPushMatrix();
+
+    glColor3f(0.1f, 0.7f, 0.1f);
+
+    // ================= BODY =================
     glBegin(GL_QUADS);
 
+    float bw = 0.25f;
+    float bh = 0.5f;
+    float bd = 0.15f;
+
+    // Front
+    glVertex3f(-bw, -bh, bd);
+    glVertex3f(bw, -bh, bd);
+    glVertex3f(bw, bh, bd);
+    glVertex3f(-bw, bh, bd);
+
+    // Back
+    glVertex3f(-bw, -bh, -bd);
+    glVertex3f(-bw, bh, -bd);
+    glVertex3f(bw, bh, -bd);
+    glVertex3f(bw, -bh, -bd);
+
+    // Left
+    glVertex3f(-bw, -bh, -bd);
+    glVertex3f(-bw, -bh, bd);
+    glVertex3f(-bw, bh, bd);
+    glVertex3f(-bw, bh, -bd);
+
+    // Right
+    glVertex3f(bw, -bh, -bd);
+    glVertex3f(bw, bh, -bd);
+    glVertex3f(bw, bh, bd);
+    glVertex3f(bw, -bh, bd);
+
+    // Top
+    glVertex3f(-bw, bh, -bd);
+    glVertex3f(-bw, bh, bd);
+    glVertex3f(bw, bh, bd);
+    glVertex3f(bw, bh, -bd);
+
+    // Bottom
+    glVertex3f(-bw, -bh, -bd);
+    glVertex3f(bw, -bh, -bd);
+    glVertex3f(bw, -bh, bd);
+    glVertex3f(-bw, -bh, bd);
+
+    glEnd();
+
+    // ================= HEAD =================
+    glPushMatrix();
+
+    glTranslatef(0.0f, 0.8f, 0.0f);
+
+    glColor3f(0.9f, 0.8f, 0.6f);
+
+    float h = 0.18f;
+
+    glBegin(GL_QUADS);
+
+    // Front
+    glVertex3f(-h, -h, h);
+    glVertex3f(h, -h, h);
+    glVertex3f(h, h, h);
+    glVertex3f(-h, h, h);
+
+    // Back
+    glVertex3f(-h, -h, -h);
+    glVertex3f(-h, h, -h);
+    glVertex3f(h, h, -h);
+    glVertex3f(h, -h, -h);
+
+    // Left
+    glVertex3f(-h, -h, -h);
+    glVertex3f(-h, -h, h);
+    glVertex3f(-h, h, h);
+    glVertex3f(-h, h, -h);
+
+    // Right
+    glVertex3f(h, -h, -h);
+    glVertex3f(h, h, -h);
+    glVertex3f(h, h, h);
+    glVertex3f(h, -h, h);
+
+    // Top
+    glVertex3f(-h, h, -h);
+    glVertex3f(-h, h, h);
+    glVertex3f(h, h, h);
+    glVertex3f(h, h, -h);
+
+    // Bottom
+    glVertex3f(-h, -h, -h);
+    glVertex3f(h, -h, -h);
+    glVertex3f(h, -h, h);
+    glVertex3f(-h, -h, h);
+
+    glEnd();
+
+    glPopMatrix();
+
+    glPopMatrix();
+}
+void drawVehicle() {
+    glPushMatrix();
+
+    glColor3f(0.3f, 0.7f, 0.3f);
+
+    float w = 1.0f;
+    float h = 0.5f;
+    float d = 1.5f;
+
+    // ================= BODY =================
+    glBegin(GL_QUADS);
+
+    // Front
     glVertex3f(-w, -h, d);
     glVertex3f(w, -h, d);
     glVertex3f(w, h, d);
     glVertex3f(-w, h, d);
 
+    // Back
     glVertex3f(-w, -h, -d);
     glVertex3f(-w, h, -d);
     glVertex3f(w, h, -d);
     glVertex3f(w, -h, -d);
 
+    // Left
     glVertex3f(-w, -h, -d);
     glVertex3f(-w, -h, d);
     glVertex3f(-w, h, d);
     glVertex3f(-w, h, -d);
 
+    // Right
     glVertex3f(w, -h, -d);
     glVertex3f(w, h, -d);
     glVertex3f(w, h, d);
     glVertex3f(w, -h, d);
 
+    // Top
     glVertex3f(-w, h, -d);
     glVertex3f(-w, h, d);
     glVertex3f(w, h, d);
     glVertex3f(w, h, -d);
 
+    // Bottom
     glVertex3f(-w, -h, -d);
     glVertex3f(w, -h, -d);
     glVertex3f(w, -h, d);
     glVertex3f(-w, -h, d);
 
     glEnd();
+
+    // ================= CABIN =================
+    glPushMatrix();
+
+    glTranslatef(0.0f, 0.7f, -0.2f);
+
+    glColor3f(0.2f, 0.5f, 0.2f);
+
+    float cw = 0.6f;
+    float ch = 0.4f;
+    float cd = 0.7f;
+
+    glBegin(GL_QUADS);
+
+    // Front
+    glVertex3f(-cw, -ch, cd);
+    glVertex3f(cw, -ch, cd);
+    glVertex3f(cw, ch, cd);
+    glVertex3f(-cw, ch, cd);
+
+    // Back
+    glVertex3f(-cw, -ch, -cd);
+    glVertex3f(-cw, ch, -cd);
+    glVertex3f(cw, ch, -cd);
+    glVertex3f(cw, -ch, -cd);
+
+    // Left
+    glVertex3f(-cw, -ch, -cd);
+    glVertex3f(-cw, -ch, cd);
+    glVertex3f(-cw, ch, cd);
+    glVertex3f(-cw, ch, -cd);
+
+    // Right
+    glVertex3f(cw, -ch, -cd);
+    glVertex3f(cw, ch, -cd);
+    glVertex3f(cw, ch, cd);
+    glVertex3f(cw, -ch, cd);
+
+    // Top
+    glVertex3f(-cw, ch, -cd);
+    glVertex3f(-cw, ch, cd);
+    glVertex3f(cw, ch, cd);
+    glVertex3f(cw, ch, -cd);
+
+    // Bottom
+    glVertex3f(-cw, -ch, -cd);
+    glVertex3f(cw, -ch, -cd);
+    glVertex3f(cw, -ch, cd);
+    glVertex3f(-cw, -ch, cd);
+
+    glEnd();
+
+    glPopMatrix();
+
+    glPopMatrix();
 }
 void RadarSystem(float dt) {
     for (auto& [entity, radar] : radars) {
@@ -924,7 +1131,8 @@ void drawAppartament(ApartmentComponent& ap, float totalH) {
 }
 void RenderSystem(std::vector<SmokeEffect*>& smokes) {
     for (auto e : entities) {
-        if (healths[e].destroyed && renders[e].type != RenderType::Apartment && renders[e].type != RenderType::Tank) continue;
+        if (healths[e].destroyed && renders[e].type != RenderType::Apartment && 
+            renders[e].type != RenderType::Tank) continue;
 
         auto& t = transforms[e];
         auto& r = renders[e];
@@ -934,15 +1142,16 @@ void RenderSystem(std::vector<SmokeEffect*>& smokes) {
         glRotatef(t.angle, 0, 1, 0);
 
         switch (r.type) {
-        case RenderType::Soldat:
-            glColor3f(0, 1, 0);
-            DrawCube(0.3f, 0.7f, 0.3f);
+        case RenderType::Soldat: {
+            drawSoldier();
+        }
             break;
 
-        case RenderType::Vehicle:
-            glColor3f(0, 0.8f, 0);
-            DrawCube(1.0f, 0.6f, 1.0f);
-            break;
+        case RenderType::Vehicle: 
+        {
+            drawVehicle();
+        }
+        break;
 
         case RenderType::Tank: {
             auto& tank = tanks[e];
@@ -990,13 +1199,13 @@ void BoundsSystem() {
 
         switch (r.type) {
         case RenderType::Soldat:
-            b = { t.pos.x - 0.5f, t.pos.y, t.pos.z - 0.5f,
-                  t.pos.x + 0.5f, t.pos.y + 1.5f, t.pos.z + 0.5f };
+            b = { t.pos.x - 0.3f,t.pos.y - 0.7f,t.pos.z - 0.3f,
+                  t.pos.x + 0.3f, t.pos.y + 0.7f, t.pos.z + 0.3f };
             break;
 
         case RenderType::Vehicle:
-            b = { t.pos.x - 1, t.pos.y - 0.6f, t.pos.z - 1,
-                  t.pos.x + 1, t.pos.y + 0.6f, t.pos.z + 1 };
+            b = { t.pos.x - 1.0f, t.pos.y - 0.6f, t.pos.z - 1.0f,
+                  t.pos.x + 1.0f, t.pos.y + 0.6f, t.pos.z + 1.0f };
             break;
 
         case RenderType::Tank:
