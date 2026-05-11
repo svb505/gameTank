@@ -192,14 +192,6 @@ void RenderBadges(int ww, int wh, float scale, Tank& tank,Camera cam) {
         WorldToScreen(t.pos.x, t.pos.z, tank.pos.x, tank.pos.z, cam.cameraYaw,cam,scale, ww, wh,sx, sy);
 
         switch (r.type) {
-        case RenderType::Soldat:
-            drawSoldier(sx, sy, 10);
-            break;
-
-        case RenderType::Vehicle:
-            drawCar(sx, sy, 6);
-            break;
-
         case RenderType::Tank:
             drawTank(sx, sy, 7, t.angle - cam.cameraYaw);
             break;

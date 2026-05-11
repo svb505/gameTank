@@ -24,8 +24,6 @@ struct Health {
 };
 
 enum class RenderType {
-    Soldat,
-    Vehicle,
     Tank,
     Radar,
     Apartment
