@@ -15,7 +15,7 @@ class GUI {
 private:
     Profiler p;
 
-	std::vector<std::string> weathers = { "Clean", "Rainly","Snowly"};
+	std::vector<std::string> weathers = { "Clean", "Rainy","Snowy"};
 	std::vector<std::string> spawns = { "1", "2","3" };
 	std::vector<const char*> cstrsW;
 	std::vector<const char*> cstrsS;

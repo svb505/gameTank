@@ -26,49 +26,6 @@ void DrawSpawnMarker2D(const svbmath::Vec3& pos, bool selected, float size, floa
 
     glPopMatrix();
 }
-void drawSoldier(float x, float y, float size) {
-    // Head
-    glColor3f(0.8f, 0.8f, 0.6f);
-    glBegin(GL_TRIANGLE_FAN);
-    glVertex2f(x, y);
-    for (int i = 0; i <= 20; i++) {
-        float angle = i * 2.0f * 3.14159f / 20;
-        glVertex2f(x + cos(angle) * size * 0.3f,
-            y + sin(angle) * size * 0.3f);
-    }
-    glEnd();
-
-    // Body
-    glColor3f(0.2f, 0.8f, 0.2f);
-    glBegin(GL_LINES);
-    glVertex2f(x, y - size * 0.3f);
-    glVertex2f(x, y - size);
-    glEnd();
-}
-void drawCar(float x, float y, float size) {
-    // Body
-    glColor3f(0.2f, 0.2f, 1.0f);
-    glBegin(GL_QUADS);
-    glVertex2f(x - size, y);
-    glVertex2f(x + size, y);
-    glVertex2f(x + size, y + size * 0.5f);
-    glVertex2f(x - size, y + size * 0.5f);
-    glEnd();
-
-    // Wheels
-    glColor3f(0.0f, 0.0f, 0.0f);
-    float r = size * 0.3f;
-    for (int w = -1; w <= 1; w += 2) {
-        glBegin(GL_TRIANGLE_FAN);
-        glVertex2f(x + w * size * 0.6f, y);
-        for (int i = 0; i <= 20; i++) {
-            float a = i * 2.0f * 3.14159f / 20;
-            glVertex2f(x + w * size * 0.6f + cos(a) * r,
-                y + sin(a) * r);
-        }
-        glEnd();
-    }
-}
 void drawRadar(float x, float y, float size, float angle) {
     // circle
     glColor3f(0.0f, 1.0f, 0.0f);

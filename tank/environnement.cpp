@@ -10,6 +10,7 @@
 #include "getheight.h"
 #include "craters.h"
 #include "texture.h"
+
 const float size = 100.0f;
 
 void drawGridText(float camX, float camZ) {
@@ -109,7 +110,7 @@ void drawGround(float camX, float camZ, std::string& weather) {
     float x0 = camX;
     float z0 = camZ;
 
-    bool snowly = (weather == "Snowly");
+    bool snowly = (weather == "Snowy");
 
     glBegin(GL_QUADS);
 

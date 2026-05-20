@@ -20,7 +20,7 @@ void Weather::getWeather(Sound& sound,Camera& cam) {
 		}
 		snowPiles.clear();
 	}
-	else if (weather == "Rainly") {
+	else if (weather == "Rainy") {
 		snowPiles.clear();
 
 		changeTypeOfParticle(Type::snowly, Type::rainly);
@@ -31,7 +31,7 @@ void Weather::getWeather(Sound& sound,Camera& cam) {
 		}
 		if (particles.size() < count) generate(Type::rainly, cam);
 	}
-	else if (weather == "Snowly") {
+	else if (weather == "Snowy") {
 		alSourceStop(sound.sources["Rain"]);
 		sound.rainPlayed = false;
 
