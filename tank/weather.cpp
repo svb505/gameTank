@@ -11,8 +11,16 @@
 #include "sounds.h"
 #include "svbmath.h"
 
+std::vector<const char*> weathersStrings = { "Clean","Rainy","Snowy" };
+std::map<const char*, Type> weathersToConvert = { {"Clean",Type::clean},{"Rainy",Type::rainy},
+													{"Snowy",Type::snowy} };
+
+Type convertStringToType(const char* str) {
+	return weathersToConvert[str];
+}
+
 void Weather::getWeather(Sound& sound,Camera& cam) {
-	if (weather == "Clean") {
+	if (weather == Type::clean) {
 		if (particles.size() > 0) {
 			alSourceStop(sound.sources["Rain"]);
 			sound.rainPlayed = false;
@@ -20,24 +28,24 @@ void Weather::getWeather(Sound& sound,Camera& cam) {
 		}
 		snowPiles.clear();
 	}
-	else if (weather == "Rainy") {
+	else if (weather == Type::rainy) {
 		snowPiles.clear();
 
-		changeTypeOfParticle(Type::snowly, Type::rainly);
+		changeTypeOfParticle(Type::snowy, Type::rainy);
 
 		if (!sound.rainPlayed) {
 			alSourcePlay(sound.sources["Rain"]);
 			sound.rainPlayed = true;
 		}
-		if (particles.size() < count) generate(Type::rainly, cam);
+		if (particles.size() < count) generate(Type::rainy, cam);
 	}
-	else if (weather == "Snowy") {
+	else if (weather == Type::snowy) {
 		alSourceStop(sound.sources["Rain"]);
 		sound.rainPlayed = false;
 
-		changeTypeOfParticle(Type::rainly, Type::snowly);
+		changeTypeOfParticle(Type::rainy, Type::snowy);
 
-		if (particles.size() < count) generate(Type::snowly, cam);
+		if (particles.size() < count) generate(Type::snowy, cam);
 		if (snowPiles.size() == 0) generateSnowPiles(50, 100.0f);
 	}
 }
@@ -84,7 +92,7 @@ void Weather::draw() {
 		glPushMatrix();
 		glTranslatef(p.x, p.y, p.z);
 
-		if (p.type == Type::rainly) {
+		if (p.type == Type::rainy) {
 			glColor3f(51.0f / 255.0f, 153.0f / 255.0f, 255.0f / 255.0f);
 
 			glLineWidth(2.0f);
@@ -95,7 +103,7 @@ void Weather::draw() {
 
 			
 		}
-		if (p.type == Type::snowly) {
+		if (p.type == Type::snowy) {
 			glColor3f(1.0f, 1.0f, 1.0f);
 
 			glPointSize(3.0f);
@@ -121,7 +129,7 @@ void Weather::generate(const Type& type,Camera& cam) {
 		p.z = cam.cameraZ + (rand() % int(diapazone * 2)) - diapazone;
 
 		p.vx = 0.0f; p.vz = 0.0f;
-		p.fallSpeed = (p.type == Type::rainly) ? 45.0f * svbmath::randFloat(0.5f,1.0f) : 20.0f * svbmath::randFloat(0.5f, 1.0f);
+		p.fallSpeed = (p.type == Type::rainy) ? 45.0f * svbmath::randFloat(0.5f,1.0f) : 20.0f * svbmath::randFloat(0.5f, 1.0f);
 
 		p.vy = -p.fallSpeed;
 

@@ -10,6 +10,7 @@
 #include "getheight.h"
 #include "craters.h"
 #include "texture.h"
+#include "weather.h"
 
 const float size = 100.0f;
 
@@ -105,12 +106,12 @@ void drawSky(){
     glDisable(GL_TEXTURE_2D);
     glEnable(GL_DEPTH_TEST);
 }
-void drawGround(float camX, float camZ, std::string& weather) {
+void drawGround(float camX, float camZ, Type& weather) {
     float step = 4.0f;
     float x0 = camX;
     float z0 = camZ;
 
-    bool snowly = (weather == "Snowy");
+    bool snowly = (weather == Type::snowy);
 
     glBegin(GL_QUADS);
 

@@ -2,15 +2,18 @@
 #include <vector>
 #include <string>
 #include "svbmath.h"
+#include <map>
 
-class Camera;
-class Sound;
+class Camera; class Sound;
 
 enum class Type{
-	clear,
-	snowly,
-	rainly
+	clean,
+	snowy,
+	rainy
 };
+
+extern std::map<const char*, Type> weathersToConvert;
+extern std::vector<const char*> weathersStrings;
 
 struct Particle {
 	Type type;
@@ -26,12 +29,14 @@ struct SnowPiles {
 	float height;
 };
 
+Type convertStringToType(const char* str);
+
 class Weather {
 private:
 	const int diapazone = 70;
 	bool isCleared = false;
 public:
-	std::string weather = "Clean";
+	Type weather = Type::clean;
 	int count = 130;
 	Weather() { particles.reserve(count); }
 	

@@ -15,9 +15,7 @@ class GUI {
 private:
     Profiler p;
 
-	std::vector<std::string> weathers = { "Clean", "Rainy","Snowy"};
 	std::vector<std::string> spawns = { "1", "2","3" };
-	std::vector<const char*> cstrsW;
 	std::vector<const char*> cstrsS;
 
 	int idxW = 0;
@@ -37,7 +35,6 @@ private:
     bool statWindow = false;
 public:
 	GUI() {
-		for (auto& s : weathers) cstrsW.push_back(s.c_str());
 		for (auto& s : spawns) cstrsS.push_back(s.c_str());
 	}
     void setup(GLFWwindow* window) {
@@ -55,7 +52,7 @@ public:
         ImGui_ImplGlfw_Shutdown();
         ImGui::DestroyContext();
     }
-    void render(float& fps, Tank& tank, Artillery& art, Sound& sound,std::string& weather, SmokeGranade& g,bool& badges,
+    void render(float& fps, Tank& tank, Artillery& art, Sound& sound,Type& weather, SmokeGranade& g,bool& badges,
         std::unordered_map<int, Entity>& enemyes,bool& locked){
         std::string buf = std::format("{} / {}", tank.currentHP, tank.HP);
 
@@ -99,10 +96,12 @@ public:
         ImGui::Image((ImTextureID)(intptr_t)allTextures["SMOKEGR"], ImVec2(60, 60));
 
         ImGui::Dummy(ImVec2(0.0f, 10.0f));
-        if (ImGui::Combo("Select weather", &idxW, cstrsW.data(), cstrsW.size())) weather = weathers[idxW];
+        if (ImGui::Combo("Select weather", &idxW, weathersStrings.data(), weathersStrings.size()))
+            weather = convertStringToType(weathersStrings[idxW]);
         
         ImGui::Dummy(ImVec2(0.0f, 10.0f));
-        if (ImGui::Combo("Select spawn", &idxS, cstrsS.data(), cstrsS.size())) tank.selectedSpawn = std::stoi(spawns[idxS]);
+        if (ImGui::Combo("Select spawn", &idxS, cstrsS.data(), cstrsS.size())) 
+            tank.selectedSpawn = std::stoi(spawns[idxS]);
 
         ImGui::Separator();
 

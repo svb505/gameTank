@@ -11,6 +11,7 @@
 #include "enemyes.h"
 #include "minimap.h"
 #include "badges.h"
+#include "weather.h"
 
 float height = 80.0f;
 int step = 3;
@@ -18,8 +19,8 @@ bool badges = false;
 
 void setHeight(float h) { height = h; }
 float getHeight() { return height; }
-void drawMiniMap(int ECRANW, int ECRANH, Tank& playerTank, EffectsContext& context, Camera& cam, std::string weather,
-    bool badges, float dt) {
+void drawMiniMap(int ECRANW, int ECRANH, Tank& playerTank, EffectsContext& context, Camera& cam,
+    Type weather,bool badges, float dt) {
     glDisable(GL_LIGHTING);
 
     float size = height * 0.6f;

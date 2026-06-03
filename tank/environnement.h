@@ -1,6 +1,8 @@
 #include <string>
 
+enum class Type;
+
 void drawGrid(float camX, float camZ);
 void drawGridText(float camX, float camZ);
 void drawSky();
-void drawGround(float camX, float camZ,std::string& weather);
+void drawGround(float camX, float camZ,Type& weather);
