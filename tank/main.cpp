@@ -38,10 +38,9 @@
 #include "database.h"
 #include "glfw_oglSetup.h"
 #include "variables.h"
+#include "cameraShake.h"
 
 #define COUNT 55
-#define ECRANW 1600
-#define ECRANH 1000
 
 Camera cam;
 Tank tank;
@@ -51,6 +50,7 @@ GUI gui;
 Artillery art;
 Weather weat;
 SmokeGranade granades;
+CameraShake camShake;
 
 void windowCloseCallback(GLFWwindow* window) {
     createDb();
@@ -188,18 +188,18 @@ int main(){
 
         ImGui::Render();
 
-        sound.setListener(cam.cameraX, cam.cameraY, cam.cameraZ, cam.returnForwardVector());
+        sound.setListener(cam.cameraPos, cam.returnForwardVector());
 
         weat.getWeather(sound, cam);
   
         countFps(deltaTime,lastTime,currentTime,frames,fps,fpsTimer);
 
-        processTankInput(window, deltaTime, enemyes,tank,sound,cam,ray,granades,cursorVisibility,ECRANW,ECRANH);
+        processTankInput(window, deltaTime, enemyes,tank,sound,cam,ray,granades,camShake);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         drawSky();
-        cam.setupCamera(tank, tank.aimMode);
-        drawGround(cam.cameraX, cam.cameraZ,weat.weather);
+        cam.setupCamera(tank, camShake,tank.aimMode);
+        drawGround(cam.cameraPos.x, cam.cameraPos.z,weat.weather);
 
         tank.Draw();
         tank.updatePosition(tank.pos,deltaTime);
@@ -233,13 +233,15 @@ int main(){
         art.deleteIfAlived();
 
         //Update projectiles
-        update(deltaTime, sound, enemyes, healths, bounds, context, tank);
+        update(deltaTime, sound, enemyes, healths, bounds, context, tank,camShake);
         updateProjectiles();
         updateArtillery(art.shells,sound,enemyes, context);
         
         updateExplosions(explosions, deltaTime);
         updateSmokes(smokes, deltaTime);
         
+        camShake.Update(deltaTime);
+
         granades.update(deltaTime,smokes,tank,sound);
         granades.drawAll(tank);
 

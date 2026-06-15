@@ -1,6 +1,7 @@
 #pragma once
 #include "tank.h"
 #include "svbmath.h"
+#include "cameraShake.h"
 
 class Tank;
 class Camera {
@@ -20,14 +21,13 @@ public:
 
     float camDistance = 6.0f;
     float camHeight = 2.5f;
-    float cameraX = 0.0f;
-    float cameraY = 0.0f;
-    float cameraZ = 0.0f;
+
+    svbmath::Vec3 cameraPos = { 0.0f,0.0f,0.0f };
 
     float cameraYaw = 0.0f; 
     float cameraPitch = 10.0f;
 
-    void setupCamera(Tank& playerTank, bool& aimMode);
+    void setupCamera(Tank& playerTank, CameraShake& shakeEffect,bool& aimMode);
     svbmath::Vec3 returnForwardVector();
 };
 	

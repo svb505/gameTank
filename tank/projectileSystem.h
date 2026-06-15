@@ -12,6 +12,7 @@
 #include "shells.h"
 #include "artillery.h"
 #include "svbmath.h"
+#include "cameraShake.h"
 
 struct EffectsContext;
 
@@ -23,7 +24,8 @@ void spawnShell(svbmath::Vec3 pos, float yawDeg, float pitchDeg, shellType _shel
     bool isEnemy = false);
 void spawnBullet(svbmath::Vec3 pos, float yawDeg);
 void update(float dt, Sound& sound, std::unordered_map<int, Entity>& enemies, std::unordered_map<Entity, Health>& healths,
-    std::unordered_map<Entity, Bounds>& bounds, EffectsContext& context, Tank& player);
+    std::unordered_map<Entity, Bounds>& bounds, EffectsContext& context, Tank& player,
+    CameraShake& shake);
 void updateProjectiles();
 void updateArtillery(std::vector<Projectile>& artilleryProjectiles, Sound& sound,
     std::unordered_map<int, Entity>& enemies, EffectsContext& context);

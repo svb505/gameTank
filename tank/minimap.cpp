@@ -53,8 +53,8 @@ void drawMiniMap(int ECRANW, int ECRANH, Tank& playerTank, EffectsContext& conte
     for (auto it = context.explosions.begin(); it != context.explosions.end(); ++it) (*it)->Draw();
     for (auto it = context.smokes.begin(); it != context.smokes.end(); ++it) (*it)->Draw();
 
-    drawGrid(cam.cameraX, cam.cameraZ);
-    drawGridText(cam.cameraX, cam.cameraZ);
+    drawGrid(cam.cameraPos.x, cam.cameraPos.z);
+    drawGridText(cam.cameraPos.x, cam.cameraPos.z);
 
     for (auto& s : playerTank.spawns) DrawSpawnMarker2D(s.second,playerTank.selectedSpawn == s.first,
         5.0f, 1.0f, 0.5f);

@@ -18,6 +18,7 @@
 #include "craters.h"
 #include "killchat.h"
 #include "texture.h"
+#include "CameraShake.h"
 
 std::vector<Projectile> projectiles = {};
 std::map<shellType, std::string> shellTypes = { {shellType::APFSDS,"APFSDS"},{shellType::HE,"HE"},
@@ -90,13 +91,8 @@ void onHit(Projectile& p, int id, Health* health,EffectsContext& context,Sound& 
             int radius = (p.selectedShellType == shellType::APFSDS) ? 4 : 6;
             float height = (p.selectedShellType == shellType::APFSDS) ? 1.5f : 2.0f;
 
-            context.explosions.push_back(
-                new ExplosionEffect(p.pos, count, radius, height, 1.8f)
-            );
-
-            context.smokes.push_back(
-                new SmokeEffect(p.pos, 300, 3)
-            );
+            context.explosions.push_back(new ExplosionEffect(p.pos, count, radius, height, 1.8f));
+            context.smokes.push_back(new SmokeEffect(p.pos, 300, 3));
         }
     }
 
@@ -114,6 +110,7 @@ void spawnShell(svbmath::Vec3 pos, float yawDeg, float pitchDeg, shellType _shel
 
     float yaw = yawDeg * 3.1415926f / 180.0f;
     float pitch = pitchDeg * 3.1415926f / 180.0f;
+
     if (_shellType == shellType::ATGM) {
         svbmath::Vec3 dir{ sin(yaw) * cos(pitch),sin(pitch), cos(yaw) * cos(pitch)};
         float len = sqrtf(dir.x * dir.x + dir.y * dir.y + dir.z * dir.z);
@@ -122,6 +119,7 @@ void spawnShell(svbmath::Vec3 pos, float yawDeg, float pitchDeg, shellType _shel
         p.dir = dir;
         p.turnSpeed = 5.0f;
     }
+
     else p.velocity = { sin(yaw) * cos(pitch) * p.speed, -sin(pitch) * p.speed,cos(yaw) * cos(pitch) * p.speed };
     
     p.isEnemy = isEnemy;
@@ -145,15 +143,17 @@ void spawnBullet(svbmath::Vec3 pos, float yawDeg) {
     projectiles.push_back(p);
 }
 void update(float dt,Sound& sound,std::unordered_map<int, Entity>& enemies,std::unordered_map<Entity, Health>& healths,
-    std::unordered_map<Entity, Bounds>& bounds,EffectsContext& context,Tank& player) {
+    std::unordered_map<Entity, Bounds>& bounds,EffectsContext& context,Tank& player,
+    CameraShake& shake) {
     for (auto& p : projectiles) {
         if (!p.alive) continue;
 
         p.update(dt, player);
 
         if (checkCollision(player.GetHullMax(), p.pos) && p.isEnemy) {
-
             player.currentHP -= p.damage;
+
+            shake.Start(1.5f,1.5f);
 
             onHit(p, 0, nullptr, context, sound, player, false);
 
@@ -162,9 +162,7 @@ void update(float dt,Sound& sound,std::unordered_map<int, Entity>& enemies,std::
 
                 player.death++;
                 player.currentHP = player.HP;
-                player.pos.x = player.spawns[player.selectedSpawn].x;
-                player.pos.y = player.spawns[player.selectedSpawn].y;
-                player.pos.z = player.spawns[player.selectedSpawn].z;
+                player.pos = player.spawns[player.selectedSpawn];
             }
 
             continue;

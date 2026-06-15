@@ -1,6 +1,9 @@
 #pragma once
 #include "rangefinder.h"
 
+extern int ECRANW;
+extern int ECRANH;
+
 extern int lastHitID;
 extern float lastHitDist;
 

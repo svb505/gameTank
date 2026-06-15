@@ -56,8 +56,8 @@ public:
         alSourcefv(source, AL_POSITION, pos);
         alSourcefv(source, AL_VELOCITY, vel);
     }
-    void setListener(float x, float y, float z, svbmath::Vec3 forwardVector) {
-        ALfloat pos[] = { x, y, z };
+    void setListener(svbmath::Vec3 pos , svbmath::Vec3 forwardVector) {
+        ALfloat position[] = { pos.x, pos.y, pos.z };
         ALfloat vel[] = { 0.0f, 0.0f, 0.0f };
 
         ALfloat ori[] = {
@@ -65,7 +65,7 @@ public:
             0.0f, 1.0f, 0.0f
         };
 
-        alListenerfv(AL_POSITION, pos);
+        alListenerfv(AL_POSITION, position);
         alListenerfv(AL_VELOCITY, vel);
         alListenerfv(AL_ORIENTATION, ori);
     }

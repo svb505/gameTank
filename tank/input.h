@@ -36,7 +36,7 @@ struct RayContext {
 };
 
 void processTankInput(GLFWwindow* window, float dt, std::unordered_map<int, Entity>& enemyes,Tank& tank,Sound& sound,
-    Camera& cam,RayContext& context,SmokeGranade& granades,bool& cursorVisibility,int EW,int EH) {
+    Camera& cam,RayContext& context,SmokeGranade& granades,CameraShake& shake) {
     static bool prevCtrl = false;
     static bool prevAlt = false;
     static bool prevShift = false;
@@ -71,10 +71,8 @@ void processTankInput(GLFWwindow* window, float dt, std::unordered_map<int, Enti
 
         if (tank.moveSpeed >= tank.SPEED_LIMIT_BACK) tank.moveSpeed -= tank.VELOCITY_COEF / 2;
     }
-
     if (isDown(window, GLFW_KEY_UP) && isDown(window, GLFW_KEY_LEFT_CONTROL)) setHeight(getHeight() + step * dt * 60);
     if (isDown(window, GLFW_KEY_DOWN) && isDown(window, GLFW_KEY_LEFT_CONTROL)) setHeight(getHeight() - step * dt * 60);
-
     if (isDown(window, GLFW_KEY_ENTER)) {
         float yaw = tank.bodyYaw + tank.turretYaw;
 
@@ -85,7 +83,6 @@ void processTankInput(GLFWwindow* window, float dt, std::unordered_map<int, Enti
         alSourceStop(src);
         alSourcePlay(src);
     }
-
     if (isPressed(window, GLFW_KEY_R, prevR)) {
         Ray ray;
         ray.origin = { tank.pos.x, tank.pos.y + 1.6f, tank.pos.z };
@@ -106,7 +103,6 @@ void processTankInput(GLFWwindow* window, float dt, std::unordered_map<int, Enti
         if (hitID != -1) { context.lastHitID = hitID; context.lastHitDist = hitDistance; }
         else { context.lastHitID = -1; context.lastHitDist = 0.0f; }
     }
-
     if (isPressed(window, GLFW_KEY_G, prevG)) granades.strike();
     if (isPressed(window, GLFW_KEY_LEFT_ALT, prevAlt)) {
         cursorVisibility = !cursorVisibility;
@@ -114,15 +110,15 @@ void processTankInput(GLFWwindow* window, float dt, std::unordered_map<int, Enti
         glfwSetInputMode(window, GLFW_CURSOR, cursorVisibility ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_DISABLED);
     }
     if (isPressed(window, GLFW_KEY_LEFT_SHIFT, prevShift)) tank.aimMode = !tank.aimMode;
-
     if (isPressed(window, GLFW_KEY_SPACE, prevFire) && tank.finishReload <= 0.0f && tank.totalShells > 0) {
         float yaw = tank.turretLocked ? tank.bodyYaw + tank.turretYaw : tank.turretYaw - 90.0f;
 
         float posY = tank.pos.y + tank.params.hullH + tank.params.turretY - tank.params.gunOffsetY;
 
+        shake.Start(0.2f, 0.5f);
+
         spawnShell({ tank.pos.x, posY, tank.pos.z }, yaw, tank.gunPitch, tank.selectedShell, tank.shellSpeed);
 
-   
         sound.setSourcePosition(sound.sources["Shot"], tank.pos);
         alSourceStop(sound.sources["Shot"]);
         alSourcePlay(sound.sources["Shot"]);

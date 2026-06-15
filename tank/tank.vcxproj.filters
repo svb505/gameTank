@@ -13,36 +13,27 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Исходные файлы\Sound">
+      <UniqueIdentifier>{ff219c05-badc-4257-ab89-e7e0d7ab04ad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Исходные файлы\gameplay">
+      <UniqueIdentifier>{4d306a76-7715-4a6b-a641-9bf88d709b3a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Исходные файлы\visual">
+      <UniqueIdentifier>{91d57ca0-dbbe-450a-9ca2-b2879407fcdf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Исходные файлы\tools">
+      <UniqueIdentifier>{289f8dab-99ef-4bea-b52e-1b84fb20c3b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Исходные файлы\units">
+      <UniqueIdentifier>{ff83eae5-a7b7-4d1c-a00c-07623942a9e1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Исходные файлы\game_hud">
+      <UniqueIdentifier>{a3869972-fff3-4275-9b40-ebbb3c570591}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="text.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="HUD.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="minimap.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="enemyes.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="environnement.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="shells.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="lightning.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="effects.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="artillery.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
     <ClCompile Include="bounds.cpp">
@@ -51,19 +42,7 @@
     <ClCompile Include="svbmath.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="projectileSystem.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="projectile.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="tank.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
     <ClCompile Include="Logger.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="weather.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
     <ClCompile Include="camera.cpp">
@@ -72,87 +51,87 @@
     <ClCompile Include="smokeGranade.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="badges.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
     <ClCompile Include="profiler.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="getheight.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="getnormal.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="craters.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
     <ClCompile Include="rangefinder.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="killchat.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="database.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="json_parser.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
     <ClCompile Include="variables.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="artillery.cpp">
+      <Filter>Исходные файлы\gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="craters.cpp">
+      <Filter>Исходные файлы\visual</Filter>
+    </ClCompile>
+    <ClCompile Include="effects.cpp">
+      <Filter>Исходные файлы\visual</Filter>
+    </ClCompile>
+    <ClCompile Include="environnement.cpp">
+      <Filter>Исходные файлы\visual</Filter>
+    </ClCompile>
+    <ClCompile Include="projectileSystem.cpp">
+      <Filter>Исходные файлы\gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="projectile.cpp">
+      <Filter>Исходные файлы\gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="weather.cpp">
+      <Filter>Исходные файлы\visual</Filter>
+    </ClCompile>
+    <ClCompile Include="getheight.cpp">
+      <Filter>Исходные файлы\tools</Filter>
+    </ClCompile>
+    <ClCompile Include="getnormal.cpp">
+      <Filter>Исходные файлы\tools</Filter>
+    </ClCompile>
     <ClCompile Include="texture.cpp">
-      <Filter>Исходные файлы</Filter>
+      <Filter>Исходные файлы\tools</Filter>
+    </ClCompile>
+    <ClCompile Include="json_parser.cpp">
+      <Filter>Исходные файлы\tools</Filter>
+    </ClCompile>
+    <ClCompile Include="lightning.cpp">
+      <Filter>Исходные файлы\visual</Filter>
+    </ClCompile>
+    <ClCompile Include="badges.cpp">
+      <Filter>Исходные файлы\visual</Filter>
+    </ClCompile>
+    <ClCompile Include="database.cpp">
+      <Filter>Исходные файлы\tools</Filter>
+    </ClCompile>
+    <ClCompile Include="enemyes.cpp">
+      <Filter>Исходные файлы\units</Filter>
+    </ClCompile>
+    <ClCompile Include="tank.cpp">
+      <Filter>Исходные файлы\units</Filter>
+    </ClCompile>
+    <ClCompile Include="text.cpp">
+      <Filter>Исходные файлы\tools</Filter>
+    </ClCompile>
+    <ClCompile Include="shells.cpp">
+      <Filter>Исходные файлы\visual</Filter>
+    </ClCompile>
+    <ClCompile Include="minimap.cpp">
+      <Filter>Исходные файлы\game_hud</Filter>
+    </ClCompile>
+    <ClCompile Include="HUD.cpp">
+      <Filter>Исходные файлы\game_hud</Filter>
+    </ClCompile>
+    <ClCompile Include="killchat.cpp">
+      <Filter>Исходные файлы\game_hud</Filter>
+    </ClCompile>
+    <ClCompile Include="cameraShake.cpp">
+      <Filter>Исходные файлы\visual</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="tank.h">
-      <Filter>Исходные файлы</Filter>
-    </ClInclude>
-    <ClInclude Include="HUD.h">
-      <Filter>Исходные файлы</Filter>
-    </ClInclude>
-    <ClInclude Include="projectile.h">
-      <Filter>Исходные файлы</Filter>
-    </ClInclude>
-    <ClInclude Include="text.h">
-      <Filter>Исходные файлы</Filter>
-    </ClInclude>
-    <ClInclude Include="enemyes.h">
-      <Filter>Исходные файлы</Filter>
-    </ClInclude>
-    <ClInclude Include="environnement.h">
-      <Filter>Исходные файлы</Filter>
-    </ClInclude>
-    <ClInclude Include="effects.h">
-      <Filter>Исходные файлы</Filter>
-    </ClInclude>
-    <ClInclude Include="projectileSystem.h">
-      <Filter>Исходные файлы</Filter>
-    </ClInclude>
     <ClInclude Include="camera.h">
       <Filter>Исходные файлы</Filter>
     </ClInclude>
-    <ClInclude Include="sounds.h">
-      <Filter>Исходные файлы</Filter>
-    </ClInclude>
-    <ClInclude Include="shells.h">
-      <Filter>Исходные файлы</Filter>
-    </ClInclude>
     <ClInclude Include="replenishmentAmmo.h">
-      <Filter>Исходные файлы</Filter>
-    </ClInclude>
-    <ClInclude Include="minimap.h">
-      <Filter>Исходные файлы</Filter>
-    </ClInclude>
-    <ClInclude Include="lightning.h">
-      <Filter>Исходные файлы</Filter>
-    </ClInclude>
-    <ClInclude Include="GUI.h">
-      <Filter>Исходные файлы</Filter>
-    </ClInclude>
-    <ClInclude Include="artillery.h">
       <Filter>Исходные файлы</Filter>
     </ClInclude>
     <ClInclude Include="bounds.h">
@@ -161,53 +140,98 @@
     <ClInclude Include="svbmath.h">
       <Filter>Исходные файлы</Filter>
     </ClInclude>
-    <ClInclude Include="Logger.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="weather.h">
-      <Filter>Исходные файлы</Filter>
-    </ClInclude>
     <ClInclude Include="smokeGranade.h">
-      <Filter>Исходные файлы</Filter>
-    </ClInclude>
-    <ClInclude Include="badges.h">
       <Filter>Исходные файлы</Filter>
     </ClInclude>
     <ClInclude Include="profiler.h">
       <Filter>Исходные файлы</Filter>
     </ClInclude>
-    <ClInclude Include="getheight.h">
-      <Filter>Исходные файлы</Filter>
-    </ClInclude>
-    <ClInclude Include="getnormal.h">
-      <Filter>Исходные файлы</Filter>
-    </ClInclude>
-    <ClInclude Include="craters.h">
-      <Filter>Исходные файлы</Filter>
-    </ClInclude>
     <ClInclude Include="rangefinder.h">
-      <Filter>Исходные файлы</Filter>
-    </ClInclude>
-    <ClInclude Include="killchat.h">
-      <Filter>Исходные файлы</Filter>
-    </ClInclude>
-    <ClInclude Include="input.h">
-      <Filter>Исходные файлы</Filter>
-    </ClInclude>
-    <ClInclude Include="database.h">
-      <Filter>Исходные файлы</Filter>
-    </ClInclude>
-    <ClInclude Include="glfw_oglSetup.h">
-      <Filter>Исходные файлы</Filter>
-    </ClInclude>
-    <ClInclude Include="json_parser.h">
       <Filter>Исходные файлы</Filter>
     </ClInclude>
     <ClInclude Include="variables.h">
       <Filter>Исходные файлы</Filter>
     </ClInclude>
+    <ClInclude Include="artillery.h">
+      <Filter>Исходные файлы\gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="sounds.h">
+      <Filter>Исходные файлы\Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="craters.h">
+      <Filter>Исходные файлы\visual</Filter>
+    </ClInclude>
+    <ClInclude Include="effects.h">
+      <Filter>Исходные файлы\visual</Filter>
+    </ClInclude>
+    <ClInclude Include="environnement.h">
+      <Filter>Исходные файлы\visual</Filter>
+    </ClInclude>
+    <ClInclude Include="projectile.h">
+      <Filter>Исходные файлы\gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="projectileSystem.h">
+      <Filter>Исходные файлы\gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="weather.h">
+      <Filter>Исходные файлы\visual</Filter>
+    </ClInclude>
+    <ClInclude Include="input.h">
+      <Filter>Исходные файлы\gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="getheight.h">
+      <Filter>Исходные файлы\tools</Filter>
+    </ClInclude>
+    <ClInclude Include="getnormal.h">
+      <Filter>Исходные файлы\tools</Filter>
+    </ClInclude>
+    <ClInclude Include="glfw_oglSetup.h">
+      <Filter>Исходные файлы\tools</Filter>
+    </ClInclude>
+    <ClInclude Include="json_parser.h">
+      <Filter>Исходные файлы\tools</Filter>
+    </ClInclude>
     <ClInclude Include="texture.h">
+      <Filter>Исходные файлы\tools</Filter>
+    </ClInclude>
+    <ClInclude Include="lightning.h">
+      <Filter>Исходные файлы\visual</Filter>
+    </ClInclude>
+    <ClInclude Include="badges.h">
+      <Filter>Исходные файлы\visual</Filter>
+    </ClInclude>
+    <ClInclude Include="database.h">
+      <Filter>Исходные файлы\tools</Filter>
+    </ClInclude>
+    <ClInclude Include="enemyes.h">
+      <Filter>Исходные файлы\units</Filter>
+    </ClInclude>
+    <ClInclude Include="tank.h">
+      <Filter>Исходные файлы\units</Filter>
+    </ClInclude>
+    <ClInclude Include="text.h">
+      <Filter>Исходные файлы\tools</Filter>
+    </ClInclude>
+    <ClInclude Include="shells.h">
+      <Filter>Исходные файлы\visual</Filter>
+    </ClInclude>
+    <ClInclude Include="minimap.h">
+      <Filter>Исходные файлы\game_hud</Filter>
+    </ClInclude>
+    <ClInclude Include="HUD.h">
+      <Filter>Исходные файлы\game_hud</Filter>
+    </ClInclude>
+    <ClInclude Include="GUI.h">
+      <Filter>Исходные файлы\game_hud</Filter>
+    </ClInclude>
+    <ClInclude Include="killchat.h">
+      <Filter>Исходные файлы\game_hud</Filter>
+    </ClInclude>
+    <ClInclude Include="Logger.h">
       <Filter>Исходные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="cameraShake.h">
+      <Filter>Исходные файлы\visual</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
