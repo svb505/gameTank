@@ -16,3 +16,5 @@ bool drawDebugRay = false;
 
 double lastX = 800.0 / 2, lastY = 600.0 / 2;
 float sensitivity = 0.1f;
+
+DayTime dayTime = DayTime::DAY;

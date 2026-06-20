@@ -1,6 +1,10 @@
 #pragma once
 #include "rangefinder.h"
 
+enum class DayTime {
+	DAY, NIGHT
+};
+
 extern int ECRANW;
 extern int ECRANH;
 
@@ -16,3 +20,5 @@ extern  bool drawDebugRay;
 
 extern double lastX,lastY;
 extern float sensitivity;
+
+extern DayTime dayTime;

@@ -158,7 +158,7 @@ int main(){
 
     double lastTime = glfwGetTime();
     double deltaTime = 0.0;
-    float fpsTimer = 0.0f,fps = 0.0f;
+    float fpsTimer = 0.0f, fps = 0.0f;
     int frames = 0;
     
     initLighting();
@@ -197,8 +197,9 @@ int main(){
         processTankInput(window, deltaTime, enemyes,tank,sound,cam,ray,granades,camShake);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        drawSky();
         cam.setupCamera(tank, camShake,tank.aimMode);
+
+        drawSky();
         drawGround(cam.cameraPos.x, cam.cameraPos.z,weat.weather);
 
         tank.Draw();

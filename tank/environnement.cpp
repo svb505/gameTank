@@ -11,6 +11,7 @@
 #include "craters.h"
 #include "texture.h"
 #include "weather.h"
+#include "variables.h"
 
 const float size = 100.0f;
 
@@ -69,7 +70,9 @@ void drawGrid(float camX, float camZ) {
     glEnd();
 }
 void drawSky(){
-    GLuint skyTex = allTextures["cloudy"];
+    GLuint skyTex;
+
+    skyTex = (dayTime == DayTime::DAY) ? allTextures["clean"] : allTextures["cloudy"];
 
     glDisable(GL_DEPTH_TEST);
 

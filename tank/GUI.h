@@ -15,11 +15,12 @@ class GUI {
 private:
     Profiler p;
 
-	std::vector<std::string> spawns = { "1", "2","3" };
-	std::vector<const char*> cstrsS;
+	std::vector<const char*> spawns = { "1", "2","3" };
+    std::vector<const char*> days = { "Day","Night"};
 
-	int idxW = 0;
-	int idxS = 0;
+	int idxWeather = 0;
+	int idxSpawn = 0;
+    int idxDay = 0;
 
 	std::string selectedShell = "";
 	std::string controlString = "\nLeft ctrl - Zoom\nLeft alt - Show/Hide cursor\nSPACE - Shot\nENTER - Machine gun\n"
@@ -34,9 +35,6 @@ private:
     bool devWindow = false;
     bool statWindow = false;
 public:
-	GUI() {
-		for (auto& s : spawns) cstrsS.push_back(s.c_str());
-	}
     void setup(GLFWwindow* window) {
         IMGUI_CHECKVERSION();
         ImGui::CreateContext();
@@ -53,7 +51,7 @@ public:
         ImGui::DestroyContext();
     }
     void render(float& fps, Tank& tank, Artillery& art, Sound& sound,Type& weather, SmokeGranade& g,bool& badges,
-        std::unordered_map<int, Entity>& enemyes,bool& locked){
+        std::unordered_map<int, Entity>& enemyes,bool& locked) {
         std::string buf = std::format("{} / {}", tank.currentHP, tank.HP);
 
         selectedShell = shellTypes[tank.selectedShell];
@@ -96,12 +94,21 @@ public:
         ImGui::Image((ImTextureID)(intptr_t)allTextures["SMOKEGR"], ImVec2(60, 60));
 
         ImGui::Dummy(ImVec2(0.0f, 10.0f));
-        if (ImGui::Combo("Select weather", &idxW, weathersStrings.data(), weathersStrings.size()))
-            weather = convertStringToType(weathersStrings[idxW]);
+        if (ImGui::Combo("Select weather", &idxWeather, weathersStrings.data(), weathersStrings.size()))
+            weather = convertStringToType(weathersStrings[idxWeather]);
         
         ImGui::Dummy(ImVec2(0.0f, 10.0f));
-        if (ImGui::Combo("Select spawn", &idxS, cstrsS.data(), cstrsS.size())) 
-            tank.selectedSpawn = std::stoi(spawns[idxS]);
+        if (ImGui::Combo("Select spawn", &idxSpawn, spawns.data(), spawns.size()))
+            tank.selectedSpawn = std::stoi(spawns[idxSpawn]);
+
+        ImGui::Dummy(ImVec2(0.0f, 10.0f));
+        if (ImGui::Combo("Select day type", &idxDay, days.data(), days.size())) {            
+            if (idxDay == 0) dayTime = DayTime::DAY;
+            else if (idxDay == 1) dayTime = DayTime::NIGHT;
+
+            initLighting();
+        }
+            
 
         ImGui::Separator();
 

@@ -999,6 +999,8 @@ void BoundsSystem() {
     }
 }
 void HealthBarSystem() {
+    glEnable(GL_LIGHTING);
+
     if (showBars) {
         for (auto& [entity, hp] : healths) {
             if (hp.destroyed) continue;

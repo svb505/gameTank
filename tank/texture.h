@@ -5,6 +5,8 @@
 #include <map>
 #include <unordered_map>
 
+extern std::map<std::string, std::string> texturesFolders;
+
 extern std::map<std::string, GLuint> allTextures;
 extern std::unordered_map<std::string, GLuint> loadedTextures;
 extern std::unordered_map<std::string, std::string> texturesNamesAndPaths;

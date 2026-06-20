@@ -248,7 +248,6 @@ void Tank::DrawTrack(const TrackBuffer& trackL, const TrackBuffer& trackR, float
 
     svbmath::Vec3 up = { 0, 1, 0 };
 
-    glDisable(GL_LIGHTING);
     glBegin(GL_QUADS);
 
     for (auto& track : tracks) {
