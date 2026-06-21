@@ -20,6 +20,7 @@ extern std::map<shellType,std::string> shellTypes;
 
 extern std::vector<Projectile> projectiles;
 
+void reserveProjectiles();
 void spawnShell(svbmath::Vec3 pos, float yawDeg, float pitchDeg, shellType _shellType, int shellSpeed,
     bool isEnemy = false);
 void spawnBullet(svbmath::Vec3 pos, float yawDeg);

@@ -5,6 +5,7 @@
 #include "Logger.h"
 #include <map>
 #include <unordered_map>
+#include <thread>
 
 std::map<std::string, std::string> texturesFolders = { {"EFCT","textures/effects/"},
                                                         {"GUI","textures/GUI/"},

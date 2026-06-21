@@ -21,6 +21,7 @@
 #include "CameraShake.h"
 
 std::vector<Projectile> projectiles = {};
+
 std::map<shellType, std::string> shellTypes = { {shellType::APFSDS,"APFSDS"},{shellType::HE,"HE"},
         {shellType::SMOKE,"SMOKE"} ,{shellType::ATGM,"ATGM"} ,{shellType::BULLET,"BULLET"} };
 
@@ -28,6 +29,9 @@ std::string getShellType(shellType& shellType) {
     return shellTypes[shellType];
 }
 
+void reserveProjectiles() {
+    projectiles.reserve(20);
+}
 float calculatePenetration(float vel) {
     const float k = 0.0005f;
     return k * vel * vel;

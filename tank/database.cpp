@@ -26,6 +26,7 @@ void createDb() {
 
 	sqlite3_exec(db,sql,0,0,&err);
 	sqlite3_exec(db, "INSERT INTO player VALUES(0, 0, 0)", 0, 0, &err);
+	sqlite3_close(db);
 }
 void saveData(int score,int death) {
 	if (sqlite3_open("playerInfo.db", &db) != SQLITE_OK) {
@@ -39,6 +40,7 @@ void saveData(int score,int death) {
 	sqlite3_exec(db,sql,0,0,&err);
 
 	sqlite3_free(sql);
+	sqlite3_close(db);
 }
 PlayerContext getData() {
 	PlayerContext ctx;
@@ -48,6 +50,7 @@ PlayerContext getData() {
 		char* err;
 
 		sqlite3_exec(db, "SELECT * FROM player", callback, &ctx, &err);
+		sqlite3_close(db);
 
 		return ctx;
 	}

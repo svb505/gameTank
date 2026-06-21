@@ -45,6 +45,8 @@ private:
     };
 
     std::vector<Particle> particles;
+
+
     int maxParticles;
     float centerX, centerY, centerZ;
     float radius;

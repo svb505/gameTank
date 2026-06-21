@@ -10,6 +10,10 @@
 #include "Logger.h"
 #include "shells.h"
 
+Artillery::Artillery() {
+    shells.reserve(30);
+}
+
 std::vector<float> Artillery::returnRandomError() {
     std::random_device rd;
     static std::mt19937 gen(rd());

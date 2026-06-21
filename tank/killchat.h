@@ -15,6 +15,7 @@ struct Message {
 
 extern std::vector<Message> messages;
 
+void reserveMessages();
 void updateKillChat(float dt);
 void addToKillChat(std::string killer, std::string killed, std::string shell, int killerId, int killedId);
 void showKillChat(int WW, int WH);

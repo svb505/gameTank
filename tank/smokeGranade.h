@@ -21,6 +21,7 @@ public:
 	int currentGranade = 0;
 	std::vector<Position> granades;
 
+	void reservePlace();
 	void drawAll(Tank& tank);
 	void draw(svbmath::Vec3& pos, float angle, float yaw);
 	void spawn(Tank& tank);

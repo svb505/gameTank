@@ -163,6 +163,11 @@ int main(){
     
     initLighting();
     LoadAllTextures();
+    
+    granades.reservePlace();
+    reserveMessages();
+    reserveProjectiles();
+
     granades.spawn(tank);
     generateEnemyes(enemyes,COUNT);
     repl.setCoordinates(10.0f, static_cast<float>(rand() % 30),static_cast<float>((rand() % 50) - 50));

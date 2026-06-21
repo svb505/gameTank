@@ -1,3 +1,4 @@
+#define NOMINMAX
 #include <windows.h>
 #include <GL/gl.h>
 #include <GLFW/glfw3.h>
@@ -92,11 +93,9 @@ void drawSootEffect(float x, float y, float z, int segments, float radius) {
 void drawDestroyedTank(TankComponent& tank, float bodyH) {
     glPushMatrix();
 
-    // Небольшой наклон корпуса (как будто подбит)
     glRotatef(-10, 0, 0, 1);
     glRotatef(5, 1, 0, 0);
 
-    // Темный "сгоревший" цвет
     glColor3f(0.1f, 0.1f, 0.1f);
 
     // ===== BODY =====
@@ -144,7 +143,6 @@ void drawDestroyedTank(TankComponent& tank, float bodyH) {
     glPushMatrix();
     glTranslatef(0.0f, bodyH + 0.4f, 0.0f);
 
-    // Башня "сломана" — случайный угол
     glRotatef(140.0f, 0, 1, 0);
 
     float t = 0.5f;
@@ -164,7 +162,6 @@ void drawDestroyedTank(TankComponent& tank, float bodyH) {
 
     glTranslatef(0.0f, 0.0f, t);
 
-    // Пушка опущена вниз (сломана)
     glRotatef(-35.0f, 1, 0, 0);
 
     float w = 0.12f;
@@ -181,7 +178,6 @@ void drawDestroyedTank(TankComponent& tank, float bodyH) {
     glVertex3f(w, h, len);
     glVertex3f(-w, h, len);
 
-    // Остальные грани
     glVertex3f(-w, h, 0); glVertex3f(-w, h, len); glVertex3f(w, h, len); glVertex3f(w, h, 0);
     glVertex3f(-w, -h, 0); glVertex3f(w, -h, 0); glVertex3f(w, -h, len); glVertex3f(-w, -h, len);
     glVertex3f(-w, -h, 0); glVertex3f(-w, -h, len); glVertex3f(-w, h, len); glVertex3f(-w, h, 0);
@@ -877,7 +873,6 @@ void drawAppartament(ApartmentComponent& ap, float totalH) {
 
         // ================= FIRE MARKS =================
 
-        // копоть над дверью
         glColor4f(0.05f, 0.05f, 0.05f, 0.6f);
         glBegin(GL_QUADS);
         glVertex3f(-0.8f, 0.8f, ap.depth + 0.03f);
@@ -886,7 +881,6 @@ void drawAppartament(ApartmentComponent& ap, float totalH) {
         glVertex3f(-0.6f, 1.8f, ap.depth + 0.03f);
         glEnd();
 
-        // случайные пятна копоти
         for (int i = 0; i < 6; i++) {
 
             float x = ((rand() % 100) / 100.0f - 0.5f) * ap.width * 1.5f;
@@ -1063,11 +1057,16 @@ void Update(float dt, Tank& tank, Sound& sound) {
         if (playerInRadius(enemyPos,tankPos, bot.detectionRadius) && !bot.destroyed) {
             svbmath::Vec3 dir = svbmath::Normalize(tankPos - enemyPos);
             
-            float targetYaw = atan2(dir.x, dir.z);
+            float targetYaw = atan2(dir.x, -dir.z);
             float delta = svbmath::NormalizeAngle(targetYaw - bot.turretAngle);
             float newTarget = bot.turretAngle + delta;
 
-            bot.turretAngle = svbmath::RotateTowards(bot.turretAngle,newTarget,bot.turretSpeed,dt);
+            float speedMultiplier = 1.0f + fabs(delta) * 2.0f;
+            float speed = bot.turretSpeed * speedMultiplier;
+            speed = std::min(speed, bot.turretSpeed * 4.0f);
+
+            bot.turretAngle = svbmath::RotateTowards(bot.turretAngle,
+                newTarget, speed, dt);
 
             if (bot.finishReload <= 0.0f) {
                 spawnShell({ enemyPos.x, enemyPos.y + 1.0f, enemyPos.z }, bot.turretAngle * 180.0f / PI, bot.gunAngle,
@@ -1089,6 +1088,8 @@ void Render(std::vector<SmokeEffect*>& smokes, bool healthBar) {
     if (healthBar) HealthBarSystem();
 }
 void generateEnemyes(std::unordered_map<int, Entity>& enemyes, int count) {
+    entities.reserve(50);
+    
     LOG_INFO("Genarate enemies");
 
     for (int i = 0; i < count; i++) {

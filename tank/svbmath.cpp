@@ -32,8 +32,7 @@ namespace svbmath{
 
 		float step = speed * dt;
 
-		if (fabs(diff) <= step)
-			return target; // дошли до цели
+		if (fabs(diff) <= step) return target; 
 		return current + (diff > 0 ? step : -step);
 	}
 	float LengthSq(const Vec3& v) {

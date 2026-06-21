@@ -6,6 +6,9 @@
 
 std::vector<Message> messages = {};
 
+void reserveMessages() {
+	messages.reserve(10);
+}
 void addToKillChat(std::string killer,std::string killed,std::string shell,int killerId, int killedId) {
 	std::string s1 = std::format("{}({})",killer,killerId);
 	std::string s2 = std::format("{}", shell);

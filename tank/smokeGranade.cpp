@@ -4,7 +4,9 @@
 #include <cmath>
 #include "sounds.h"
 #include "svbmath.h"
-
+void SmokeGranade::reservePlace() {
+    granades.reserve(maxCount);
+}
 void SmokeGranade::draw(svbmath::Vec3& pos,float angle,float yaw) {
     float s = 0.1f;
 
