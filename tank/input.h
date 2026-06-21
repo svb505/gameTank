@@ -75,13 +75,23 @@ void processTankInput(GLFWwindow* window, float dt, std::unordered_map<int, Enti
     if (isDown(window, GLFW_KEY_DOWN) && isDown(window, GLFW_KEY_LEFT_CONTROL)) setHeight(getHeight() - step * dt * 60);
     if (isDown(window, GLFW_KEY_ENTER)) {
         float yaw = tank.bodyYaw + tank.turretYaw;
+        auto& src = sound.sources["MGun"];
+        ALint state;
 
+        alGetSourcei(src, AL_SOURCE_STATE, &state);
         spawnBullet({ tank.pos.x, tank.pos.y + 1.0f, tank.pos.z }, yaw);
 
-        auto& src = sound.sources["MGun"];
-        sound.setSourcePosition(src, tank.pos);
-        alSourceStop(src);
-        alSourcePlay(src);
+        if (!sound.mgunPlayed) {
+            sound.setSourcePosition(src, tank.pos);
+            alSourceStop(src);
+            alSourcePlay(src);
+
+            sound.mgunPlayed = true;
+        }
+
+        if (state == AL_STOPPED) sound.mgunPlayed = false;
+
+        
     }
     if (isPressed(window, GLFW_KEY_R, prevR)) {
         Ray ray;
@@ -110,7 +120,8 @@ void processTankInput(GLFWwindow* window, float dt, std::unordered_map<int, Enti
         glfwSetInputMode(window, GLFW_CURSOR, cursorVisibility ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_DISABLED);
     }
     if (isPressed(window, GLFW_KEY_LEFT_SHIFT, prevShift)) tank.aimMode = !tank.aimMode;
-    if (isPressed(window, GLFW_KEY_SPACE, prevFire) && tank.finishReload <= 0.0f && tank.totalShells > 0) {
+    if (isPressed(window, GLFW_KEY_SPACE, prevFire) && tank.finishReload <= 0.0f && 
+        tank.totalShells > 0) {
         float yaw = tank.turretLocked ? tank.bodyYaw + tank.turretYaw : tank.turretYaw - 90.0f;
 
         float posY = tank.pos.y + tank.params.hullH + tank.params.turretY - tank.params.gunOffsetY;
@@ -127,5 +138,6 @@ void processTankInput(GLFWwindow* window, float dt, std::unordered_map<int, Enti
         tank.finishReload = tank.reloadTime;
     }
 
-    if (isPressed(window, GLFW_KEY_LEFT_CONTROL, prevCtrl)) { cam.zoomed = !cam.zoomed; cam.fov = cam.zoomed ? 40.0f : 70.0f; }
+    if (isPressed(window, GLFW_KEY_LEFT_CONTROL, prevCtrl)) { cam.zoomed = !cam.zoomed; 
+                    cam.fov = cam.zoomed ? 40.0f : 70.0f; }
 }

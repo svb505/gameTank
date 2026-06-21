@@ -20,6 +20,7 @@ struct SourceConfig {
 class Sound {
 public:
     bool rainPlayed = false;
+    bool mgunPlayed = false;
 
     ALCdevice* audioDevice = nullptr;
     ALCcontext* audioContext = nullptr;
