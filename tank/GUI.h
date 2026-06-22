@@ -10,6 +10,8 @@
 #include "database.h"
 #include "variables.h"
 #include "texture.h"
+#include "modificationsSystem.h"
+#include <format>
 
 class GUI {
 private:
@@ -34,6 +36,7 @@ private:
 	bool mlrsWindow = false;
     bool devWindow = false;
     bool statWindow = false;
+    bool modWindow = false;
 public:
     void setup(GLFWwindow* window) {
         IMGUI_CHECKVERSION();
@@ -61,6 +64,7 @@ public:
         if (ImGui::Button("Developper window")) devWindow = true;
         ImGui::SameLine();
         if (ImGui::Button("Show statistick")) statWindow = true;
+        if (ImGui::Button("Modifications")) modWindow = true;
 
         if (ImGui::ImageButton("artillery", (ImTextureID)(intptr_t)allTextures["ARTILLERY"], 
             ImVec2(60, 60))) artWindow = true;
@@ -177,31 +181,69 @@ public:
         ImGui::End();
     }
     void renderStatWin() {
-        if (!dbIsExists()) ImGui::Text("DB is not exists");
+        if (!dbIsExists("playerInfo.db")) ImGui::Text("DB is not exists");
         else {
             ImGui::Begin("Statistick", &statWindow);
 
             PlayerContext ctx;
 
-            ctx = getData();
+            ctx = getDataForPlayer();
 
             for (const auto& c : ctx.players) {
-                float kd = (c.deaths == 0) ? (float)c.score : (float)c.score / (float)c.deaths;
+                float kd = (c.deaths == 0) ? (float)c.kills : (float)c.kills / (float)c.deaths;
 
-                ImGui::Text("Total kills: %d", c.score);
+                ImGui::Text("Total kills: %d", c.kills);
                 ImGui::Text("Total deaths: %d", c.deaths);
+                ImGui::Text("Total score: %d", c.score);
                 ImGui::Text("KD: %.1f", kd);
             }
 
             ImGui::End();
         }
     }
+    void renderModificationWin(Tank& tank) {
+        ImGui::Begin("Modifications");
 
+        PlayerContext ctx;
+
+        ctx = getDataForPlayer();
+
+        for (const auto& c : ctx.players) {
+            std::map<std::string, Modification> modf = getModifications("modifications");
+            
+            std::string score = std::format("Total score: {}", c.score);
+            ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.5f, 1.0f), score.c_str());
+            ImGui::Dummy({ 0.0f, 10.0f });
+
+            for (auto& m : modf) {
+                std::string name = std::format("Name: {}", m.first);
+
+                ImGui::TextColored(ImVec4(0.0f,0.5f,1.0f,1.0f),name.c_str());
+                
+                if (m.second.active) {
+                    ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "Modification buyed");
+                    ImGui::Dummy({ 0.0f,10.0f });
+                }
+                else {
+                    std::string buyText = std::format("Buy {}",m.first);
+                    
+                    ImGui::Text("Price: %d pts", m.second.value);
+                    
+                    if (ImGui::Button(buyText.c_str())) applyModification(tank,m.first);
+                    
+                    ImGui::Dummy({ 0.0f,10.0f });
+                }         
+            }         
+        }
+
+        ImGui::End();
+    }
     void render(float& fps, Tank& tank, Artillery& art, Sound& sound,Type& weather, SmokeGranade& g,bool& badges,
         std::unordered_map<int, Entity>& enemyes,bool& locked) {
         
         renderMainWin(fps,weather,tank,g,locked);
 
+        if (modWindow) renderModificationWin(tank);
         if (statWindow) renderStatWin();
         if (devWindow) renderDevWin(sound, enemyes);
         if (artWindow) renderArtilleryWin(art,sound,tank);

@@ -1,0 +1,20 @@
+{
+    "modifications": {
+        "engine": [
+            400,
+            true
+        ],
+        "gun": [
+            200,
+            true
+        ],
+        "gun_elevation_mechanism": [
+            200,
+            true
+        ],
+        "turret_rotation_mechanism": [
+            150,
+            true
+        ]
+    }
+}

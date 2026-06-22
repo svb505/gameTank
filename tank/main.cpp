@@ -53,8 +53,8 @@ SmokeGranade granades;
 CameraShake camShake;
 
 void windowCloseCallback(GLFWwindow* window) {
-    createDb();
-    saveData(tank.kills, tank.death);
+    if (!dbIsExists) createDb(TypeDb::Player,"playerInfo.db");
+    saveDataForPlayer(tank.kills, tank.death,tank.score,"+");
 }
 void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
     ImGuiIO& io = ImGui::GetIO();
@@ -160,7 +160,7 @@ int main(){
     double deltaTime = 0.0;
     float fpsTimer = 0.0f, fps = 0.0f;
     int frames = 0;
-    
+
     initLighting();
     LoadAllTextures();
     

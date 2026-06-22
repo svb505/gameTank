@@ -145,6 +145,7 @@
     <ClCompile Include="Logger.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="minimap.cpp" />
+    <ClCompile Include="modificationsSystem.cpp" />
     <ClCompile Include="profiler.cpp" />
     <ClCompile Include="projectile.cpp" />
     <ClCompile Include="projectileSystem.cpp" />
@@ -180,6 +181,7 @@
     <ClInclude Include="lightning.h" />
     <ClInclude Include="Logger.h" />
     <ClInclude Include="minimap.h" />
+    <ClInclude Include="modificationsSystem.h" />
     <ClInclude Include="profiler.h" />
     <ClInclude Include="projectile.h" />
     <ClInclude Include="projectileSystem.h" />
