@@ -2,11 +2,12 @@
 #include "projectile.h"
 #include "tank.h"
 #include "svbmath.h"
+#include <iostream>
 
 void Projectile::update(float dt,Tank& tank) {
     if (selectedShellType == shellType::ATGM) {
-        float yaw = (tank.turretYaw + 90.0f) * 3.1415926f / 180.0f;
-        float pitch = tank.gunPitch * 3.1415926f / 180.0f;
+        float yaw = (tank.getTurretYaw() + 90.0f) * 3.1415926f / 180.0f;
+        float pitch = tank.getGunPitch() * 3.1415926f / 180.0f;
 
         svbmath::Vec3 targetDir{
             -sinf(yaw) * cosf(pitch),

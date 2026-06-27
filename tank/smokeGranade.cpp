@@ -4,6 +4,13 @@
 #include <cmath>
 #include "sounds.h"
 #include "svbmath.h"
+
+std::vector<Position>& SmokeGranade::getGranades() {
+    return granades;
+}
+int& SmokeGranade::getMaxCount() {
+    return maxCount;
+}
 void SmokeGranade::reservePlace() {
     granades.reserve(maxCount);
 }
@@ -35,10 +42,10 @@ void SmokeGranade::draw(svbmath::Vec3& pos,float angle,float yaw) {
     glPopMatrix();
 }
 void SmokeGranade::drawAll(Tank& tank) {
-    for (auto& g : granades) draw(g.pos,g.angle,tank.turretYaw);
+    for (auto& g : granades) draw(g.pos,g.angle,tank.getTurretYaw());
 }
 void SmokeGranade::spawn(Tank& tank) {
-    float halfW = tank.params.turretW * 0.5f;
+    float halfW = tank.getParams().turretW * 0.5f;
 
     svbmath::Vec3 leftLocal = { -halfW, 0.0f, 0.0f };
     svbmath::Vec3 rightLocal = { halfW, 0.0f, 0.0f };
@@ -52,7 +59,7 @@ void SmokeGranade::spawn(Tank& tank) {
         else p.pos = rightSide;
 
         float angleRad = p.angle * PI / 180.0f;
-        float yawRad = (tank.bodyYaw + tank.turretYaw) * PI / 180.0f;
+        float yawRad = (tank.getBodyYaw() + tank.getTurretYaw()) * PI / 180.0f;
 
         p.count = 3000;
 
@@ -64,7 +71,7 @@ void SmokeGranade::spawn(Tank& tank) {
     }
 }
 void SmokeGranade::update(float dt, std::vector<SmokeEffect*>& smokes,Tank& tank,Sound& sound) {
-    float halfW = tank.params.turretW * 0.5f; 
+    float halfW = tank.getParams().turretW * 0.5f; 
 
     svbmath::Vec3 leftLocal = { -halfW, 0.0f, 0.0f }; 
     svbmath::Vec3 rightLocal = { halfW, 0.0f, 0.0f }; 
@@ -76,7 +83,7 @@ void SmokeGranade::update(float dt, std::vector<SmokeEffect*>& smokes,Tank& tank
     for (auto& g : granades) {     
         if (!g.strike) {
             float angleRad = g.angle * PI / 180.0f;
-            float yawRad = (tank.bodyYaw + tank.turretYaw) * PI / 180.0f;
+            float yawRad = (tank.getBodyYaw() + tank.getTurretYaw()) * PI / 180.0f;
 
             g.pos = (i < maxCount / 2) ? tank.LocalToWorldTurret(leftLocal) : tank.LocalToWorldTurret(rightLocal);
             

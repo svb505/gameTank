@@ -18,30 +18,30 @@ void Camera::setupCamera(Tank& tank, CameraShake& shakeEffect,bool& aimMode) {
     svbmath::Vec3 offset = shakeEffect.GetOffset();
 
     if (!aimMode) {
-        cameraPos.x = tank.pos.x - cos(pitchRad) * sin(yawRad) * camDistance;
-        cameraPos.y = tank.pos.y + camHeight + sin(pitchRad) * camDistance;
-        cameraPos.z = tank.pos.z + cos(pitchRad) * cos(yawRad) * camDistance;
+        cameraPos.x = tank.getCurrentPos().x - cos(pitchRad) * sin(yawRad) * camDistance;
+        cameraPos.y = tank.getCurrentPos().y + camHeight + sin(pitchRad) * camDistance;
+        cameraPos.z = tank.getCurrentPos().z + cos(pitchRad) * cos(yawRad) * camDistance;
 
         gluLookAt(cameraPos.x + offset.x,cameraPos.y + offset.y,cameraPos.z + offset.z,
-            tank.pos.x, tank.pos.y + 1.0f, tank.pos.z,0,1,0);
+            tank.getCurrentPos().x, tank.getCurrentPos().y + 1.0f, tank.getCurrentPos().z,0,1,0);
     }
     else {
         float turretRad;
 
-        if (!tank.turretLocked) turretRad = (tank.turretYaw - 90.0f) * 3.1415926f / 180.0f;
-        else turretRad = (tank.bodyYaw + tank.turretYaw) * 3.1415926f / 180.0f;
+        if (!tank.getTurretLocked()) turretRad = (tank.getTurretYaw() - 90.0f) * 3.1415926f / 180.0f;
+        else turretRad = (tank.getBodyYaw() + tank.getTurretYaw()) * 3.1415926f / 180.0f;
 
         float forwardX = sin(turretRad);
         float forwardZ = cos(turretRad);
 
-        cameraPos.x = tank.pos.x - forwardX * 0.5f;
-        cameraPos.y = tank.pos.y + (tank.params.hullH + tank.params.turretY - tank.params.gunOffsetY);
-        cameraPos.z = tank.pos.z - forwardZ * 0.5f;
+        cameraPos.x = tank.getCurrentPos().x - forwardX * 0.5f;
+        cameraPos.y = tank.getCurrentPos().y + (tank.getParams().hullH + tank.getParams().turretY - tank.getParams().gunOffsetY);
+        cameraPos.z = tank.getCurrentPos().z - forwardZ * 0.5f;
 
-        float gunPitchRad = tank.gunPitch * 3.1415926f / 180.0f;
-        float lookX = tank.pos.x + forwardX;
+        float gunPitchRad = tank.getGunPitch() * 3.1415926f / 180.0f;
+        float lookX = tank.getCurrentPos().x + forwardX;
         float lookY = cameraPos.y + sin(gunPitchRad);
-        float lookZ = tank.pos.z + forwardZ;
+        float lookZ = tank.getCurrentPos().z + forwardZ;
 
         gluLookAt(cameraPos.x + offset.x, cameraPos.y + offset.y, cameraPos.z + offset.z,
             lookX, lookY, lookZ,

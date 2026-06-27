@@ -43,15 +43,15 @@ public:
 	void startReplish(float dt,Tank& tank,int wH,int wW) {
 		glDisable(GL_LIGHTING);
 
-		if (tank.totalShells < tank.maxShells) {
+		if (tank.getTotalShells() < tank.getMaxShells()) {
 			replishTime -= dt;
 			RenderTextHUD((float)wW / 2, (float)wH / 2, 1, 1, 1, std::format("Replish ammo: {:.1f} s", replishTime).c_str(),wW,wH);
-			if (replishTime <= 0) { tank.totalShells++; replishTime = 5.0f; }
+			if (replishTime <= 0) { tank.getTotalShells()++; replishTime = 5.0f; }
 		}
-		if (tank.currentHP < tank.HP) {
+		if (tank.getCurretHp() < tank.getHp()) {
 			repairTime -= dt;
 			RenderTextHUD((float)wW / 2, (float)wH / 2 + 40, 1, 1, 1, std::format("Repair: {:.1f} s", repairTime).c_str(), wW, wH);
-			if (repairTime <= 0) { tank.currentHP = tank.HP; repairTime = 3.0f; }
+			if (repairTime <= 0) { tank.getCurretHp() = tank.getHp(); repairTime = 3.0f; }
 		}
 
 		glEnable(GL_LIGHTING);

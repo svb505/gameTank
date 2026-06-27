@@ -109,7 +109,7 @@ void drawSky(){
     glDisable(GL_TEXTURE_2D);
     glEnable(GL_DEPTH_TEST);
 }
-void drawGround(float camX, float camZ, Type& weather) {
+void drawGround(float camX, float camZ, const Type& weather) {
     float step = 4.0f;
     float x0 = camX;
     float z0 = camZ;

@@ -10,6 +10,10 @@
 #include "Logger.h"
 #include "shells.h"
 
+std::vector<Projectile>& Artillery::getShells() {
+    return shells;
+}
+
 Artillery::Artillery() {
     shells.reserve(30);
 }
@@ -41,9 +45,9 @@ void Artillery::spawnShells(float x,float z) {
         auto error = returnRandomError();
 
         Projectile s(shellType::HE);
-        s.pos.x = x + error[0];
-        s.pos.y = shellHeight;
-        s.pos.z = z + error[1];
+
+        s.pos = { x + error[0], shellHeight,z + error[1] };
+
         s.delay = 5.0f;
         s.active = false;
         s.speed = shellSpeed * returnSpeedError();

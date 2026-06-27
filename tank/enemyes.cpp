@@ -1025,7 +1025,7 @@ void DeathSystem(Tank& tank) {
 
             LOG_INFO("+1 kill");
 
-            tank.kills++;
+            tank.getKills()++;
         }
     }
 
@@ -1047,7 +1047,7 @@ void Update(float dt, Tank& tank, Sound& sound) {
 
     for (auto& [id, bot] : tanks) {
         svbmath::Vec3 enemyPos = transforms[id].pos;
-        svbmath::Vec3 tankPos = tank.pos;
+        svbmath::Vec3 tankPos = tank.getCurrentPos();
 
         if (bot.finishReload > 0.0f) {
             bot.finishReload -= dt;

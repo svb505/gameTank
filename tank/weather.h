@@ -35,13 +35,16 @@ class Weather {
 private:
 	const int diapazone = 70;
 	bool isCleared = false;
-public:
+
 	Type weather = Type::clean;
 	int count = 130;
-	Weather() { particles.reserve(count); }
-	
+
 	std::vector<Particle> particles = {};
 	std::vector<SnowPiles> snowPiles;
+public:
+	Weather() { particles.reserve(count); }
+
+	Type& getWeather();
 
 	void drawSnowPile(float radius, float height);
 	void drawSphere(float radius, int stacks, int slices);

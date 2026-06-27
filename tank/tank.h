@@ -54,7 +54,14 @@ struct TankParams {
     float gunOffsetZ = 0.9f;
 };
 class Tank {
-public:
+private:
+    void DrawBox(float w, float h, float d);
+    void DrawCylinder(float r, float h, int seg = 16);
+    void DrawHull();
+    void DrawTracks();
+    void DrawTurret();
+    void DrawGun();
+
     TankParams params;
 
     std::map<int, svbmath::Vec3> spawns = {
@@ -62,6 +69,9 @@ public:
      {2, {-30.0f, 0.0f, 0.0f}},
      {3, {30.0f, 0.0f, 0.0f}}
     };
+    svbmath::Vec3 basePos = { 0.0f,0.0f,0.0f };
+    svbmath::Vec3 pos = { 0.0f,0.0f,0.0f };
+    svbmath::Vec3 oldPos = { 0.0f,0.0f,0.0f };
 
     bool turretLocked = true;
 
@@ -77,11 +87,7 @@ public:
     int scoreToCount = 10;
     int currentHP = HP;
 
-    svbmath::Vec3 basePos = { 0.0f,0.0f,0.0f };
-    svbmath::Vec3 pos = { 0.0f,0.0f,0.0f };
-    svbmath::Vec3 oldPos = { 0.0f,0.0f,0.0f };
-
-    float bodyYaw = -90.0f, turretYaw = -90.0f, gunPitch = 0.0f;  
+    float bodyYaw = -90.0f, turretYaw = -90.0f, gunPitch = 0.0f;
 
     int maxShells = 26, totalShells = 26;
     float reloadTime = getFloatFromJson("tankReload"), finishReload = 0.0f;
@@ -96,6 +102,41 @@ public:
     float turretSpeed = getFloatFromJson("tankTurretSpeed"), gunSpeed = getFloatFromJson("tankGunSpeed");
 
     float bodyRad = (bodyYaw + 90.0f) * 3.1415926f / 180.0f, dirX = -sin(bodyRad), dirZ = -cos(bodyRad);
+public:
+    void setHp(int _hp);
+    void setDeath(int _d);
+    void setScore(int _s);
+    void setKills(int _k);
+
+    bool& getAimMode();
+    bool& getTurretLocked();
+    float& getReloadTime();
+    float& getFinishReload();
+    float& getMoveSpeed();
+    float& getBodyRad();
+    float& getBodyYaw();
+    float& getTurretYaw();
+    float& getGunPitch();
+    float& getRotateSpeed();
+    int& getBaseShellSpeed();
+    int& getTotalShells();
+    int& getKills();
+    int& getCurretHp();
+    int& getScore();
+    int& getDeath();
+    int& getScoreToCount();
+    int& getSelectedSpawn();
+    int& getHp();
+    int& getMaxShells();
+    TankParams& getParams();
+    shellType& getSelectedShell();
+    std::map<int, svbmath::Vec3>& getSpawns();
+    const float& getReductionCoef();
+    const float& getSpeedLimitForward();
+    const float& getVelocityCoef();
+    const float& getSpeedLimitBack();
+    svbmath::Vec3& getOldPos();
+    svbmath::Vec3& getCurrentPos();
 
     void UpdateTrack(TrackBuffer& track, const svbmath::Vec3& tankPos, float dt);
     void Draw();
@@ -107,11 +148,5 @@ public:
     Bounds GetHullMax() const;
     void DrawTrack(const TrackBuffer& trackL, const TrackBuffer& trackR, float width);
     void UpdateTrack(float dt, svbmath::Vec3 tankPos,TrackBuffer& leftTrack, TrackBuffer& rightTrack);
-private:
-    void DrawBox(float w, float h, float d);
-    void DrawCylinder(float r, float h, int seg = 16);
-    void DrawHull();
-    void DrawTracks();
-    void DrawTurret();
-    void DrawGun();
+
 };

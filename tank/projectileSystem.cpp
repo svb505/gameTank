@@ -50,23 +50,24 @@ void onHit(Projectile& p, int id, Health* health,EffectsContext& context,Sound& 
             health->current -= p.damage;
 
             if (wasAlive && health->current <= 0.0f) {
-                player.kills++;
+                player.getKills()++;
 
                 health->destroyed = true;
                 g_destroyText = "Target Destroyed";
 
                 if (!p.isEnemy && p.type != ProjectileType::Bullet)
-                    player.score += player.scoreToCount;
+                    player.getScore() += player.getScoreToCount();
 
                 addToKillChat("Player",getRenderTypeString(renders[id].type),getShellType(p.selectedShellType),0,id);
 
-                sound.setSourcePosition(sound.sources["Kill"], player.pos);
+                sound.setSourcePosition(sound.sources["Kill"], player.getCurrentPos());
                 alSourcePlay(sound.sources["Kill"]);
             }
             else if (health->current > 0.0f) {
                 g_destroyText = "Target hit";
 
-                if (!p.isEnemy && p.type != ProjectileType::Bullet) player.score += player.scoreToCount / 2;
+                if (!p.isEnemy && p.type != ProjectileType::Bullet) player.getScore() 
+                    += player.getScoreToCount() / 2;
             }
         }
 
@@ -155,18 +156,18 @@ void update(float dt,Sound& sound,std::unordered_map<int, Entity>& enemies,std::
         p.update(dt, player);
 
         if (checkCollision(player.GetHullMax(), p.pos) && p.isEnemy) {
-            player.currentHP -= p.damage;
+            player.getCurretHp() -= p.damage;
 
             shake.Start(1.5f,1.5f);
 
             onHit(p, 0, nullptr, context, sound, player, false);
 
-            if (player.currentHP <= 0) {
+            if (player.getCurretHp() <= 0) {
                 addToKillChat("Tank", "Player", getShellType(p.selectedShellType), 0, 0);
 
-                player.death++;
-                player.currentHP = player.HP;
-                player.pos = player.spawns[player.selectedSpawn];
+                player.getDeath()++;
+                player.getCurretHp() = player.getHp();
+                player.getCurrentPos() = player.getSpawns()[player.getSelectedSpawn()];
             }
 
             continue;
@@ -207,7 +208,8 @@ void updateProjectiles() {
     }
 }
 void updateArtillery(std::vector<Projectile>& artilleryProjectiles, Sound& sound,
-    std::unordered_map<int, Entity>& enemies, EffectsContext& context) {
+    std::unordered_map<int, Entity>& enemies, EffectsContext& context,Tank& player) {
+    
     for (auto& p : artilleryProjectiles) {
         if (!p.alive) continue;
 
@@ -218,14 +220,9 @@ void updateArtillery(std::vector<Projectile>& artilleryProjectiles, Sound& sound
             if (!bounds.contains(id)) continue;
 
             if (checkCollision(bounds[id], p.pos) && calculatePenetration(p.speed)) {
-                healths[id].current -= p.damage;
-
-                context.explosions.push_back(new ExplosionEffect(p.pos, 200));
-
-                p.alive = false;
+                onHit(p,id,&healths[id], context,sound,player,false);
                 exploded = true;
-                sound.setSourcePosition(sound.sources["ArtExplosion"], p.pos);
-                alSourcePlay(sound.sources["ArtExplosion"]);
+
                 break;
             }
         }

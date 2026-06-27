@@ -54,7 +54,7 @@ CameraShake camShake;
 
 void windowCloseCallback(GLFWwindow* window) {
     if (!dbIsExists) createDb(TypeDb::Player,"playerInfo.db");
-    saveDataForPlayer(tank.kills, tank.death,tank.score,"+");
+    saveDataForPlayer(tank.getKills(), tank.getDeath(), tank.getScore(), "+");
 }
 void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
     ImGuiIO& io = ImGui::GetIO();
@@ -85,14 +85,14 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
     cam.cameraYaw += (float)xoffset;
     cam.cameraPitch -= (float)yoffset;
 
-    tank.turretYaw -= (float)xoffset;
-    tank.gunPitch += (float)yoffset;
+    tank.getTurretYaw() -= (float)xoffset;
+    tank.getGunPitch() += (float)yoffset;
 
     cam.cameraYaw = fmod(cam.cameraYaw + 360.0f, 360.0f);
 
-    tank.turretYaw = fmod(tank.turretYaw + 360.0f, 360.0f);
+    tank.getTurretYaw() = fmod(tank.getTurretYaw() + 360.0f, 360.0f);
 
-    tank.gunPitch = std::clamp(tank.gunPitch, -10.0f, 10.0f);
+    tank.getGunPitch() = std::clamp(tank.getGunPitch(), -10.0f, 10.0f);
 }
 void countFps(double& deltaTime,double& lastTime,double& currentTime,int& frames,float& fps,float& fpsTimer) {
     deltaTime = currentTime - lastTime;
@@ -189,7 +189,7 @@ int main(){
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        gui.render(fps, tank, art, sound, weat.weather, granades, badges, enemyes, tank.turretLocked);
+        gui.render(fps, tank, art, sound, weat.getWeather(), granades, badges, enemyes, tank.getTurretLocked());
 
         ImGui::Render();
 
@@ -202,19 +202,19 @@ int main(){
         processTankInput(window, deltaTime, enemyes,tank,sound,cam,ray,granades,camShake);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        cam.setupCamera(tank, camShake,tank.aimMode);
+        cam.setupCamera(tank, camShake,tank.getAimMode());
 
         drawSky();
-        drawGround(cam.cameraPos.x, cam.cameraPos.z,weat.weather);
+        drawGround(cam.cameraPos.x, cam.cameraPos.z,weat.getWeather());
 
         tank.Draw();
-        tank.updatePosition(tank.pos,deltaTime);
-        tank.updateDirrections(tank.bodyRad, tank.bodyYaw);
-        tank.UpdateTrack(deltaTime, tank.pos, leftTrack, rightTrack);
+        tank.updatePosition(tank.getCurrentPos(), deltaTime);
+        tank.updateDirrections(tank.getBodyRad(), tank.getBodyYaw());
+        tank.UpdateTrack(deltaTime, tank.getCurrentPos(), leftTrack, rightTrack);
         tank.DrawTrack(leftTrack, rightTrack, 0.3f);
 
-        if (tank.finishReload > 0.0f) tank.finishReload -= deltaTime;
-        if (tank.moveSpeed > 0.0f) tank.moveSpeed *= tank.REDUCTION_COEF;
+        if (tank.getFinishReload() > 0.0f) tank.getFinishReload() -= deltaTime;
+        if (tank.getMoveSpeed() > 0.0f) tank.getMoveSpeed() *= tank.getReductionCoef();
 
         repl.drawReplCircle(30);//replishement ammo
 
@@ -232,7 +232,7 @@ int main(){
 
         showDestroyText(deltaTime);
 
-        if (repl.isInCircle(tank.pos.x, tank.pos.z)) repl.startReplish(deltaTime,tank,ECRANH,ECRANW);
+        if (repl.isInCircle(tank.getCurrentPos().x, tank.getCurrentPos().z)) repl.startReplish(deltaTime, tank, ECRANH, ECRANW);
 
         art.updateShells(deltaTime);
         art.drawAllShells();
@@ -241,7 +241,7 @@ int main(){
         //Update projectiles
         update(deltaTime, sound, enemyes, healths, bounds, context, tank,camShake);
         updateProjectiles();
-        updateArtillery(art.shells,sound,enemyes, context);
+        updateArtillery(art.getShells(), sound, enemyes, context, tank);
         
         updateExplosions(explosions, deltaTime);
         updateSmokes(smokes, deltaTime);
@@ -251,23 +251,23 @@ int main(){
         granades.update(deltaTime,smokes,tank,sound);
         granades.drawAll(tank);
 
-        auto tankCollision = checkCollisionWithTank(tank.pos);
+        auto tankCollision = checkCollisionWithTank(tank.getCurrentPos());
 
         //Collision with enemy
         if (tankCollision.checked) { 
-            tank.pos = tank.oldPos;
+            tank.getCurrentPos() = tank.getOldPos();
 
             if (healths.contains(tankCollision.id)) {
                 healths[tankCollision.id].current -= tank.returnImpactImpulse();
             }
 
-            sound.setSourcePosition(sound.sources["Collision"], tank.pos);
+            sound.setSourcePosition(sound.sources["Collision"], tank.getCurrentPos());
             alSourcePlay(sound.sources["Collision"]);
         }
 
         Draw3DAim(tank);
 
-        drawMiniMap(ECRANW, ECRANH, tank, context, cam, weat.weather,badges,deltaTime);
+        drawMiniMap(ECRANW, ECRANH, tank, context, cam, weat.getWeather(), badges, deltaTime);
 
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
         glfwSwapBuffers(window);

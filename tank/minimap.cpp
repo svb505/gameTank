@@ -37,11 +37,11 @@ void drawMiniMap(int ECRANW, int ECRANH, Tank& playerTank, EffectsContext& conte
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
-    gluLookAt(playerTank.pos.x, height, playerTank.pos.z,playerTank.pos.x, 0.0f, playerTank.pos.z,0, 0, -1);
+    gluLookAt(playerTank.getCurrentPos().x, height, playerTank.getCurrentPos().z,playerTank.getCurrentPos().x, 0.0f, playerTank.getCurrentPos().z,0, 0, -1);
 
     glClear(GL_DEPTH_BUFFER_BIT);
 
-    drawGround(playerTank.pos.x, playerTank.pos.z,weather);
+    drawGround(playerTank.getCurrentPos().x, playerTank.getCurrentPos().z,weather);
     
 
     for (auto& p : projectiles) {
@@ -56,7 +56,8 @@ void drawMiniMap(int ECRANW, int ECRANH, Tank& playerTank, EffectsContext& conte
     drawGrid(cam.cameraPos.x, cam.cameraPos.z);
     drawGridText(cam.cameraPos.x, cam.cameraPos.z);
 
-    for (auto& s : playerTank.spawns) DrawSpawnMarker2D(s.second,playerTank.selectedSpawn == s.first,
+    for (auto& s : playerTank.getSpawns()) 
+        DrawSpawnMarker2D(s.second,playerTank.getSelectedSpawn() == s.first,
         5.0f, 1.0f, 0.5f);
 
     if (!badges) {

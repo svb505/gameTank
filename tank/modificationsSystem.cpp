@@ -24,7 +24,7 @@ void applyModification(Tank& tank,std::string key) {
     for (const auto& c : ctx.players) {
         if (c.score < modf[key].value) return;
         else {
-            saveDataForPlayer(tank.kills,tank.death,modf[key].value,"-");
+            saveDataForPlayer(tank.getKills(),tank.getDeath(), modf[key].value, "-");
 
             for (auto k : modToKeys[key]) {
                 float newValue = getFloatFromJson(k) * modCoefs[key];

@@ -54,10 +54,10 @@ public:
         ImGui::DestroyContext();
     }
     void renderMainWin(float& fps,Type& weather, Tank& tank, SmokeGranade& g,bool& locked) {
-        std::string buf = std::format("{} / {}", tank.currentHP, tank.HP);
-        selectedShell = shellTypes[tank.selectedShell];
+        std::string buf = std::format("{} / {}", tank.getCurretHp(), tank.getHp());
+        selectedShell = shellTypes[tank.getSelectedShell()];
 
-        bool canUseMlrs = (tank.kills > 0 && tank.kills % 5 == 0);
+        bool canUseMlrs = (tank.getKills() > 0 && tank.getKills() % 5 == 0);
 
         ImGui::Begin("Settings & Info");
 
@@ -94,7 +94,7 @@ public:
         ImGui::Text("My HP: %s", buf.c_str());
         ImGui::Dummy(ImVec2(0.0f, 10.0f));
 
-        ImGui::Text("%d / %d", (int)g.granades.size(), g.maxCount);
+        ImGui::Text("%d / %d", (int)g.getGranades().size(), g.getMaxCount());
         ImGui::Image((ImTextureID)(intptr_t)allTextures["SMOKEGR"], ImVec2(60, 60));
 
         ImGui::Dummy(ImVec2(0.0f, 10.0f));
@@ -103,7 +103,7 @@ public:
 
         ImGui::Dummy(ImVec2(0.0f, 10.0f));
         if (ImGui::Combo("Select spawn", &idxSpawn, spawns.data(), spawns.size()))
-            tank.selectedSpawn = std::stoi(spawns[idxSpawn]);
+            tank.getSelectedSpawn() = std::stoi(spawns[idxSpawn]);
 
         ImGui::Dummy(ImVec2(0.0f, 10.0f));
         if (ImGui::Combo("Select day type", &idxDay, days.data(), days.size())) {
@@ -115,17 +115,17 @@ public:
 
         ImGui::Separator();
 
-        ImGui::Text("Speed: %.1f", tank.moveSpeed);
+        ImGui::Text("Speed: %.1f", tank.getMoveSpeed());
         ImGui::Dummy(ImVec2(0.0f, 10.0f));
 
-        ImGui::Text("Total shells: %d", tank.totalShells);
+        ImGui::Text("Total shells: %d", tank.getTotalShells());
         ImGui::Image((ImTextureID)(intptr_t)allTextures[selectedShell], ImVec2(70, 60));
 
-        ImGui::Text("Reload time: %.1f", tank.finishReload);
+        ImGui::Text("Reload time: %.1f", tank.getFinishReload());
         ImGui::Dummy(ImVec2(0.0f, 10.0f));
 
-        ImGui::Text("Kills: %d", tank.kills);
-        ImGui::Text("Score: %d", tank.score);
+        ImGui::Text("Kills: %d", tank.getKills());
+        ImGui::Text("Score: %d", tank.getScore());
         ImGui::Dummy(ImVec2(0.0f, 10.0f));
 
         ImGui::Text("Control: %s", controlString.c_str());
@@ -141,7 +141,7 @@ public:
         if (ImGui::Button("Start artillery strike")) {
             art.init(8, 25.0f);
 
-            sound.setSourcePosition(sound.sources["ArtVolley"], tank.pos);
+            sound.setSourcePosition(sound.sources["ArtVolley"], tank.getCurrentPos());
             alSourceStop(sound.sources["ArtVolley"]);
             alSourcePlay(sound.sources["ArtVolley"]);
 
@@ -159,7 +159,7 @@ public:
         if (ImGui::Button("Start MLRS strike")) {
             art.init(25, 125.0f);
 
-            sound.setSourcePosition(sound.sources["ArtVolley"], tank.pos);
+            sound.setSourcePosition(sound.sources["ArtVolley"], tank.getCurrentPos());
             alSourceStop(sound.sources["ArtVolley"]);
             alSourcePlay(sound.sources["ArtVolley"]);
 
@@ -238,8 +238,9 @@ public:
 
         ImGui::End();
     }
-    void render(float& fps, Tank& tank, Artillery& art, Sound& sound,Type& weather, SmokeGranade& g,bool& badges,
-        std::unordered_map<int, Entity>& enemyes,bool& locked) {
+    void render(float& fps, Tank& tank, Artillery& art, Sound& sound,Type& weather, 
+        SmokeGranade& g,bool& badges,std::unordered_map<int, Entity>& enemyes,
+        bool& locked) {
         
         renderMainWin(fps,weather,tank,g,locked);
 

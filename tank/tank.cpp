@@ -11,7 +11,105 @@
 #include "svbmath.h"
 #include "tank.h"
 #include "texture.h"
-
+svbmath::Vec3& Tank::getOldPos() {
+    return oldPos;
+}
+svbmath::Vec3& Tank::getCurrentPos() {
+    return pos;
+}
+void Tank::setScore(int _s) {
+    score = _s;
+}
+void Tank::setDeath(int _d) {
+    death = _d;
+}
+void Tank::setHp(int _hp) {
+    HP = _hp;
+}
+void Tank::setKills(int _k) {
+    kills = _k;
+}
+std::map<int, svbmath::Vec3>& Tank::getSpawns() {
+    return spawns;
+}
+float& Tank::getFinishReload() {
+    return finishReload;
+}
+int& Tank::getHp() {
+    return HP;
+}
+int& Tank::getMaxShells() {
+    return maxShells;
+}
+float& Tank::getRotateSpeed() {
+    return rotateSpeed;
+}
+bool& Tank::getAimMode() {
+    return aimMode;
+}
+float& Tank::getMoveSpeed() {
+    return moveSpeed;
+}
+float& Tank::getBodyRad() {
+    return bodyRad;
+}
+float& Tank::getBodyYaw() {
+    return bodyYaw;
+}
+const float& Tank::getReductionCoef() {
+    return REDUCTION_COEF;
+}
+const float& Tank::getSpeedLimitForward() {
+    return SPEED_LIMIT_FORWARD;
+}
+const float& Tank::getVelocityCoef() {
+    return VELOCITY_COEF;
+}
+const float& Tank::getSpeedLimitBack() {
+    return SPEED_LIMIT_BACK;
+}
+int& Tank::getKills() {
+    return kills;
+}
+int& Tank::getScore() {
+    return score;
+}
+int& Tank::getDeath() {
+    return death;
+}
+float& Tank::getTurretYaw() {
+    return turretYaw;
+}
+float& Tank::getGunPitch() {
+    return gunPitch;
+}
+int& Tank::getScoreToCount() {
+    return scoreToCount;
+}
+TankParams& Tank::getParams() {
+    return params;
+}
+shellType& Tank::getSelectedShell() {
+    return selectedShell;
+}
+int& Tank::getBaseShellSpeed() {
+    return shellSpeed;
+}
+int& Tank::getTotalShells() {
+    return totalShells;
+}
+bool& Tank::getTurretLocked() {
+    return turretLocked;
+}
+float& Tank::getReloadTime() {
+    return reloadTime;
+}
+int& Tank::getCurretHp() {
+    return currentHP;
+}
+int& Tank::getSelectedSpawn() {
+    return selectedSpawn;
+}
 void Tank::UpdateTrack(TrackBuffer& track, const svbmath::Vec3& pos, float dt) {
     float minDist = 0.3f;
 

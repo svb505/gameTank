@@ -21,16 +21,16 @@ void drawHUD(int WW,int WH,float lastHit) {
 void Draw3DAim(Tank& tank) {
     float turretRad;
 
-    if (tank.turretLocked) turretRad = (tank.bodyYaw + tank.turretYaw) * 3.1415926f / 180.0f;
-    else turretRad = (tank.turretYaw - 90.0f) * 3.1415926f / 180.0f;
+    if (tank.getTurretLocked()) turretRad = (tank.getBodyYaw() + tank.getTurretYaw()) * 3.1415926f / 180.0f;
+    else turretRad = (tank.getTurretYaw() - 90.0f) * 3.1415926f / 180.0f;
 
-    float pitchRad = tank.gunPitch * 3.1415926f / 180.0f;
+    float pitchRad = tank.getGunPitch() * 3.1415926f / 180.0f;
     float barrelLength = 4.9f;
     float barrelHeight = 0.9f;
 
-    float barrelX = tank.pos.x + sin(turretRad) * cos(pitchRad) * barrelLength;
-    float barrelY = tank.pos.y + barrelHeight - sin(pitchRad) * barrelLength;
-    float barrelZ = tank.pos.z + cos(turretRad) * cos(pitchRad) * barrelLength;
+    float barrelX = tank.getCurrentPos().x + sin(turretRad) * cos(pitchRad) * barrelLength;
+    float barrelY = tank.getCurrentPos().y + barrelHeight - sin(pitchRad) * barrelLength;
+    float barrelZ = tank.getCurrentPos().z + cos(turretRad) * cos(pitchRad) * barrelLength;
 
     glPushAttrib(GL_ENABLE_BIT | GL_LINE_BIT);
     glDisable(GL_LIGHTING);

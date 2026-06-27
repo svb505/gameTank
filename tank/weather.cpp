@@ -14,7 +14,6 @@
 std::vector<const char*> weathersStrings = { "Clean","Rainy","Snowy" };
 std::map<const char*, Type> weathersToConvert = { {"Clean",Type::clean},{"Rainy",Type::rainy},
 													{"Snowy",Type::snowy} };
-
 Type convertStringToType(const char* str) {
 	auto it = weathersToConvert.find(str);
 
@@ -22,7 +21,9 @@ Type convertStringToType(const char* str) {
 
 	throw std::runtime_error("Unknown weather type");
 }
-
+Type& Weather::getWeather() {
+	return weather;
+}
 void Weather::getWeather(Sound& sound,Camera& cam) {
 	if (weather == Type::clean) {
 		if (particles.size() > 0) {

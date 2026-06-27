@@ -8,11 +8,12 @@ private:
 	float shellHeight = 40.0f;
 	float shellSpeed = 25.0f;
 	float waiting = 5.0f;
+
+	std::vector<Projectile> shells;
 public:
 	Artillery();
 
-	std::vector<Projectile> shells;
-
+	std::vector<Projectile>& getShells();
 	std::vector<float> returnRandomError();
 
 	void init(int volley,float shellSpeed);
