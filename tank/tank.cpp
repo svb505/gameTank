@@ -26,8 +26,8 @@ void Tank::setDeath(int _d) {
 void Tank::setHp(int _hp) {
     HP = _hp;
 }
-void Tank::setKills(int _k) {
-    kills = _k;
+void Tank::addKill(int _k) {
+    kills += _k;
 }
 std::map<int, svbmath::Vec3>& Tank::getSpawns() {
     return spawns;
@@ -68,7 +68,7 @@ const float& Tank::getVelocityCoef() {
 const float& Tank::getSpeedLimitBack() {
     return SPEED_LIMIT_BACK;
 }
-int& Tank::getKills() {
+int& Tank::getKills(){
     return kills;
 }
 int& Tank::getScore() {

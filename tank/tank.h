@@ -106,7 +106,7 @@ public:
     void setHp(int _hp);
     void setDeath(int _d);
     void setScore(int _s);
-    void setKills(int _k);
+    void addKill(int _k);
 
     bool& getAimMode();
     bool& getTurretLocked();

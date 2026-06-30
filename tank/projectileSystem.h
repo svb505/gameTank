@@ -26,14 +26,10 @@ void spawnShell(svbmath::Vec3 pos, float yawDeg, float pitchDeg, shellType _shel
 
 void spawnBullet(svbmath::Vec3 pos, float yawDeg);
 
-void update(float dt, Sound& sound, std::unordered_map<int, Entity>& enemies, std::unordered_map<Entity, Health>& healths,
-    std::unordered_map<Entity, Bounds>& bounds, EffectsContext& context, Tank& player,
-    CameraShake& shake);
+void update(float dt, Sound& sound, std::vector<Projectile>& artilleryProjectiles, 
+    ECSCompenents& components, EffectsContext& context, Tank& player,CameraShake& shake);
 
-void updateProjectiles();
-
-void updateArtillery(std::vector<Projectile>& artilleryProjectiles, Sound& sound,
-    std::unordered_map<int, Entity>& enemies, EffectsContext& context,Tank& tank);
+void drawProjectiles();
 
 std::string getShellType(shellType& shellType);
 

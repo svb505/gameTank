@@ -25,7 +25,7 @@ void drawGridText(float camX, float camZ) {
             float x = baseX + i;
             float z = baseZ + j;
 
-            std::string text = std::format("(X:{:.0f}; Z:{:.0f})", x, z);
+            std::string text = std::format("(X:{:.0f}; Z:{:.0f})", x, -z);
             float y = 1.5f;
             RenderTextWorld(x, y, z, 0.8f, 0.8f, 0.8f, text.c_str());
         }
@@ -47,7 +47,7 @@ void drawGrid(float camX, float camZ) {
 
             float y = 0.2f;
 
-            // линии по X
+            // X lines
             if (j < size) {
                 float z2 = baseZ + j + step;
                 float y2 = 0.2f;
@@ -56,7 +56,7 @@ void drawGrid(float camX, float camZ) {
                 glVertex3f(x, y2, z2);
             }
 
-            // линии по Z
+            // Z lines
             if (i < size) {
                 float x2 = baseX + i + step;
                 float y2 = 0.2f;

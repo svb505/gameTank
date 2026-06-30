@@ -50,13 +50,13 @@ void onHit(Projectile& p, int id, Health* health,EffectsContext& context,Sound& 
             health->current -= p.damage;
 
             if (wasAlive && health->current <= 0.0f) {
-                player.getKills()++;
+                player.addKill(1);
 
                 health->destroyed = true;
                 g_destroyText = "Target Destroyed";
 
                 if (!p.isEnemy && p.type != ProjectileType::Bullet)
-                    player.getScore() += player.getScoreToCount();
+                    player.setScore(player.getScoreToCount());
 
                 addToKillChat("Player",getRenderTypeString(renders[id].type),getShellType(p.selectedShellType),0,id);
 
@@ -66,8 +66,8 @@ void onHit(Projectile& p, int id, Health* health,EffectsContext& context,Sound& 
             else if (health->current > 0.0f) {
                 g_destroyText = "Target hit";
 
-                if (!p.isEnemy && p.type != ProjectileType::Bullet) player.getScore() 
-                    += player.getScoreToCount() / 2;
+                if (!p.isEnemy && p.type != ProjectileType::Bullet) 
+                    player.setScore(player.getScoreToCount() / 2);
             }
         }
 
@@ -147,9 +147,9 @@ void spawnBullet(svbmath::Vec3 pos, float yawDeg) {
 
     projectiles.push_back(p);
 }
-void update(float dt,Sound& sound,std::unordered_map<int, Entity>& enemies,std::unordered_map<Entity, Health>& healths,
-    std::unordered_map<Entity, Bounds>& bounds,EffectsContext& context,Tank& player,
-    CameraShake& shake) {
+void update(float dt,Sound& sound, std::vector<Projectile>& artilleryProjectiles, 
+    ECSCompenents& components,EffectsContext& context,Tank& player, CameraShake& shake) {
+
     for (auto& p : projectiles) {
         if (!p.alive) continue;
 
@@ -173,15 +173,15 @@ void update(float dt,Sound& sound,std::unordered_map<int, Entity>& enemies,std::
             continue;
         }
 
-        for (auto& [id, en] : enemies) {
+        for (auto& [id, en] : components.enemyes) {
 
-            if (!healths.contains(id)) continue;
-            if (!bounds.contains(id)) continue;
-            if (healths[id].destroyed && renders[id].type != RenderType::Apartment) continue;
+            if (!components.healths.contains(id)) continue;
+            if (!components.bounds.contains(id)) continue;
+            if (components.healths[id].destroyed && renders[id].type != RenderType::Apartment) continue;
 
-            if (checkCollision(bounds[id], p.pos) && !p.isEnemy) {
+            if (checkCollision(components.bounds[id], p.pos) && !p.isEnemy) {
 
-                onHit(p,id, &healths[id], context, sound, player, false);
+                onHit(p,id, &components.healths[id], context, sound, player, false);
                 break;
             }
         }
@@ -190,37 +190,17 @@ void update(float dt,Sound& sound,std::unordered_map<int, Entity>& enemies,std::
         }
     }
 
-    std::erase_if(projectiles, [](const Projectile& p) {
-        return !p.alive;
-        });
-}
-void updateProjectiles() {
-    for (auto& p : projectiles) {
-        if (!p.alive) continue;
-
-        glPushMatrix();
-        glTranslatef(p.pos.x, p.pos.y, p.pos.z);
-
-        if (p.type == ProjectileType::Shell) drawShell();
-        else drawBullet();
-
-        glPopMatrix();
-    }
-}
-void updateArtillery(std::vector<Projectile>& artilleryProjectiles, Sound& sound,
-    std::unordered_map<int, Entity>& enemies, EffectsContext& context,Tank& player) {
-    
     for (auto& p : artilleryProjectiles) {
         if (!p.alive) continue;
 
         bool exploded = false;
 
-        for (auto& [id, en] : enemies) {
-            if (!healths.contains(id) || healths[id].destroyed) continue;
-            if (!bounds.contains(id)) continue;
+        for (auto& [id, en] : components.enemyes) {
+            if (!components.healths.contains(id) || components.healths[id].destroyed) continue;
+            if (!components.bounds.contains(id)) continue;
 
-            if (checkCollision(bounds[id], p.pos) && calculatePenetration(p.speed)) {
-                onHit(p,id,&healths[id], context,sound,player,false);
+            if (checkCollision(components.bounds[id], p.pos) && calculatePenetration(p.speed)) {
+                onHit(p, id, &components.healths[id], context, sound, player, false);
                 exploded = true;
 
                 break;
@@ -234,5 +214,22 @@ void updateArtillery(std::vector<Projectile>& artilleryProjectiles, Sound& sound
             alSourcePlay(sound.sources["ArtExplosion"]);
             p.alive = false;
         }
+    }
+
+    std::erase_if(projectiles, [](const Projectile& p) {
+        return !p.alive;
+        });
+}
+void drawProjectiles() {
+    for (auto& p : projectiles) {
+        if (!p.alive) continue;
+
+        glPushMatrix();
+        glTranslatef(p.pos.x, p.pos.y, p.pos.z);
+
+        if (p.type == ProjectileType::Shell) drawShell();
+        else drawBullet();
+
+        glPopMatrix();
     }
 }

@@ -58,6 +58,11 @@ struct ApartmentComponent {
     int LOD = 1;
 };
 
+struct ECSCompenents {
+    std::unordered_map<int, Entity>& enemyes;
+    std::unordered_map<Entity, Health>& healths;
+    std::unordered_map<Entity, Bounds>& bounds;
+};
 
 extern std::vector<Entity> entities;
 

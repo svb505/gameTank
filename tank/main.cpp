@@ -153,6 +153,8 @@ int main(){
     EffectsContext context{ explosions, smokes };
     RayContext ray{ debugRay, drawDebugRay, lastHitID, lastHitDist };
 
+    ECSCompenents components{ enemyes,healths,bounds };
+
     TrackBuffer leftTrack;
     TrackBuffer rightTrack;
 
@@ -176,7 +178,6 @@ int main(){
 
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     glfwSetCursorPosCallback(window, mouse_callback);
-
     glfwSetWindowCloseCallback(window, windowCloseCallback);
 
     while (!glfwWindowShouldClose(window)){
@@ -239,9 +240,8 @@ int main(){
         art.deleteIfAlived();
 
         //Update projectiles
-        update(deltaTime, sound, enemyes, healths, bounds, context, tank,camShake);
-        updateProjectiles();
-        updateArtillery(art.getShells(), sound, enemyes, context, tank);
+        update(deltaTime, sound, art.getShells(), components, context, tank, camShake);
+        drawProjectiles();
         
         updateExplosions(explosions, deltaTime);
         updateSmokes(smokes, deltaTime);
