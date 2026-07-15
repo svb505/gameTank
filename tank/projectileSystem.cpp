@@ -22,6 +22,10 @@
 #include "APSSystem.h"
 
 std::vector<Projectile> projectiles = {};
+std::map<shellType, int> shellSpeeds = { {shellType::APFSDS, 400},
+                                            {shellType::HE, 100 }, 
+                                            { shellType::ATGM, 10 },
+                                            { shellType::SMOKE, 200 } };
 
 std::map<shellType, std::string> shellTypes = { {shellType::APFSDS,"APFSDS"},{shellType::HE,"HE"},
         {shellType::SMOKE,"SMOKE"} ,{shellType::ATGM,"ATGM"} ,{shellType::BULLET,"BULLET"} };
@@ -105,14 +109,14 @@ void onHit(Projectile& p, int id, Health* health,EffectsContext& context,Sound& 
     p.alive = false;
 }
 void spawnShell(svbmath::Vec3 pos, float yawDeg, float pitchDeg, shellType _shellType,
-    int shellSpeed,bool isEnemy) {
+        bool isEnemy) {
     Projectile p(_shellType);
     p.type = ProjectileType::Shell;
 
     p.selectedShellType = _shellType;
 
     p.pos = pos;
-    p.speed = shellSpeed;
+    p.speed = shellSpeeds[_shellType];
 
     float yaw = yawDeg * 3.1415926f / 180.0f;
     float pitch = pitchDeg * 3.1415926f / 180.0f;
@@ -154,9 +158,9 @@ void update(float dt,Sound& sound, std::vector<Projectile>& artilleryProjectiles
     for (auto& p : projectiles) {
         if (!p.alive) continue;
 
-        startAPS(p,context,sound,player);
-
         p.update(dt, player);
+
+        startAPS(p, context, sound, player);
 
         if (checkCollision(player.GetHullMax(), p.pos) && p.isEnemy) {
             player.getCurretHp() -= p.damage;

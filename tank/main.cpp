@@ -111,7 +111,7 @@ void countFps(double& deltaTime,double& lastTime,double& currentTime,int& frames
 int main(){
     Logger::initLogger();
 
-    srand(time(NULL));
+    srand((unsigned)time(nullptr));
 
     sound.setupBuffers();
     sound.createSources();

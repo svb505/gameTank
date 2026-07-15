@@ -1075,7 +1075,7 @@ void Update(float dt, Tank& tank, Sound& sound) {
                     : shellType::HE;
 
                 spawnShell({ enemyPos.x, enemyPos.y + 1.0f, enemyPos.z }, bot.turretAngle * 180.0f / PI, bot.gunAngle,
-                    type, 100.0f, true);
+                    type, true);
 
                 sound.setSourcePosition(sound.sources["Shot"], enemyPos);
                 alSourceStop(sound.sources["Shot"]);

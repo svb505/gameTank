@@ -6,6 +6,7 @@
 
 extern float MAX_SHL_SPD;
 extern float RADIUS;
+extern int counter_munition;
 
 struct Projectile;
 

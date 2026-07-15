@@ -138,8 +138,7 @@ void processTankInput(GLFWwindow* window, float dt, std::unordered_map<int, Enti
 
         shake.Start(0.2f, 0.5f);
 
-        spawnShell({ pos.x, posY, pos.z }, yaw, tank.getGunPitch(), tank.getSelectedShell(), 
-            tank.getBaseShellSpeed());
+        spawnShell({ pos.x, posY, pos.z }, yaw, tank.getGunPitch(), tank.getSelectedShell());
 
         sound.setSourcePosition(sound.sources["Shot"], tank.getCurrentPos());
         alSourceStop(sound.sources["Shot"]);

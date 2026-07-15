@@ -17,11 +17,11 @@
 struct EffectsContext;
 
 extern std::map<shellType,std::string> shellTypes;
-
 extern std::vector<Projectile> projectiles;
+extern std::map<shellType,int> shellSpeeds;
 
 void reserveProjectiles();
-void spawnShell(svbmath::Vec3 pos, float yawDeg, float pitchDeg, shellType _shellType, int shellSpeed,
+void spawnShell(svbmath::Vec3 pos, float yawDeg, float pitchDeg, shellType _shellType,
     bool isEnemy = false);
 
 void spawnBullet(svbmath::Vec3 pos, float yawDeg);

@@ -4,8 +4,8 @@
 #include "text.h"
 #include <format>
 
-svbmath::Vec3 min = {-100,0,-100};
-svbmath::Vec3 max = {100,0,100};
+svbmath::Vec3 min = {-200,0,-200};
+svbmath::Vec3 max = {200,0,200};
 
 float timer = 10.0f;
 
