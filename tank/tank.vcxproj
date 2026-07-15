@@ -127,6 +127,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="APSSystem.cpp" />
     <ClCompile Include="artillery.cpp" />
     <ClCompile Include="bounds.cpp" />
     <ClCompile Include="camera.cpp" />
@@ -161,6 +162,7 @@
     <ClCompile Include="weather.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="APSSystem.h" />
     <ClInclude Include="artillery.h" />
     <ClInclude Include="bounds.h" />
     <ClInclude Include="camera.h" />

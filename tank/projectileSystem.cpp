@@ -19,6 +19,7 @@
 #include "killchat.h"
 #include "texture.h"
 #include "CameraShake.h"
+#include "APSSystem.h"
 
 std::vector<Projectile> projectiles = {};
 
@@ -110,7 +111,7 @@ void spawnShell(svbmath::Vec3 pos, float yawDeg, float pitchDeg, shellType _shel
 
     p.selectedShellType = _shellType;
 
-    p.pos.x = pos.x; p.pos.y = pos.y; p.pos.z = pos.z;
+    p.pos = pos;
     p.speed = shellSpeed;
 
     float yaw = yawDeg * 3.1415926f / 180.0f;
@@ -136,7 +137,7 @@ void spawnShell(svbmath::Vec3 pos, float yawDeg, float pitchDeg, shellType _shel
 void spawnBullet(svbmath::Vec3 pos, float yawDeg) {
     Projectile p(shellType::BULLET);
     p.type = ProjectileType::Bullet;
-    p.pos.x = pos.x; p.pos.y = pos.y; p.pos.z = pos.z;
+    p.pos = pos;
     p.speed = 120.0f;
     p.damage = 1;
     p.lifeTime = 4.0f;
@@ -152,6 +153,8 @@ void update(float dt,Sound& sound, std::vector<Projectile>& artilleryProjectiles
 
     for (auto& p : projectiles) {
         if (!p.alive) continue;
+
+        startAPS(p,context,sound,player);
 
         p.update(dt, player);
 

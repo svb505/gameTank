@@ -1069,8 +1069,13 @@ void Update(float dt, Tank& tank, Sound& sound) {
                 newTarget, speed, dt);
 
             if (bot.finishReload <= 0.0f) {
+
+                shellType type = (svbmath::randFloat(0.0f, 1.0f) < 0.5f)
+                    ? shellType::APFSDS
+                    : shellType::HE;
+
                 spawnShell({ enemyPos.x, enemyPos.y + 1.0f, enemyPos.z }, bot.turretAngle * 180.0f / PI, bot.gunAngle,
-                    shellType::APFSDS, 100.0f, true);
+                    type, 100.0f, true);
 
                 sound.setSourcePosition(sound.sources["Shot"], enemyPos);
                 alSourceStop(sound.sources["Shot"]);
