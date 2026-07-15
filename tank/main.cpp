@@ -39,6 +39,7 @@
 #include "glfw_oglSetup.h"
 #include "variables.h"
 #include "cameraShake.h"
+#include "gameBorder.h"
 
 #define COUNT 55
 
@@ -216,6 +217,8 @@ int main(){
 
         if (tank.getFinishReload() > 0.0f) tank.getFinishReload() -= deltaTime;
         if (tank.getMoveSpeed() > 0.0f) tank.getMoveSpeed() *= tank.getReductionCoef();
+
+        checkBorders(tank,deltaTime, ECRANW, ECRANH);
 
         repl.drawReplCircle(30);//replishement ammo
 
