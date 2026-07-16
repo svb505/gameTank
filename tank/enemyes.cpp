@@ -1057,7 +1057,7 @@ void Update(float dt, Tank& tank, Sound& sound) {
         if (playerInRadius(enemyPos,tankPos, bot.detectionRadius) && !bot.destroyed) {
             svbmath::Vec3 dir = svbmath::Normalize(tankPos - enemyPos);
             
-            float targetYaw = atan2(dir.x, -dir.z);
+            float targetYaw = atan2(dir.x, dir.z);
             float delta = svbmath::NormalizeAngle(targetYaw - bot.turretAngle);
             float newTarget = bot.turretAngle + delta;
 

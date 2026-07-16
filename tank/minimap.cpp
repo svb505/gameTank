@@ -12,6 +12,7 @@
 #include "minimap.h"
 #include "badges.h"
 #include "weather.h"
+#include "gameBorder.h"
 
 float height = 80.0f;
 int step = 3;
@@ -55,6 +56,8 @@ void drawMiniMap(int ECRANW, int ECRANH, Tank& playerTank, EffectsContext& conte
 
     drawGrid(cam.cameraPos.x, cam.cameraPos.z);
     drawGridText(cam.cameraPos.x, cam.cameraPos.z);
+
+    drawBorders();
 
     for (auto& s : playerTank.getSpawns()) 
         DrawSpawnMarker2D(s.second,playerTank.getSelectedSpawn() == s.first,

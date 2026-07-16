@@ -108,6 +108,8 @@ public:
     void setScore(int _s);
     void addKill(int _k);
 
+    void respawn(int selectedSpawn);
+
     bool& getAimMode();
     bool& getTurretLocked();
     float& getReloadTime();

@@ -17,6 +17,9 @@ svbmath::Vec3& Tank::getOldPos() {
 svbmath::Vec3& Tank::getCurrentPos() {
     return pos;
 }
+void Tank::respawn(int selectedSpawn) {
+    pos = spawns[selectedSpawn];
+}
 void Tank::setScore(int _s) {
     score = _s;
 }

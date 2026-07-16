@@ -270,6 +270,8 @@ int main(){
 
         Draw3DAim(tank);
 
+        drawBorders();
+
         drawMiniMap(ECRANW, ECRANH, tank, context, cam, weat.getWeather(), badges, deltaTime);
 
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

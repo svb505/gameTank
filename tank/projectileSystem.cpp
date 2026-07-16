@@ -41,9 +41,10 @@ float calculatePenetration(float vel) {
     const float k = 0.0005f;
     return k * vel * vel;
 }
-void onHit(Projectile& p, int id, Health* health,EffectsContext& context,Sound& sound, Tank& player,bool hitGround) {
+void onHit(Projectile& p, int id, Health* health,EffectsContext& context,
+    Sound& sound, Tank& player,bool hitGround) {
 
-    const char* snd = (p.type == ProjectileType::Shell) ? "Explosion" : "Explosion";
+    const char* snd = "Explosion";
     sound.setSourcePosition(sound.sources[snd], p.pos);
     alSourceStop(sound.sources[snd]);
     alSourcePlay(sound.sources[snd]);
@@ -174,7 +175,7 @@ void update(float dt,Sound& sound, std::vector<Projectile>& artilleryProjectiles
 
                 player.getDeath()++;
                 player.getCurretHp() = player.getHp();
-                player.getCurrentPos() = player.getSpawns()[player.getSelectedSpawn()];
+                player.respawn(player.getSelectedSpawn());
             }
 
             continue;
@@ -223,9 +224,7 @@ void update(float dt,Sound& sound, std::vector<Projectile>& artilleryProjectiles
         }
     }
 
-    std::erase_if(projectiles, [](const Projectile& p) {
-        return !p.alive;
-        });
+    std::erase_if(projectiles, [](const Projectile& p) { return !p.alive; });
 }
 void drawProjectiles() {
     for (auto& p : projectiles) {

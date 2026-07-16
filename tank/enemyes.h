@@ -40,7 +40,7 @@ struct TankComponent {
 
     float turretAngle = 0.0f;
     float gunAngle = 0.0f;
-    float detectionRadius = 55.0f;
+    float detectionRadius = 85.0f;
     float turretSpeed = 70.0f;
 
     bool destroyed = false;

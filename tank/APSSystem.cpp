@@ -15,7 +15,7 @@ bool shellInRadius(const svbmath::Vec3& shellPos, const svbmath::Vec3 tankPos, f
 }
 void startAPS(Projectile& p, EffectsContext& context, Sound& sound,Tank& tank) {
     if (shellInRadius(p.pos, tank.getCurrentPos(), RADIUS) && p.speed <= 
-        MAX_SHL_SPD && p.isEnemy && counter_munition > 10) {
+        MAX_SHL_SPD && p.isEnemy && counter_munition > 0) {
         counter_munition--;
         
         context.explosions.push_back(new ExplosionEffect(p.pos, 300, 3.0f, 1.5f, 1.0f));
