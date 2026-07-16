@@ -1,4 +1,8 @@
-﻿#define NOMINMAX
+﻿#ifndef GL_MULTISAMPLE
+#define GL_MULTISAMPLE 0x809D
+#endif
+
+#define NOMINMAX
 #include <windows.h>
 #include <GL/gl.h>
 #include <GLFW/glfw3.h>
@@ -125,6 +129,7 @@ int main(){
         return -1;
     }
 
+    glfwWindowHint(GLFW_SAMPLES, 16);
     GLFWwindow* window = glfwCreateWindow(ECRANW,ECRANH, "Tank", NULL, NULL);
     if (!window){
         LOG_ERROR("Failed to create window");
@@ -137,11 +142,12 @@ int main(){
         glfwSetWindowIcon(window, 1, &icon);
         stbi_image_free(pixels);
     }
-    
+     
     glfwMakeContextCurrent(window);
     glClearColor(0.6f, 0.8f, 1.0f, 1.0f);;
     BuildFont();
 
+    glEnable(GL_MULTISAMPLE);
     glEnable(GL_DEPTH_TEST);
 
     setMatrix(cam.left, cam.right, cam.bottom, cam.top, cam.nearPlane, cam.farPlane);
