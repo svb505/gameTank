@@ -3,11 +3,12 @@ This is a **local tank game** where the goal is to destroy various enemies (tank
 Each enemy has its own HP pool, and each shell deals damage.
 
 ## Features: **Positional sound** with attenuation, **kill chat**, **AI**, **Json configs** ,**modifications system**,**different shell types** (APFSDS, HE, Smoke), 
-**Explosion** and **fire/smoke effects** through points,**destruction of buildings and tanks** when a shell hits or a tank crashes into them, 
+**Explosion**,**APS** and **fire/smoke effects** through points,**destruction of buildings and tanks** when a shell hits or a tank crashes into them, 
 small **AI** for enemy tanks that **turns the turret towards the player** if he is within range and **shoots at him**.
 Tank crashes into objects and destroys them, **lighting**, a **minimap** with dynamic data (your position, enemies around, effects, etc.), 
 **Arced projectile trajectory**, **ammo limitation**, the **ability to replenish ammo** at a special point, and **calling an artillery**
-strike at specific coordinates with a margin of errorь **data base** for kills and death.
+strike at specific coordinates with a margin of errorь **data base** for kills and death. **APS**(Active Protect System) who destroy enemyes shells if they have 
+a specific speed, and they are located in a specific position around the tank.
 
 ## Technical nuances: 
   - Each logical system is implemented in a separate file
