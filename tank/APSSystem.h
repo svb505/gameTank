@@ -10,5 +10,4 @@ extern int counter_munition;
 
 struct Projectile;
 
-bool shellInRadius(const svbmath::Vec3& shellPos,const svbmath::Vec3 tankPos,float radius);
 void startAPS(Projectile& p, EffectsContext& context, Sound& sound,Tank& tank);

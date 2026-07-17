@@ -67,5 +67,11 @@ namespace svbmath{
 
 		return Normalize(newDir);
 	}
+	bool InRadius(const svbmath::Vec3& childPos, const svbmath::Vec3 parentPos, float radius) {
+		svbmath::Vec3 diff = parentPos - childPos;
+		return LengthSq(diff) <= radius * radius;
+	}
 }
+
+
 

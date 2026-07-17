@@ -36,6 +36,35 @@ Entity CreateEntity() {
     entities.push_back(e);
     return e;
 }
+void DrawRadar(float angle){
+    // body
+    glPushMatrix();
+    glScalef(1.2f, 0.25f, 1.2f);
+    DrawCube(0.5f, 0.5f, 0.5f);
+    glPopMatrix();
+
+    // Rack
+    glPushMatrix();
+    glTranslatef(0.0f, 0.75f, 0.0f);
+    glScalef(0.15f, 1.5f, 0.15f);
+    DrawCube(0.5f, 0.5f, 0.5f);
+    glPopMatrix();
+
+    // antenne
+    glPushMatrix();
+
+    glTranslatef(0.0f, 1.55f, 0.0f);
+
+    glRotatef(angle, 0, 1, 0);
+
+    glRotatef(90.0f, 1, 0, 0);
+    glRotatef(90.0f, 0, 1, 0);
+
+    glScalef(2.5f, 0.08f, 0.35f);
+    DrawCube(0.5f, 0.5f, 0.5f);
+
+    glPopMatrix();
+}
 void DrawCube(float w, float h, float d) { 
     glBegin(GL_QUADS); 
     
@@ -922,7 +951,7 @@ void RenderSystem(std::vector<SmokeEffect*>& smokes) {
 
         glPushMatrix();
         glTranslatef(t.pos.x, t.pos.y, t.pos.z);
-        glRotatef(t.angle, 0, 1, 0);
+        if (r.type != RenderType::Radar) glRotatef(t.angle, 0, 1, 0);
 
         switch (r.type) {
         case RenderType::Tank: {
@@ -935,8 +964,7 @@ void RenderSystem(std::vector<SmokeEffect*>& smokes) {
                              break;
 
         case RenderType::Radar:
-            glColor3f(0.4f, 0.4f, 0.4f);
-            DrawCube(0.8f, 0.3f, 0.8f);
+            DrawRadar(t.angle);
             break;
 
         case RenderType::Apartment: {
@@ -975,10 +1003,14 @@ void BoundsSystem() {
                   t.pos.x + 1, t.pos.y + 1.5f, t.pos.z + 2.8f };
             break;
 
-        case RenderType::Radar:
-            b = { t.pos.x - 1, t.pos.y, t.pos.z - 1,
-                  t.pos.x + 1, t.pos.y + 2, t.pos.z + 1 };
+        case RenderType::Radar:{
+            constexpr float radius = 0.65f;
+
+            b = { t.pos.x - radius, t.pos.y, t.pos.z - radius,
+                    t.pos.x + radius, t.pos.y + 2.0f, t.pos.z + radius
+            };
             break;
+        }
 
         case RenderType::Apartment: {
             auto& ap = apartments[e];
@@ -1054,7 +1086,7 @@ void Update(float dt, Tank& tank, Sound& sound) {
             if (bot.finishReload < 0.0f) bot.finishReload = 0.0f;
         }
             
-        if (playerInRadius(enemyPos,tankPos, bot.detectionRadius) && !bot.destroyed) {
+        if (svbmath::InRadius(enemyPos,tankPos, bot.detectionRadius) && !bot.destroyed) {
             svbmath::Vec3 dir = svbmath::Normalize(tankPos - enemyPos);
             
             float targetYaw = atan2(dir.x, dir.z);
@@ -1131,8 +1163,4 @@ checkCol checkCollisionWithTank(svbmath::Vec3& pos) {
         }
     }
     return { false, 0 };
-}
-bool playerInRadius(const svbmath::Vec3& enemyPos, const svbmath::Vec3& playerPos, float radius){
-    svbmath::Vec3 diff = playerPos - enemyPos;
-    return LengthSq(diff) <= radius * radius;
 }

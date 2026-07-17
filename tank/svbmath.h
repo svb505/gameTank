@@ -24,8 +24,6 @@ namespace svbmath {
 	float LengthSq(const Vec3& v);
 	float Length(const Vec3& v);
 	bool InFOV(const Vec3& forward, const Vec3& dirToTarget, float fovDeg);
-	
-
-
+	bool InRadius(const svbmath::Vec3& childPos, const svbmath::Vec3 parentPos, float radius);
 }
 

@@ -9,12 +9,8 @@ float MAX_SHL_SPD = 140.0f;
 float RADIUS = 5.0f;
 int counter_munition = 10;
 
-bool shellInRadius(const svbmath::Vec3& shellPos, const svbmath::Vec3 tankPos, float radius) {
-    svbmath::Vec3 diff = tankPos - shellPos;
-    return LengthSq(diff) <= radius * radius;
-}
 void startAPS(Projectile& p, EffectsContext& context, Sound& sound,Tank& tank) {
-    if (shellInRadius(p.pos, tank.getCurrentPos(), RADIUS) && p.speed <= 
+    if (svbmath::InRadius(p.pos, tank.getCurrentPos(), RADIUS) && p.speed <=
         MAX_SHL_SPD && p.isEnemy && counter_munition > 0) {
         counter_munition--;
         
