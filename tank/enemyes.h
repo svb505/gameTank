@@ -16,6 +16,7 @@ struct Transform {
     svbmath::Vec3 pos;
     float angle;
 };
+
 struct Health {
     int current;
     int max;
@@ -35,6 +36,7 @@ extern bool showBars;
 struct RenderComponent {
     RenderType type;
 };
+
 struct TankComponent {
     float reloadTime = 6.5f, finishReload = 0.0f;
 
@@ -45,20 +47,24 @@ struct TankComponent {
 
     bool destroyed = false;
 };
+
 struct RadarComponent {
     float rotationSpeed;
 };
+
 struct ApartmentComponent {
-    int floors;
-    float floorHeight;
+    int floors; // 5 - 15   
+    float floorHeight; // 0.0 - 1.0
     float width;
     float depth;
     bool destroyed = false;
     bool smokeEnabled = false;
-    int LOD = 1;
+    int LOD = 1; // 1 - 2
 };
 
 struct ECSCompenents {
+    //For write 'ECSComponents' in place of 'std::unordered_map.....'
+
     std::unordered_map<int, Entity>& enemyes;
     std::unordered_map<Entity, Health>& healths;
     std::unordered_map<Entity, Bounds>& bounds;

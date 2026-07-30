@@ -2,11 +2,10 @@
 #include <windows.h>
 #include <GL/gl.h>
 #include <GLFW/glfw3.h>
-#include <cmath>
+#include <cmath> 
 #include "text.h"
 #include "tank.h"
-
-constexpr float myPI = 3.1415926f;
+#include "svbmath.h" // PI
 
 class Replishment {
 private:

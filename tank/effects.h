@@ -18,10 +18,12 @@ private:
     };
 
     std::vector<Particle> particles;
+
     float duration;
     float elapsedTime;
     bool finished;
-    float centerX, centerY, centerZ;
+
+    svbmath::Vec3 centers;
 
     float radiusScale;
     float heightScale;
@@ -40,19 +42,22 @@ class SmokeEffect {
 private:
     struct Particle {
         svbmath::Vec3 pos;
+
         float size;
         float riseSpeed;
     };
 
     std::vector<Particle> particles;
 
-
     int maxParticles;
-    float centerX, centerY, centerZ;
+
+    svbmath::Vec3 centers;
+
     float radius;
     float size;
     float speed;
     float heightRadius;
+
     std::vector<float> colors = { 0.2f, 0.2f, 0.2f, 0.2f };
 
 public:

@@ -1137,7 +1137,7 @@ void generateEnemyes(std::unordered_map<int, Entity>& enemyes, int count) {
         float x = (float)(rand() % 200 - 100);
         float z = -(float)(rand() % 200);
 
-        transforms[e] = { x, 0.0f, z, (float)(rand() % 360) };
+        transforms[e] = { {x, 0.0f, z,}, (float)(rand() % 360) };
 
         if (i < 25) {
             renders[e] = { RenderType::Tank };

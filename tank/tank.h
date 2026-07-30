@@ -70,7 +70,7 @@ private:
      {3, {30.0f, 0.0f, 0.0f}}
     };
     svbmath::Vec3 basePos = { 0.0f,0.0f,0.0f };
-    svbmath::Vec3 pos = { 0.0f,0.0f,0.0f };
+    svbmath::Vec3 pos = { 0.0f,0.0f,0.0f }; //Current
     svbmath::Vec3 oldPos = { 0.0f,0.0f,0.0f };
 
     bool turretLocked = true;
@@ -110,44 +110,38 @@ public:
 
     void respawn(int selectedSpawn);
 
-    bool& getAimMode();
-    bool& getTurretLocked();
-    float& getReloadTime();
-    float& getFinishReload();
-    float& getMoveSpeed();
-    float& getBodyRad();
-    float& getBodyYaw();
-    float& getTurretYaw();
-    float& getGunPitch();
-    float& getRotateSpeed();
-    int& getBaseShellSpeed();
-    int& getTotalShells();
-    int& getKills();
-    int& getCurretHp();
-    int& getScore();
-    int& getDeath();
-    int& getScoreToCount();
-    int& getSelectedSpawn();
-    int& getHp();
-    int& getMaxShells();
+    bool& getAimMode(); bool& getTurretLocked();
+    float& getReloadTime(); float& getFinishReload();
+    float& getMoveSpeed(); float& getBodyRad();
+    float& getBodyYaw(); float& getTurretYaw();
+    float& getGunPitch(); float& getRotateSpeed();
+    int& getBaseShellSpeed(); int& getTotalShells();
+    int& getKills(); int& getCurretHp();
+    int& getScore(); int& getDeath();
+    int& getScoreToCount(); int& getSelectedSpawn();
+    int& getHp(); int& getMaxShells();
+
+    const float& getReductionCoef(); const float& getSpeedLimitForward();
+    const float& getVelocityCoef(); const float& getSpeedLimitBack();
+
+    svbmath::Vec3& getOldPos(); svbmath::Vec3& getCurrentPos();
+
     TankParams& getParams();
     shellType& getSelectedShell();
     std::map<int, svbmath::Vec3>& getSpawns();
-    const float& getReductionCoef();
-    const float& getSpeedLimitForward();
-    const float& getVelocityCoef();
-    const float& getSpeedLimitBack();
-    svbmath::Vec3& getOldPos();
-    svbmath::Vec3& getCurrentPos();
 
+    void updateDirrections(float bR, float bY); //Tracks
     void UpdateTrack(TrackBuffer& track, const svbmath::Vec3& tankPos, float dt);
-    void Draw();
-    void updateDirrections(float bR, float bY);
-    void updatePosition(svbmath::Vec3& pos, float dt);
+    void Draw(); //All tank
+    
+    void updatePosition(svbmath::Vec3& pos, float dt); //Tank
     float returnImpactImpulse();
+
     svbmath::Vec3 RotateY(const svbmath::Vec3& v, float angleDeg);
     svbmath::Vec3 LocalToWorldTurret(const svbmath::Vec3& local);
+    
     Bounds GetHullMax() const;
+    
     void DrawTrack(const TrackBuffer& trackL, const TrackBuffer& trackR, float width);
     void UpdateTrack(float dt, svbmath::Vec3 tankPos,TrackBuffer& leftTrack, TrackBuffer& rightTrack);
 

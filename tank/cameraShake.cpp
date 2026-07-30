@@ -13,7 +13,7 @@ void CameraShake::Start(float duration, float intensity){
 
 void CameraShake::Update(float deltaTime){
     if (m_remainingTime <= 0.0f){
-        m_offset = svbmath::Vec3(0.0f);
+        m_offset = svbmath::Vec3(0.0f,0.0f,0.0f);
         return;
     }
 

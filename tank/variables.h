@@ -5,20 +5,20 @@ enum class DayTime {
 	DAY, NIGHT
 };
 
+//Main
 extern int ECRANW;
 extern int ECRANH;
-
-extern int lastHitID;
-extern float lastHitDist;
-
 extern bool firstMouse;
 extern bool cursorVisibility;
 extern bool fpsLimit;
+extern double lastX, lastY; //Cursor
+extern float sensitivity; //Cursor
 
+//Rangefinder
+extern int lastHitID; 
+extern float lastHitDist;
 extern  Ray debugRay;
 extern  bool drawDebugRay;
 
-extern double lastX,lastY;
-extern float sensitivity;
-
+//Weather
 extern DayTime dayTime;

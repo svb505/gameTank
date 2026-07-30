@@ -3,11 +3,12 @@
 #include "texture.h"
 
 ExplosionEffect::ExplosionEffect(svbmath::Vec3 pos, int count, float durationSec,
-    float radius, float height) : centerX(pos.x), centerY(pos.y), centerZ(pos.z), duration(durationSec),
+    float radius, float height) : centers(pos.x,pos.y,pos.z), duration(durationSec),
     elapsedTime(0), finished(false), radiusScale(radius), heightScale(height){
 
     particles.reserve(count);
 
+    //Generate particles
     for (int i = 0; i < count; i++) {
 
         float u = ((float)rand() / RAND_MAX) * 2.0f - 1.0f;
@@ -22,6 +23,7 @@ ExplosionEffect::ExplosionEffect(svbmath::Vec3 pos, int count, float durationSec
         float speed = ((float)rand() / RAND_MAX) * 5.0f + 2.0f;
 
         float vx = 0, vy = 0, vz = 0;
+
         if (r > 0.0001f) {
             vx = x / r * speed;
             vy = y / r * speed;
@@ -65,7 +67,7 @@ void ExplosionEffect::Draw(){
     glBlendFunc(GL_SRC_ALPHA, GL_ONE);
 
     glPushMatrix();
-    glTranslatef(centerX, centerY, centerZ);
+    glTranslatef(centers.x, centers.y, centers.z);
 
     glBegin(GL_QUADS);
 
@@ -96,16 +98,18 @@ bool ExplosionEffect::IsFinished() const { return finished; }
 void ExplosionEffect::SetRadius(float r) { radiusScale = r; }
 void ExplosionEffect::SetHeight(float h) { heightScale = h; }
 SmokeEffect::SmokeEffect(svbmath::Vec3 pos, int count, float r,const std::vector<float>& _colors, 
-    float _size, float _speed, float hRadius) : centerX(pos.x), centerY(pos.y), centerZ(pos.z), radius(r), maxParticles(count),
+    float _size, float _speed, float hRadius) : centers(pos.x, pos.y, pos.z), radius(r), maxParticles(count),
     colors(_colors), size(_size), speed(_speed), heightRadius(hRadius){
 
     particles.reserve(maxParticles);
+
     for (int i = 0; i < maxParticles; i++) {
         float angle = ((float)rand() / RAND_MAX) * 2.0f * 3.1415926f;
         float dist = ((float)rand() / RAND_MAX) * radius;
         float height = ((float)rand() / RAND_MAX) * heightRadius;
 
-        particles.push_back({ dist * cos(angle),height, dist * sin(angle),0.05f + ((float)rand() / RAND_MAX) * 0.05f,
+        particles.push_back({ {dist * cos(angle),height, dist * sin(angle)},
+            0.05f + ((float)rand() / RAND_MAX) * 0.05f,
             0.2f + ((float)rand() / RAND_MAX) * speed });
     }
 }
@@ -114,7 +118,7 @@ std::vector<SmokeEffect::Particle> SmokeEffect::getCoordinates() const {
     std::vector<Particle> coords;
     coords.reserve(particles.size());
 
-    for (auto& p : particles) coords.push_back({ p.pos.x, p.pos.y, p.pos.z });
+    for (auto& p : particles) coords.push_back({ p.pos });
 
     return coords;
 }
@@ -137,7 +141,7 @@ void SmokeEffect::Draw(){
     glColor4f(1, 1, 1, 1);
 
     glPushMatrix();
-    glTranslatef(centerX, centerY, centerZ);
+    glTranslatef(centers.x, centers.y, centers.z);
 
     glBegin(GL_QUADS);
 
@@ -162,10 +166,7 @@ void updateExplosions(std::vector<ExplosionEffect*>& explosions, float dt) {
         (*it)->Update(dt);
         (*it)->Draw();
 
-        if ((*it)->IsFinished()) {
-            delete* it;
-            it = explosions.erase(it);
-        }
+        if ((*it)->IsFinished()) { delete* it; it = explosions.erase(it); }
         else ++it;
     }
 }
@@ -175,15 +176,10 @@ void updateSmokes(std::vector<SmokeEffect*>& smokes, float dt) {
 
         bool alive = false;
         for (auto& p : smoke->getCoordinates()) {
-            if (p.pos.y <= 5.0f) {
-                alive = true;
-                break;
-            }
+            if (p.pos.y <= 5.0f) { alive = true; break; }
         }
-        if (!alive) {
-            delete smoke;
-            it = smokes.erase(it);
-        }
+        if (!alive) { delete smoke; it = smokes.erase(it); }
+
         else {
             smoke->Update(dt);
             smoke->Draw();
