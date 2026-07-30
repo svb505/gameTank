@@ -5,6 +5,16 @@
 
 using json = nlohmann::json;
 
+void changeKeyBindConfig(const std::string& key, const int value) {
+	std::ifstream file("keyBinds.json");
+	json j;
+
+	file >> j;
+
+	j[key] = value;
+
+	std::ofstream("keyBinds.json") << j.dump(4);
+}
 void changePlayerConfig(const std::string key, const float value) {
 	std::ifstream file("gameConfig.json");
 	json j;
@@ -36,8 +46,8 @@ std::map<std::string, Modification> getModifications(const std::string& key) {
 
 	return j.at(key).get<std::map<std::string, Modification>>();
 }
-float getFloatFromJson(std::string key) {
-	std::ifstream file("gameConfig.json");
+float getFloatFromJson(std::string key,std::string path) {
+	std::ifstream file(path);
 
 	json j;
 

@@ -141,6 +141,7 @@
     <ClCompile Include="getheight.cpp" />
     <ClCompile Include="getnormal.cpp" />
     <ClCompile Include="HUD.cpp" />
+    <ClCompile Include="input.cpp" />
     <ClCompile Include="json_parser.cpp" />
     <ClCompile Include="killchat.cpp" />
     <ClCompile Include="lightning.cpp" />

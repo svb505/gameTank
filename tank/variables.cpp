@@ -11,6 +11,8 @@ bool firstMouse = true;
 bool cursorVisibility = false;
 bool fpsLimit = false;
 
+int waitingForBind = -1;
+
 Ray debugRay;
 bool drawDebugRay = false;
 

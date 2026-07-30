@@ -135,6 +135,9 @@
     <ClCompile Include="gameBorder.cpp">
       <Filter>Исходные файлы\gameplay</Filter>
     </ClCompile>
+    <ClCompile Include="input.cpp">
+      <Filter>Исходные файлы\gameplay</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="camera.h">

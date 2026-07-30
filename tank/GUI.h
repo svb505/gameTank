@@ -12,6 +12,7 @@
 #include "texture.h"
 #include "modificationsSystem.h"
 #include <format>
+#include "input.h"
 
 class GUI {
 private:
@@ -37,6 +38,7 @@ private:
     bool devWindow = false;
     bool statWindow = false;
     bool modWindow = false;
+    bool controlWindow = false;
 public:
     void setup(GLFWwindow* window) {
         IMGUI_CHECKVERSION();
@@ -53,6 +55,37 @@ public:
         ImGui_ImplGlfw_Shutdown();
         ImGui::DestroyContext();
     }
+    void renderBindsWindow() {
+        bool banned = false;
+
+        ImGui::Begin("Control Settings");
+
+        for (int i = 0; i < binds.size(); i++){
+            for (auto& b : bannedKeysForChanging) {
+                if (binds[i].action == b.action) { banned = true; break; }
+            }
+
+            if (banned) { banned = false; continue; }
+
+            ImGui::PushID(i);
+
+            ImGui::Text("%s", binds[i].action.c_str());
+
+            ImGui::SameLine(150);
+
+            if (waitingForBind == i) 
+                ImGui::TextColored(ImVec4(1, 1, 0, 1), "Click any key...");
+            else ImGui::Text("%s", getKeyName(binds[i].key));
+
+            ImGui::SameLine(350);
+
+            if (ImGui::Button("Change")) waitingForBind = i;
+
+            ImGui::PopID();
+        }
+
+        ImGui::End();
+    }
     void renderMainWin(float& fps,Type& weather, Tank& tank, SmokeGranade& g,bool& locked) {
         std::string buf = std::format("{} / {}", tank.getCurretHp(), tank.getHp());
         selectedShell = shellTypes[tank.getSelectedShell()];
@@ -64,7 +97,10 @@ public:
         if (ImGui::Button("Developper window")) devWindow = true;
         ImGui::SameLine();
         if (ImGui::Button("Show statistick")) statWindow = true;
+
         if (ImGui::Button("Modifications")) modWindow = true;
+        ImGui::SameLine();
+        if (ImGui::Button("Control settings")) controlWindow = true;
 
         if (ImGui::ImageButton("artillery", (ImTextureID)(intptr_t)allTextures["ARTILLERY"], 
             ImVec2(60, 60))) artWindow = true;
@@ -128,7 +164,9 @@ public:
         ImGui::Text("Score: %d", tank.getScore());
         ImGui::Dummy(ImVec2(0.0f, 10.0f));
 
-        ImGui::Text("Control: %s", controlString.c_str());
+        ImGui::Text("Control:");
+
+        for (auto& b : binds) ImGui::Text("%s - %s", b.action.c_str(), getKeyName(b.key));
 
         ImGui::End();
     }
@@ -238,6 +276,7 @@ public:
 
         ImGui::End();
     }
+    
     void render(float& fps, Tank& tank, Artillery& art, Sound& sound,Type& weather, 
         SmokeGranade& g,bool& badges,std::unordered_map<int, Entity>& enemyes,
         bool& locked) {
@@ -249,5 +288,6 @@ public:
         if (devWindow) renderDevWin(sound, enemyes);
         if (artWindow) renderArtilleryWin(art,sound,tank);
         if (mlrsWindow) renderMlrsWin(art,sound,tank);
+        if (controlWindow) renderBindsWindow();
     }
 };

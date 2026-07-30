@@ -57,6 +57,15 @@ Weather weat;
 SmokeGranade granades;
 CameraShake camShake;
 
+void keyCallback(GLFWwindow*, int key, int scancode, int action, int mods){
+    if (action == GLFW_PRESS && waitingForBind != -1){
+        binds[waitingForBind].key = key;
+
+        changeKeyBindConfig(binds[waitingForBind].action, key);
+
+        waitingForBind = -1;
+    }
+}
 void windowCloseCallback(GLFWwindow* window) {
     if (!dbIsExists) createDb(TypeDb::Player,"playerInfo.db");
     saveDataForPlayer(tank.getKills(), tank.getDeath(), tank.getScore(), "+");
@@ -112,6 +121,7 @@ void countFps(double& deltaTime,double& lastTime,double& currentTime,int& frames
         fpsTimer = 0.0f;
     }
 }
+
 int main(){
     Logger::initLogger();
 
@@ -182,7 +192,9 @@ int main(){
     repl.setCoordinates(10.0f, static_cast<float>(rand() % 30),static_cast<float>((rand() % 50) - 50));
 
     gui.setup(window);
+    setupBinds(); //Setup key binds(Importing from JSON)
 
+    glfwSetKeyCallback(window, keyCallback);
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     glfwSetCursorPosCallback(window, mouse_callback);
     glfwSetWindowCloseCallback(window, windowCloseCallback);

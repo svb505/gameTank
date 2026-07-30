@@ -13,7 +13,7 @@ extern bool cursorVisibility;
 extern bool fpsLimit;
 extern double lastX, lastY; //Cursor
 extern float sensitivity; //Cursor
-
+extern int waitingForBind; //Input
 //Rangefinder
 extern int lastHitID; 
 extern float lastHitDist;
