@@ -62,7 +62,7 @@ public:
 
         for (int i = 0; i < binds.size(); i++){
             for (auto& b : bannedKeysForChanging) {
-                if (binds[i].action == b.action) { banned = true; break; }
+                if (binds[i].action == b) { banned = true; break; }
             }
 
             if (banned) { banned = false; continue; }
@@ -166,7 +166,11 @@ public:
 
         ImGui::Text("Control:");
 
-        for (auto& b : binds) ImGui::Text("%s - %s", b.action.c_str(), getKeyName(b.key));
+        for (auto& b : binds) {
+            std::string name = getKeyName(b.key);
+
+            ImGui::Text("%s - %s", b.action.c_str(), name.c_str());
+        }
 
         ImGui::End();
     }

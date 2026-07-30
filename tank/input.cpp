@@ -1,4 +1,3 @@
-#pragma once
 #include <GLFW/glfw3.h>
 #include "projectile.h"
 #include <unordered_map>
@@ -15,6 +14,122 @@
 #include "input.h"
 #include "variables.h"
 #include "json_parser.h"
+#include <unordered_map>
+
+std::unordered_map<int, std::string> keyNames = {
+    // Letters
+    {GLFW_KEY_A, "A"},
+    {GLFW_KEY_B, "B"},
+    {GLFW_KEY_C, "C"},
+    {GLFW_KEY_D, "D"},
+    {GLFW_KEY_E, "E"},
+    {GLFW_KEY_F, "F"},
+    {GLFW_KEY_G, "G"},
+    {GLFW_KEY_H, "H"},
+    {GLFW_KEY_I, "I"},
+    {GLFW_KEY_J, "J"},
+    {GLFW_KEY_K, "K"},
+    {GLFW_KEY_L, "L"},
+    {GLFW_KEY_M, "M"},
+    {GLFW_KEY_N, "N"},
+    {GLFW_KEY_O, "O"},
+    {GLFW_KEY_P, "P"},
+    {GLFW_KEY_Q, "Q"},
+    {GLFW_KEY_R, "R"},
+    {GLFW_KEY_S, "S"},
+    {GLFW_KEY_T, "T"},
+    {GLFW_KEY_U, "U"},
+    {GLFW_KEY_V, "V"},
+    {GLFW_KEY_W, "W"},
+    {GLFW_KEY_X, "X"},
+    {GLFW_KEY_Y, "Y"},
+    {GLFW_KEY_Z, "Z"},
+
+    // Numbers
+    {GLFW_KEY_0, "0"},
+    {GLFW_KEY_1, "1"},
+    {GLFW_KEY_2, "2"},
+    {GLFW_KEY_3, "3"},
+    {GLFW_KEY_4, "4"},
+    {GLFW_KEY_5, "5"},
+    {GLFW_KEY_6, "6"},
+    {GLFW_KEY_7, "7"},
+    {GLFW_KEY_8, "8"},
+    {GLFW_KEY_9, "9"},
+
+    // Main keys
+    {GLFW_KEY_SPACE, "Space"},
+    {GLFW_KEY_ENTER, "Enter"},
+    {GLFW_KEY_TAB, "Tab"},
+    {GLFW_KEY_BACKSPACE, "Backspace"},
+    {GLFW_KEY_ESCAPE, "Escape"},
+    {GLFW_KEY_INSERT, "Insert"},
+    {GLFW_KEY_DELETE, "Delete"},
+    {GLFW_KEY_HOME, "Home"},
+    {GLFW_KEY_END, "End"},
+    {GLFW_KEY_PAGE_UP, "Page Up"},
+    {GLFW_KEY_PAGE_DOWN, "Page Down"},
+
+    // Arrows
+    {GLFW_KEY_UP, "Arrow Up"},
+    {GLFW_KEY_DOWN, "Arrow Down"},
+    {GLFW_KEY_LEFT, "Arrow Left"},
+    {GLFW_KEY_RIGHT, "Arrow Right"},
+
+    // Modificators
+    {GLFW_KEY_LEFT_SHIFT, "Left Shift"},
+    {GLFW_KEY_RIGHT_SHIFT, "Right Shift"},
+    {GLFW_KEY_LEFT_CONTROL, "Left Ctrl"},
+    {GLFW_KEY_RIGHT_CONTROL, "Right Ctrl"},
+    {GLFW_KEY_LEFT_ALT, "Left Alt"},
+    {GLFW_KEY_RIGHT_ALT, "Right Alt"},
+    {GLFW_KEY_LEFT_SUPER, "Left Super"},
+    {GLFW_KEY_RIGHT_SUPER, "Right Super"},
+
+    // F-keys
+    {GLFW_KEY_F1, "F1"},
+    {GLFW_KEY_F2, "F2"},
+    {GLFW_KEY_F3, "F3"},
+    {GLFW_KEY_F4, "F4"},
+    {GLFW_KEY_F5, "F5"},
+    {GLFW_KEY_F6, "F6"},
+    {GLFW_KEY_F7, "F7"},
+    {GLFW_KEY_F8, "F8"},
+    {GLFW_KEY_F9, "F9"},
+    {GLFW_KEY_F10, "F10"},
+    {GLFW_KEY_F11, "F11"},
+    {GLFW_KEY_F12, "F12"},
+
+    // NumPad
+    {GLFW_KEY_KP_0, "Num 0"},
+    {GLFW_KEY_KP_1, "Num 1"},
+    {GLFW_KEY_KP_2, "Num 2"},
+    {GLFW_KEY_KP_3, "Num 3"},
+    {GLFW_KEY_KP_4, "Num 4"},
+    {GLFW_KEY_KP_5, "Num 5"},
+    {GLFW_KEY_KP_6, "Num 6"},
+    {GLFW_KEY_KP_7, "Num 7"},
+    {GLFW_KEY_KP_8, "Num 8"},
+    {GLFW_KEY_KP_9, "Num 9"},
+    {GLFW_KEY_KP_ENTER, "Num Enter"},
+    {GLFW_KEY_KP_ADD, "Num +"},
+    {GLFW_KEY_KP_SUBTRACT, "Num -"},
+    {GLFW_KEY_KP_MULTIPLY, "Num *"},
+    {GLFW_KEY_KP_DIVIDE, "Num /"},
+
+    // Symbols
+    {GLFW_KEY_MINUS, "-"},
+    {GLFW_KEY_EQUAL, "="},
+    {GLFW_KEY_LEFT_BRACKET, "["},
+    {GLFW_KEY_RIGHT_BRACKET, "]"},
+    {GLFW_KEY_SEMICOLON, ";"},
+    {GLFW_KEY_APOSTROPHE, "'"},
+    {GLFW_KEY_COMMA, ","},
+    {GLFW_KEY_PERIOD, "."},
+    {GLFW_KEY_SLASH, "/"},
+    {GLFW_KEY_BACKSLASH, "\\"},
+    {GLFW_KEY_GRAVE_ACCENT, "`"}
+};
 
 std::vector<KeyBind> binds = { {"Fire",GLFW_KEY_SPACE},{"Forward",GLFW_KEY_W},
                               {"Back",GLFW_KEY_S},{"Left",GLFW_KEY_A},
@@ -25,12 +140,12 @@ std::vector<KeyBind> binds = { {"Fire",GLFW_KEY_SPACE},{"Forward",GLFW_KEY_W},
                               {"Zoom",GLFW_KEY_LEFT_CONTROL},
 };//Base values
 
-std::vector<std::string> allKeys = { "Fire","Forward","Back","Left","Right",
+std::vector<std::string> allBindedKeys = { "Fire","Forward","Back","Left","Right",
                                     "Rangefinder","Smoke","MGun","AimMode","CursorVisibility",
                                     "Zoom"};
 
-std::vector<BannedKey> bannedKeysForChanging = { {"Fire","SPACE"},{"MGun","ENTER"},
-    {"AimMode","SHIFT"},{"Zoom","CTRL"},{"CursorVisibility","ALT" } };
+std::vector<std::string> bannedKeysForChanging = {"Fire","MGun","AimMode","Zoom",
+                        "CursorVisibility" };
 
 
 inline bool isDown(GLFWwindow* w, int key) {
@@ -49,12 +164,12 @@ int getKey(const std::string& action){
 
     return GLFW_KEY_UNKNOWN;
 }
-const char* getKeyName(int key) {
-    for (auto& b : bannedKeysForChanging) {
-        if (getKey(b.action) == key) return b.keyName.c_str();
+std::string getKeyName(const int key) {
+    for (auto& k : keyNames) {
+        if (k.first == key) return k.second;
     }
 
-    return glfwGetKeyName(key, 0);
+    return "Unknown";
 }
 std::string getAction(const int key) {
     for (const auto& b : binds)
@@ -66,13 +181,13 @@ std::string getAction(const int key) {
 void setupBinds() {
     bool banned = false;
 
-    for (size_t i = 0; i < allKeys.size(); i++) {
-        for (auto& b : bannedKeysForChanging) { if (b.action == allKeys[i]) 
+    for (size_t i = 0; i < allBindedKeys.size(); i++) {
+        for (auto& b : bannedKeysForChanging) { if (b == allBindedKeys[i]) 
             banned = true; }
 
         if (banned) { banned = false;  continue; }
 
-        binds[i].key = getFloatFromJson(allKeys[i],"keyBinds.json");
+        binds[i].key = getFloatFromJson(allBindedKeys[i],"keyBinds.json");
     }
 }
 

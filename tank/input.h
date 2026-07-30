@@ -18,19 +18,15 @@ struct KeyBind {
     int key;
 };
 
-struct BannedKey {
-    std::string action;
-    std::string keyName;
-};
-
 extern std::vector<KeyBind> binds;
-extern std::vector<BannedKey> bannedKeysForChanging;
-extern std::vector<std::string> allKeys;
+extern std::vector<std::string> bannedKeysForChanging;
+extern std::vector<std::string> allBindedKeys;
+extern std::unordered_map<int, std::string> keyNames;
 
 inline bool isDown(GLFWwindow* w, int key);
 inline bool isPressed(GLFWwindow* w, int key, bool& prev);
 int getKey(const std::string& action);
-const char* getKeyName(int key);
+std::string getKeyName(const int key);
 std::string getAction(const int key);
 
 void setupBinds();

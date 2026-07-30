@@ -54,5 +54,7 @@ float getFloatFromJson(std::string key,std::string path) {
 	file >> j;
 
 	if (j.contains(key)) return j[key];
-	else return 1.0f;
+	else {
+		if (path != "keyBinds.json") return 1.0f;
+	}
 }
