@@ -144,10 +144,6 @@ std::vector<std::string> allBindedKeys = { "Fire","Forward","Back","Left","Right
                                     "Rangefinder","Smoke","MGun","AimMode","CursorVisibility",
                                     "Zoom"};
 
-std::vector<std::string> bannedKeysForChanging = {"Fire","MGun","AimMode","Zoom",
-                        "CursorVisibility" };
-
-
 inline bool isDown(GLFWwindow* w, int key) {
     return glfwGetKey(w, key) == GLFW_PRESS;
 }
@@ -157,6 +153,7 @@ inline bool isPressed(GLFWwindow* w, int key, bool& prev) {
     prev = curr;
     return result;
 }
+
 int getKey(const std::string& action){
     for (const auto& b : binds)
         if (b.action == action)
@@ -164,6 +161,7 @@ int getKey(const std::string& action){
 
     return GLFW_KEY_UNKNOWN;
 }
+
 std::string getKeyName(const int key) {
     for (auto& k : keyNames) {
         if (k.first == key) return k.second;
@@ -171,6 +169,7 @@ std::string getKeyName(const int key) {
 
     return "Unknown";
 }
+
 std::string getAction(const int key) {
     for (const auto& b : binds)
         if (b.key == key) return b.action;
@@ -179,14 +178,7 @@ std::string getAction(const int key) {
 }
 
 void setupBinds() {
-    bool banned = false;
-
     for (size_t i = 0; i < allBindedKeys.size(); i++) {
-        for (auto& b : bannedKeysForChanging) { if (b == allBindedKeys[i]) 
-            banned = true; }
-
-        if (banned) { banned = false;  continue; }
-
         binds[i].key = getFloatFromJson(allBindedKeys[i],"keyBinds.json");
     }
 }

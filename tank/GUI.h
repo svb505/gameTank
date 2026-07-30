@@ -56,17 +56,9 @@ public:
         ImGui::DestroyContext();
     }
     void renderBindsWindow() {
-        bool banned = false;
-
         ImGui::Begin("Control Settings");
 
         for (int i = 0; i < binds.size(); i++){
-            for (auto& b : bannedKeysForChanging) {
-                if (binds[i].action == b) { banned = true; break; }
-            }
-
-            if (banned) { banned = false; continue; }
-
             ImGui::PushID(i);
 
             ImGui::Text("%s", binds[i].action.c_str());

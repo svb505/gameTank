@@ -19,7 +19,6 @@ struct KeyBind {
 };
 
 extern std::vector<KeyBind> binds;
-extern std::vector<std::string> bannedKeysForChanging;
 extern std::vector<std::string> allBindedKeys;
 extern std::unordered_map<int, std::string> keyNames;
 

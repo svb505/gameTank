@@ -1,8 +1,13 @@
 {
+    "AimMode": 340,
     "Back": 83,
+    "CursorVisibility": 342,
+    "Fire": 32,
     "Forward": 87,
     "Left": 65,
+    "MGun": 257,
     "Rangefinder": 82,
     "Right": 68,
-    "Smoke": 71
+    "Smoke": 71,
+    "Zoom": 341
 }
