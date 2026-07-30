@@ -75,19 +75,27 @@ extern std::unordered_map<Entity, ApartmentComponent> apartments;
 extern std::unordered_map<Entity, Bounds> bounds;
 
 Entity CreateEntity();
-void drawRadar(float angle);
+
+//Drawlers
+void DrawRadar(float angle);
 void drawTank(TankComponent& tank, float bodyH);
 void DrawCube(float w, float h, float d);
-void RadarSystem(float dt);
 void drawDestroyedTank(TankComponent& tank, float bodyH);
 void drawDestroyedAppartament(ApartmentComponent& ap, float totalH);
 void drawAppartament(ApartmentComponent& ap, float totalH);
+
+//Systems
+void RadarSystem(float dt);
 void RenderSystem(std::vector<SmokeEffect*>& smokes);
 void BoundsSystem();
 void HealthBarSystem();
 void DeathSystem(Tank& tank);
+
+//Other
 void Update(float dt, Tank& tank,Sound& sound);
 void Render(std::vector<SmokeEffect*>& smokes,bool healthBar = true);
+
 void generateEnemyes(std::unordered_map<int, Entity>& enemyes, int count);
+
 std::string getRenderTypeString(RenderType& type);
 checkCol checkCollisionWithTank(svbmath::Vec3& pos);
