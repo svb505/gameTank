@@ -19,16 +19,9 @@
 * 
 * ¤ reserveProjectiles() - Reserve place in vector for projectiles
 
- ¤ spawnShell(svbmath::Vec3 pos, float yawDeg, float pitchDeg, shellType _shellType,
-bool isEnemy = false); - Spawn shell
-
- ¤ spawnBullet(svbmath::Vec3 pos, float yawDeg); - Spawn Bullet
-
  ¤ update(float dt, Sound& sound, std::vector<Projectile>& artilleryProjectiles, 
 ECSCompenents& components, EffectsContext& context, Tank& player,
 CameraShake& shake); - Update all projectiles(position,bounds....)
-
- ¤ drawProjectiles(); - Draw all projectiles
 
  ¤ std::string getShellType(shellType& shellType); Get string from enumerate value
 

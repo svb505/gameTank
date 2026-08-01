@@ -13,10 +13,11 @@
 #include "modificationsSystem.h"
 #include <format>
 #include "input.h"
+#include <memory.h>
 
 class GUI {
 private:
-    Profiler p;
+    std::unique_ptr<Profiler> p = nullptr;
 
 	std::vector<const char*> spawns = { "1", "2","3" };
     std::vector<const char*> days = { "Day","Night"};
@@ -205,9 +206,11 @@ public:
         ImGui::End();
     }
     void renderDevWin(Sound& sound,std::unordered_map<int, Entity>& enemyes) {
+        p = std::make_unique<Profiler>();
+        
         ImGui::Begin("Dev. Window", &devWindow);
 
-        ImGui::Text("%s\n%s", p.getMemoryUsage()[0].c_str(), p.getMemoryUsage()[1].c_str());
+        ImGui::Text("%s\n%s", p->getMemoryUsage()[0].c_str(), p->getMemoryUsage()[1].c_str());
         ImGui::Text("Enemyes count: %d", enemyes.size());
         ImGui::Text("Sound buffers: %d", sound.buffers.size());
         ImGui::Text("Sound sources: %d", sound.sources.size());
