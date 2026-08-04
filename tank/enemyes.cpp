@@ -355,7 +355,7 @@ void drawTank(TankComponent& tank, float bodyH) {
     glPopMatrix(); // turret
     glPopMatrix(); // tank
 }
-void RadarSystem(float dt) {
+void RadarSystem(double dt) {
     for (auto& [entity, radar] : radars) {
         transforms[entity].angle += radar.rotationSpeed * dt;
         if (transforms[entity].angle >= 360.0f) transforms[entity].angle -= 360.0f;
@@ -1072,7 +1072,7 @@ void DeathSystem(Tank& tank) {
         if (it != entities.end()) entities.erase(it);
     }
 }
-void Update(float dt, Tank& tank, Sound& sound) {
+void Update(double dt, Tank& tank, Sound& sound) {
     RadarSystem(dt);
     BoundsSystem();
     DeathSystem(tank);
@@ -1109,9 +1109,7 @@ void Update(float dt, Tank& tank, Sound& sound) {
                 spawnShell({ enemyPos.x, enemyPos.y + 1.0f, enemyPos.z }, bot.turretAngle * 180.0f / PI, bot.gunAngle,
                     type, true);
 
-                sound.setSourcePosition(sound.sources["Shot"], enemyPos);
-                alSourceStop(sound.sources["Shot"]);
-                alSourcePlay(sound.sources["Shot"]);
+                sound.playSound(sound.sources["Shot"], transforms[id].pos);
 
                 LOG_INFO("Bot shooted");
 

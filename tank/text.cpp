@@ -96,7 +96,7 @@ void RenderTextWorld(float x, float y, float z, float r, float g, float b, const
 
     glPopMatrix();
 }
-void showDestroyText(float dt) {
+void showDestroyText(double dt) {
     if (timerText > 0.0f) {
         RenderTextHUD(1600 / 2 - 100, 1500 / 2 + 100, 1, 1, 1, g_destroyText.c_str(), 1600, 1000);
         timerText -= dt; 

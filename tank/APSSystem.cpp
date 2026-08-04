@@ -15,11 +15,9 @@ void startAPS(Projectile& p, EffectsContext& context, Sound& sound,Tank& tank) {
         counter_munition--;
         
         context.explosions.push_back(new ExplosionEffect(p.pos, 300, 3.0f, 1.5f, 1.0f));
-        context.smokes.push_back(new SmokeEffect(p.pos, 80.0f, 1.0));
+        context.smokes.push_back(new SmokeEffect(p.pos, 80.0f, 1.0f));
 
-        sound.setSourcePosition(sound.sources["Explosion"], p.pos);
-        alSourceStop(sound.sources["Explosion"]);
-        alSourcePlay(sound.sources["Explosion"]);
+        sound.playSound(sound.sources["Explosion"], p.pos);
 
         p.alive = false;
     }

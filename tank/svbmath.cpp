@@ -24,7 +24,7 @@ namespace svbmath{
 		float cosFov = cos(fovDeg * 0.5f * PI / 180.0f);
 		return Dot(forward, dirToTarget) > cosFov;
 	}
-	float RotateTowards(float current, float target, float speed, float dt) {
+	float RotateTowards(float current, float target, float speed, double dt) {
 		float diff = target - current;
 
 		while (diff > PI) diff -= 2 * PI;

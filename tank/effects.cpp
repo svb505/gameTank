@@ -42,7 +42,7 @@ ExplosionEffect::ExplosionEffect(svbmath::Vec3 pos, int count, float durationSec
     }
 }
 
-void ExplosionEffect::Update(float dt) {
+void ExplosionEffect::Update(double dt) {
     if (finished) return;
 
     elapsedTime += dt;
@@ -122,7 +122,7 @@ std::vector<SmokeEffect::Particle> SmokeEffect::getCoordinates() const {
 
     return coords;
 }
-void SmokeEffect::Update(float dt) {
+void SmokeEffect::Update(double dt) {
     for (auto& p : particles) {
         p.pos.y += p.riseSpeed * dt;
         p.pos.x += ((float)rand() / RAND_MAX - 0.5f) * 0.01f;
@@ -161,7 +161,7 @@ void SmokeEffect::Draw(){
     glDisable(GL_BLEND);
     glDisable(GL_TEXTURE_2D);
 }
-void updateExplosions(std::vector<ExplosionEffect*>& explosions, float dt) {
+void updateExplosions(std::vector<ExplosionEffect*>& explosions, double dt) {
     for (auto it = explosions.begin(); it != explosions.end();) {
         (*it)->Update(dt);
         (*it)->Draw();
@@ -170,7 +170,7 @@ void updateExplosions(std::vector<ExplosionEffect*>& explosions, float dt) {
         else ++it;
     }
 }
-void updateSmokes(std::vector<SmokeEffect*>& smokes, float dt) {
+void updateSmokes(std::vector<SmokeEffect*>& smokes, double dt) {
     for (auto it = smokes.begin(); it != smokes.end(); ) {
         SmokeEffect* smoke = *it;
 

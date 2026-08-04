@@ -113,7 +113,7 @@ int& Tank::getCurretHp() {
 int& Tank::getSelectedSpawn() {
     return selectedSpawn;
 }
-void Tank::UpdateTrack(TrackBuffer& track, const svbmath::Vec3& pos, float dt) {
+void Tank::UpdateTrack(TrackBuffer& track, const svbmath::Vec3& pos, double dt) {
     float minDist = 0.3f;
 
     if (!track.hasLast) {
@@ -173,7 +173,7 @@ void Tank::updateDirrections(float bR, float bY) {
     dirX = -sin(bR);
     dirZ = -cos(bR);
 }
-void Tank::updatePosition(svbmath::Vec3& pos, float dt) {
+void Tank::updatePosition(svbmath::Vec3& pos, double dt) {
     this->pos.x += dirX * moveSpeed * dt;
     this->pos.z += dirZ * moveSpeed * dt;
 }
@@ -325,7 +325,7 @@ Bounds Tank::GetHullMax() const {
 
     return result;
 }
-void Tank::UpdateTrack(float dt, svbmath::Vec3 tankPos,TrackBuffer& leftTrack, TrackBuffer& rightTrack) {
+void Tank::UpdateTrack(double dt, svbmath::Vec3 tankPos,TrackBuffer& leftTrack, TrackBuffer& rightTrack) {
     svbmath::Vec3 forward = { dirX, 0.0f, dirZ };
     svbmath::Vec3 up = { 0, 1, 0 };
     svbmath::Vec3 tankRight = svbmath::Normalize(svbmath::Cross(forward, up));

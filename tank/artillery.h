@@ -18,7 +18,7 @@ public:
 
 	void init(int volley,float shellSpeed);
 	void spawnShells(float x,float z);
-	void updateShells(float dt);
+	void updateShells(double dt);
 	void drawAllShells();
 	void deleteIfAlived();
 	float returnSpeedError();

@@ -42,5 +42,5 @@ struct Projectile {
     Projectile(shellType shell) : selectedShellType(shell) {
         damage = (selectedShellType == shellType::APFSDS) ? 100 : 40;
     }
-    void update(float dt, Tank& tank);
+    void update(double dt, Tank& tank);
 };

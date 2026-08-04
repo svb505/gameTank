@@ -39,7 +39,8 @@ void Weather::getWeather(Sound& sound,Camera& cam) {
 		changeTypeOfParticle(Type::snowy, Type::rainy);
 
 		if (!sound.rainPlayed) {
-			alSourcePlay(sound.sources["Rain"]);
+			sound.playSound(sound.sources["Rain"], cam.cameraPos);
+
 			sound.rainPlayed = true;
 		}
 		if (particles.size() < count) generate(Type::rainy, cam);
@@ -141,7 +142,7 @@ void Weather::generate(const Type& type,Camera& cam) {
 		particles.push_back(p);
 	}
 }
-void Weather::update(Camera& cam,float dt) {
+void Weather::update(Camera& cam,double dt) {
 	for (auto& p : particles) {
 		p.vy -= p.gravity * dt;
 		p.y += p.vy * dt;

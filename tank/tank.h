@@ -131,10 +131,10 @@ public:
     std::map<int, svbmath::Vec3>& getSpawns();
 
     void updateDirrections(float bR, float bY); //Tracks
-    void UpdateTrack(TrackBuffer& track, const svbmath::Vec3& tankPos, float dt);
+    void UpdateTrack(TrackBuffer& track, const svbmath::Vec3& tankPos, double dt);
     void Draw(); //All tank
     
-    void updatePosition(svbmath::Vec3& pos, float dt); //Tank
+    void updatePosition(svbmath::Vec3& pos, double dt); //Tank
     float returnImpactImpulse();
 
     svbmath::Vec3 RotateY(const svbmath::Vec3& v, float angleDeg);
@@ -143,6 +143,6 @@ public:
     Bounds GetHullMax() const;
     
     void DrawTrack(const TrackBuffer& trackL, const TrackBuffer& trackR, float width);
-    void UpdateTrack(float dt, svbmath::Vec3 tankPos,TrackBuffer& leftTrack, TrackBuffer& rightTrack);
+    void UpdateTrack(double dt, svbmath::Vec3 tankPos,TrackBuffer& leftTrack, TrackBuffer& rightTrack);
 
 };

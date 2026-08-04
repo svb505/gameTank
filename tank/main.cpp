@@ -282,8 +282,7 @@ int main(){
                 healths[tankCollision.id].current -= tank.returnImpactImpulse();
             }
 
-            sound.setSourcePosition(sound.sources["Collision"], tank.getCurrentPos());
-            alSourcePlay(sound.sources["Collision"]);
+            sound.playSound(sound.sources["Collision"], tank.getCurrentPos());
         }
 
         Draw3DAim(tank);

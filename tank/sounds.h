@@ -99,6 +99,14 @@ public:
         return buffer;
     }
 
+    void playSound(ALuint source, svbmath::Vec3 posit) {
+        setSourcePosition(source, posit);
+
+        alSourceStop(source);
+
+        alSourcePlay(source);
+    }
+
     void setupBuffers() {
         audioDevice = alcOpenDevice(nullptr);
         audioContext = alcCreateContext(audioDevice, nullptr);

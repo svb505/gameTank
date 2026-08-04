@@ -50,7 +50,7 @@ public:
 	void drawSphere(float radius, int stacks, int slices);
 	void draw();
 	void generate(const Type& type,Camera& cam);
-	void update(Camera& cam, float dt);
+	void update(Camera& cam, double dt);
 	void generateSnowPiles(int count, float areaSize);
 	void renderSnowPiles();
 	void getWeather(Sound& sound, Camera& cam);

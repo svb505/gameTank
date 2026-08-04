@@ -22,7 +22,7 @@ void addToKillChat(std::string killer,std::string killed,std::string shell,int k
 
 	messages.push_back(m);
 }
-void updateKillChat(float dt) {
+void updateKillChat(double dt) {
 	for (auto& m : messages) m.life -= dt;
 
 	for (auto it = messages.begin();it != messages.end();) {

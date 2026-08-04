@@ -9,5 +9,5 @@ extern float stepBorder;
 extern float timer;
 extern float Y;
 
-void checkBorders(Tank& tank,float dt, int ScrH, int ScrW);
+void checkBorders(Tank& tank,double dt, int ScrH, int ScrW);
 void drawBorders();

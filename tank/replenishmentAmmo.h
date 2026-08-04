@@ -39,7 +39,7 @@ public:
 
 		return (dx * dx + dz * dz) <= (radius * radius);
 	}
-	void startReplish(float dt,Tank& tank,int wH,int wW) {
+	void startReplish(double dt,Tank& tank,int wH,int wW) {
 		glDisable(GL_LIGHTING);
 
 		if (tank.getTotalShells() < tank.getMaxShells()) {

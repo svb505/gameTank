@@ -176,9 +176,7 @@ public:
         if (ImGui::Button("Start artillery strike")) {
             art.init(8, 25.0f);
 
-            sound.setSourcePosition(sound.sources["ArtVolley"], tank.getCurrentPos());
-            alSourceStop(sound.sources["ArtVolley"]);
-            alSourcePlay(sound.sources["ArtVolley"]);
+            sound.playSound(sound.sources["ArtVolley"], tank.getCurrentPos());
 
             art.spawnShells(artX, artZ);
         }
@@ -194,9 +192,7 @@ public:
         if (ImGui::Button("Start MLRS strike")) {
             art.init(25, 125.0f);
 
-            sound.setSourcePosition(sound.sources["ArtVolley"], tank.getCurrentPos());
-            alSourceStop(sound.sources["ArtVolley"]);
-            alSourcePlay(sound.sources["ArtVolley"]);
+            sound.playSound(sound.sources["ArtVolley"], tank.getCurrentPos());
 
             art.spawnShells(artX, artZ);
         }
@@ -206,7 +202,7 @@ public:
         ImGui::End();
     }
     void renderDevWin(Sound& sound,std::unordered_map<int, Entity>& enemyes) {
-        p = std::make_unique<Profiler>();
+        if (!p) p = std::make_unique<Profiler>();
         
         ImGui::Begin("Dev. Window", &devWindow);
 

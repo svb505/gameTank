@@ -4,7 +4,7 @@
 #include "svbmath.h"
 #include <iostream>
 
-void Projectile::update(float dt,Tank& tank) {
+void Projectile::update(double dt,Tank& tank) {
     if (selectedShellType == shellType::ATGM) {
         float yaw = (tank.getTurretYaw() + 90.0f) * 3.1415926f / 180.0f;
         float pitch = tank.getGunPitch() * 3.1415926f / 180.0f;

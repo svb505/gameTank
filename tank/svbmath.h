@@ -23,7 +23,7 @@ namespace svbmath {
 	float NormalizeAngle(float angle);
 	float GetYaw(const Vec3& dir);
 	float Dot(const Vec3& a, const Vec3& b);
-	float RotateTowards(float current, float target, float speed, float dt);
+	float RotateTowards(float current, float target, float speed, double dt);
 	float LengthSq(const Vec3& v);
 	float Length(const Vec3& v);
 	bool InFOV(const Vec3& forward, const Vec3& dirToTarget, float fovDeg);

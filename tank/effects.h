@@ -20,7 +20,7 @@ private:
     std::vector<Particle> particles;
 
     float duration;
-    float elapsedTime;
+    double elapsedTime;
     bool finished;
 
     svbmath::Vec3 centers;
@@ -32,7 +32,7 @@ public:
     ExplosionEffect(svbmath::Vec3 pos, int count = 400, float durationSec = 6.0f,
         float radius = 2.0f, float height = 1.8f);
 
-    void Update(float dt);
+    void Update(double dt);
     void Draw();
     bool IsFinished() const;
     void SetRadius(float r);
@@ -65,12 +65,12 @@ public:
         const std::vector<float>& _colors = { 0.2f, 0.2f, 0.2f, 0.5f }, float _size = 1.0f, float _speed = 0.5f,
         float hRadius = 0.5f);
     std::vector<Particle> getCoordinates() const;
-    void Update(float dt);
+    void Update(double dt);
     void Draw();
 };
 
-void updateExplosions(std::vector<ExplosionEffect*>& explosions, float dt);
-void updateSmokes(std::vector<SmokeEffect*>& smokes, float dt);
+void updateExplosions(std::vector<ExplosionEffect*>& explosions, double dt);
+void updateSmokes(std::vector<SmokeEffect*>& smokes, double dt);
 
 struct EffectsContext {
     std::vector<ExplosionEffect*>& explosions;

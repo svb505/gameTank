@@ -183,7 +183,7 @@ void setupBinds() {
     }
 }
 
-void processTankInput(GLFWwindow* window, float dt, std::unordered_map<int, Entity>& enemyes, Tank& tank, Sound& sound,
+void processTankInput(GLFWwindow* window, double dt, std::unordered_map<int, Entity>& enemyes, Tank& tank, Sound& sound,
     Camera& cam, RayContext& context, SmokeGranade& granades, CameraShake& shake) {
     static bool prevCtrl = false;
     static bool prevAlt = false;
@@ -238,9 +238,7 @@ void processTankInput(GLFWwindow* window, float dt, std::unordered_map<int, Enti
         spawnBullet({ pos.x, pos.y + 1.0f, pos.z }, yaw);
 
         if (!sound.mgunPlayed) {
-            sound.setSourcePosition(src, tank.getCurrentPos());
-            alSourceStop(src);
-            alSourcePlay(src);
+            sound.playSound(src, tank.getCurrentPos());
 
             sound.mgunPlayed = true;
         }
@@ -291,9 +289,7 @@ void processTankInput(GLFWwindow* window, float dt, std::unordered_map<int, Enti
 
         spawnShell({ pos.x, posY, pos.z }, yaw, tank.getGunPitch(), tank.getSelectedShell());
 
-        sound.setSourcePosition(sound.sources["Shot"], tank.getCurrentPos());
-        alSourceStop(sound.sources["Shot"]);
-        alSourcePlay(sound.sources["Shot"]);
+        sound.playSound(sound.sources["Shot"], tank.getCurrentPos());
 
         --tank.getTotalShells();
         tank.getFinishReload() = tank.getReloadTime();

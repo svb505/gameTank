@@ -54,7 +54,7 @@ void Artillery::spawnShells(float x,float z) {
         shells.push_back(s);
     }
 }
-void Artillery::updateShells(float dt) {
+void Artillery::updateShells(double dt) {
     for (auto& s : shells) {
         if (!s.alive) continue;
 

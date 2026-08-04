@@ -91,14 +91,14 @@ void drawDestroyedAppartament(ApartmentComponent& ap, float totalH);
 void drawAppartament(ApartmentComponent& ap, float totalH);
 
 //Systems
-void RadarSystem(float dt);
+void RadarSystem(double dt);
 void RenderSystem(std::vector<SmokeEffect*>& smokes);
 void BoundsSystem();
 void HealthBarSystem();
 void DeathSystem(Tank& tank);
 
 //Other
-void Update(float dt, Tank& tank,Sound& sound);
+void Update(double dt, Tank& tank,Sound& sound);
 void Render(std::vector<SmokeEffect*>& smokes,bool healthBar = true);
 
 void generateEnemyes(std::unordered_map<int, Entity>& enemyes, int count);

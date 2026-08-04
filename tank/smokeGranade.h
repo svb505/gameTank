@@ -28,6 +28,6 @@ public:
 	void drawAll(Tank& tank);
 	void draw(svbmath::Vec3& pos, float angle, float yaw);
 	void spawn(Tank& tank);
-	void update(float dt, std::vector<SmokeEffect*>& smokes, Tank& tank, Sound& sound);
+	void update(double dt, std::vector<SmokeEffect*>& smokes, Tank& tank, Sound& sound);
 	void strike();
 };

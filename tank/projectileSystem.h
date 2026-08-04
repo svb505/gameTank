@@ -19,7 +19,7 @@
 * 
 * ¤ reserveProjectiles() - Reserve place in vector for projectiles
 
- ¤ update(float dt, Sound& sound, std::vector<Projectile>& artilleryProjectiles, 
+ ¤ update(double dt, Sound& sound, std::vector<Projectile>& artilleryProjectiles, 
 ECSCompenents& components, EffectsContext& context, Tank& player,
 CameraShake& shake); - Update all projectiles(position,bounds....)
 
@@ -42,7 +42,7 @@ void spawnShell(svbmath::Vec3 pos, float yawDeg, float pitchDeg, shellType _shel
 
 void spawnBullet(svbmath::Vec3 pos, float yawDeg);
 
-void update(float dt, Sound& sound, std::vector<Projectile>& artilleryProjectiles, 
+void update(double dt, Sound& sound, std::vector<Projectile>& artilleryProjectiles, 
     ECSCompenents& components, EffectsContext& context, Tank& player,CameraShake& shake);
 
 void drawProjectiles();

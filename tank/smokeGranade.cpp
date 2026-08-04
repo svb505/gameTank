@@ -70,7 +70,7 @@ void SmokeGranade::spawn(Tank& tank) {
         granades.push_back(p);
     }
 }
-void SmokeGranade::update(float dt, std::vector<SmokeEffect*>& smokes,Tank& tank,Sound& sound) {
+void SmokeGranade::update(double dt, std::vector<SmokeEffect*>& smokes,Tank& tank,Sound& sound) {
     float halfW = tank.getParams().turretW * 0.5f; 
 
     svbmath::Vec3 leftLocal = { -halfW, 0.0f, 0.0f }; 
@@ -106,8 +106,7 @@ void SmokeGranade::update(float dt, std::vector<SmokeEffect*>& smokes,Tank& tank
         if (g.pos.y <= 0.0f) {
             smokes.push_back(new SmokeEffect(g.pos, g.count, 7.0f, { 1.0f,1.0f,1.0f }, 3.0f,
                 0.1f,9.0f));
-            sound.setSourcePosition(sound.sources["Smoke"], g.pos);
-            alSourcePlay(sound.sources["Smoke"]);
+            sound.playSound(sound.sources["Smoke"], g.pos);
 
             it = granades.erase(it);
         }

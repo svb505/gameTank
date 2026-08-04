@@ -21,7 +21,7 @@ bool badges = false;
 void setHeight(float h) { height = h; }
 float getHeight() { return height; }
 void drawMiniMap(int ECRANW, int ECRANH, Tank& playerTank, EffectsContext& context, Camera& cam,
-    Type weather,bool badges, float dt) {
+    Type weather,bool badges, double dt) {
     glDisable(GL_LIGHTING);
 
     float size = height * 0.6f;

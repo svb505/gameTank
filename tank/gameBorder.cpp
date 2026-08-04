@@ -42,7 +42,7 @@ void drawBorders() {
 		glEnd();
 	}
 }
-void checkBorders(Tank& tank,float dt,int ScrH,int ScrW) {
+void checkBorders(Tank& tank,double dt,int ScrH,int ScrW) {
 	svbmath::Vec3 pos = tank.getCurrentPos();
 
 	if (pos.x <= min.x || pos.x >= max.x || pos.z <= min.z || pos.z >= max.z) {
