@@ -8,7 +8,8 @@ class Camera {
 public:
     bool zoomed = false;
 
-    float fov = 70.0f;
+    float baseFov = 70.0f;
+    float fov = baseFov;
     float aspect = 1600.0f / 1000.0f;
     float nearPlane = 0.1f;
     float farPlane = 300.0f;

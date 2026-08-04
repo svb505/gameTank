@@ -285,7 +285,7 @@ int main(){
             sound.playSound(sound.sources["Collision"], tank.getCurrentPos());
         }
 
-        Draw3DAim(tank);
+        Draw2DAim(tank,cam);
 
         drawBorders();
 
