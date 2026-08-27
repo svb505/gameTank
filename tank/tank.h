@@ -73,7 +73,7 @@ private:
     svbmath::Vec3 pos = { 0.0f,0.0f,0.0f }; //Current
     svbmath::Vec3 oldPos = { 0.0f,0.0f,0.0f };
 
-    bool turretLocked = true;
+    bool turretLocked = false;
 
     const float SPEED_LIMIT_FORWARD = getFloatFromJson("MAX_FORWARD_SPEED");
     const float SPEED_LIMIT_BACK = getFloatFromJson("MAX_BACK_SPEED");

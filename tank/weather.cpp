@@ -39,7 +39,7 @@ void Weather::getWeather(Sound& sound,Camera& cam) {
 		changeTypeOfParticle(Type::snowy, Type::rainy);
 
 		if (!sound.rainPlayed) {
-			sound.playSound(sound.sources["Rain"], cam.cameraPos);
+			sound.playSound(sound.sources["Rain"], cam.getCamPos());
 
 			sound.rainPlayed = true;
 		}
@@ -126,13 +126,15 @@ void Weather::generate(const Type& type,Camera& cam) {
 	int toGenerate = std::min<int>(count - static_cast<int>(particles.size()), 10);
 
 	for (int i = 0; i < toGenerate; i++) {
+		svbmath::Vec3 camPos = cam.getCamPos();
+
 		Particle p;
 
 		p.type = type;
 
-		p.x = cam.cameraPos.x + (rand() % int(diapazone * 2)) - diapazone;
-		p.y = cam.cameraPos.y + p.height;
-		p.z = cam.cameraPos.z + (rand() % int(diapazone * 2)) - diapazone;
+		p.x = camPos.x + (rand() % int(diapazone * 2)) - diapazone;
+		p.y = camPos.y + p.height;
+		p.z = camPos.z + (rand() % int(diapazone * 2)) - diapazone;
 
 		p.vx = 0.0f; p.vz = 0.0f;
 		p.fallSpeed = (p.type == Type::rainy) ? 45.0f * svbmath::randFloat(0.5f,1.0f) : 20.0f * svbmath::randFloat(0.5f, 1.0f);
@@ -148,7 +150,7 @@ void Weather::update(Camera& cam,double dt) {
 		p.y += p.vy * dt;
 		
 		if (p.y <= 0.0f) {
-			p.y = cam.cameraPos.y + p.height;
+			p.y = cam.getCamPos().y + p.height;
 			p.vy = -p.fallSpeed;
 		}
 	}

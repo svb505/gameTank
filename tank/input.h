@@ -45,4 +45,4 @@ struct RayContext {
 };
 
 void processTankInput(GLFWwindow* window, double dt, std::unordered_map<int, Entity>& enemyes, Tank& tank, Sound& sound,
-    Camera& cam, RayContext& context, SmokeGranade& granades, CameraShake& shake);
+    CameraParams& cam, RayContext& context, SmokeGranade& granades, CameraShake& shake);

@@ -15,7 +15,7 @@ extern bool badges;
 
 void setHeight(float h);
 float getHeight();
-void drawMiniMap(int ECRANW, int ECRANH, Tank& playerTank, EffectsContext& context, Camera& cam,
-    Type weather, bool badges, double dt);
+void drawMiniMap(int ECRANW, int ECRANH, Tank& playerTank, EffectsContext& context, 
+    Camera& cam,Type weather, bool badges, double dt);
 
     

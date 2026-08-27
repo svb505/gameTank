@@ -85,6 +85,8 @@ public:
 
         bool canUseMlrs = (tank.getKills() > 0 && tank.getKills() % 5 == 0);
 
+        ImGui::SetNextWindowSize(ImVec2(350.0f, 550.0f));
+
         ImGui::Begin("Settings & Info");
 
         if (ImGui::Button("Developper window")) devWindow = true;
@@ -147,23 +149,9 @@ public:
         ImGui::Text("Speed: %.1f", tank.getMoveSpeed());
         ImGui::Dummy(ImVec2(0.0f, 10.0f));
 
-        ImGui::Text("Total shells: %d", tank.getTotalShells());
-        ImGui::Image((ImTextureID)(intptr_t)allTextures[selectedShell], ImVec2(70, 60));
-
-        ImGui::Text("Reload time: %.1f", tank.getFinishReload());
-        ImGui::Dummy(ImVec2(0.0f, 10.0f));
-
         ImGui::Text("Kills: %d", tank.getKills());
         ImGui::Text("Score: %d", tank.getScore());
         ImGui::Dummy(ImVec2(0.0f, 10.0f));
-
-        ImGui::Text("Control:");
-
-        for (auto& b : binds) {
-            std::string name = getKeyName(b.key);
-
-            ImGui::Text("%s - %s", b.action.c_str(), name.c_str());
-        }
 
         ImGui::End();
     }
@@ -254,7 +242,7 @@ public:
                 ImGui::TextColored(ImVec4(0.0f,0.5f,1.0f,1.0f),name.c_str());
                 
                 if (m.second.active) {
-                    ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "Modification buyed");
+                    ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "Modification bought");
                     ImGui::Dummy({ 0.0f,10.0f });
                 }
                 else {
@@ -271,12 +259,34 @@ public:
 
         ImGui::End();
     }
-    
+    void renderShellsWindow(Tank& tank) {
+        ImGuiIO& io = ImGui::GetIO();
+
+        ImGui::SetNextWindowPos(ImVec2(io.DisplaySize.x / 2, io.DisplaySize.y - 170.0f),
+            ImGuiCond_Always);
+
+        ImGui::SetNextWindowSize(ImVec2(400.0f, 200.0f));
+
+        ImGui::Begin("Shells", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
+
+        ImGui::Text("Total shells: %d", tank.getTotalShells());
+        ImGui::Dummy(ImVec2(0.0f, 10.0f));
+        ImGui::Text("Reload time: %.1f", tank.getFinishReload());
+
+        ImGui::SameLine();
+
+        ImGui::Image((ImTextureID)(intptr_t)allTextures[selectedShell], ImVec2(70, 60));        
+
+        ImGui::End();
+    }
     void render(float& fps, Tank& tank, Artillery& art, Sound& sound,Type& weather, 
         SmokeGranade& g,bool& badges,std::unordered_map<int, Entity>& enemyes,
         bool& locked) {
         
+
+
         renderMainWin(fps,weather,tank,g,locked);
+        renderShellsWindow(tank);
 
         if (modWindow) renderModificationWin(tank);
         if (statWindow) renderStatWin();

@@ -22,6 +22,9 @@ void setHeight(float h) { height = h; }
 float getHeight() { return height; }
 void drawMiniMap(int ECRANW, int ECRANH, Tank& playerTank, EffectsContext& context, Camera& cam,
     Type weather,bool badges, double dt) {
+
+    CameraParams& params = cam.getCamParams();
+
     glDisable(GL_LIGHTING);
 
     float size = height * 0.6f;
@@ -54,8 +57,8 @@ void drawMiniMap(int ECRANW, int ECRANH, Tank& playerTank, EffectsContext& conte
     for (auto it = context.explosions.begin(); it != context.explosions.end(); ++it) (*it)->Draw();
     for (auto it = context.smokes.begin(); it != context.smokes.end(); ++it) (*it)->Draw();
 
-    drawGrid(cam.cameraPos.x, cam.cameraPos.z);
-    drawGridText(cam.cameraPos.x, cam.cameraPos.z);
+    drawGrid(cam.getCamPos().x, cam.getCamPos().z);
+    drawGridText(cam.getCamPos().x, cam.getCamPos().z);
 
     drawBorders();
 
@@ -68,7 +71,7 @@ void drawMiniMap(int ECRANW, int ECRANH, Tank& playerTank, EffectsContext& conte
         Render(context.smokes, false);
     }
     else {
-        drawPlayerIcon(miniW * 0.5f, miniH * 0.5f, 1.0f, cam.cameraYaw);
+        drawPlayerIcon({ miniW * 0.5f, miniH * 0.5f }, 1.0f, params.cameraYaw);
         RenderBadges(miniW,miniH,scale,playerTank,cam);
     }
 
@@ -93,7 +96,7 @@ void drawMiniMap(int ECRANW, int ECRANH, Tank& playerTank, EffectsContext& conte
 
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    gluPerspective(cam.fov, (float)ECRANW / ECRANH, cam.nearPlane, cam.farPlane);
+    gluPerspective(params.fov, (float)ECRANW / ECRANH, params.nearPlane, params.farPlane);
 
     glEnable(GL_LIGHTING);
 }

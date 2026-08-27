@@ -73,6 +73,7 @@ void windowCloseCallback(GLFWwindow* window) {
 void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
     ImGuiIO& io = ImGui::GetIO();
     io.AddMousePosEvent((float)xpos, (float)ypos);
+    CameraParams& params = cam.getCamParams();
 
     if (io.WantCaptureMouse || cursorVisibility) return;
 
@@ -96,13 +97,13 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
     xoffset *= sensitivity;
     yoffset *= sensitivity;
 
-    cam.cameraYaw += (float)xoffset;
-    cam.cameraPitch -= (float)yoffset;
+    params.cameraYaw += (float)xoffset;
+    params.cameraPitch -= -(float)yoffset;
 
     tank.getTurretYaw() -= (float)xoffset;
     tank.getGunPitch() += (float)yoffset;
 
-    cam.cameraYaw = fmod(cam.cameraYaw + 360.0f, 360.0f);
+    params.cameraYaw = fmod(params.cameraYaw + 360.0f, 360.0f);
 
     tank.getTurretYaw() = fmod(tank.getTurretYaw() + 360.0f, 360.0f);
 
@@ -123,6 +124,8 @@ void countFps(double& deltaTime,double& lastTime,double& currentTime,int& frames
 }
 
 int main(){
+    CameraParams& params = cam.getCamParams();
+
     Logger::initLogger();
 
     srand((unsigned)time(nullptr));
@@ -141,6 +144,7 @@ int main(){
 
     glfwWindowHint(GLFW_SAMPLES, 16);
     GLFWwindow* window = glfwCreateWindow(ECRANW,ECRANH, "Tank", NULL, NULL);
+
     if (!window){
         LOG_ERROR("Failed to create window");
         std::cout << "Failed to create window\n";
@@ -153,15 +157,18 @@ int main(){
         stbi_image_free(pixels);
     }
      
+    glfwSetWindowUserPointer(window, &cam);
     glfwMakeContextCurrent(window);
+
     glClearColor(0.6f, 0.8f, 1.0f, 1.0f);;
     BuildFont();
 
     glEnable(GL_MULTISAMPLE);
     glEnable(GL_DEPTH_TEST);
 
-    setMatrix(cam.left, cam.right, cam.bottom, cam.top, cam.nearPlane, cam.farPlane);
-
+    setMatrix(params.left, params.right, params.bottom, params.top, params.nearPlane, 
+        params.farPlane);
+  
     std::unordered_map<int, Entity> enemyes;
 
     std::vector<ExplosionEffect*> explosions;
@@ -213,19 +220,19 @@ int main(){
 
         ImGui::Render();
 
-        sound.setListener(cam.cameraPos, cam.returnForwardVector());
+        sound.setListener(cam.getCamPos(), cam.returnForwardVector());
 
         weat.getWeather(sound, cam);
   
         countFps(deltaTime,lastTime,currentTime,frames,fps,fpsTimer);
 
-        processTankInput(window, deltaTime, enemyes,tank,sound,cam,ray,granades,camShake);
+        processTankInput(window, deltaTime, enemyes,tank,sound,cam.getCamParams(), ray, granades, camShake);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         cam.setupCamera(tank, camShake,tank.getAimMode());
 
         drawSky();
-        drawGround(cam.cameraPos.x, cam.cameraPos.z,weat.getWeather());
+        drawGround(cam.getCamPos().x, cam.getCamPos().z, weat.getWeather());
 
         tank.Draw();
         tank.updatePosition(tank.getCurrentPos(), deltaTime);
@@ -285,7 +292,7 @@ int main(){
             sound.playSound(sound.sources["Collision"], tank.getCurrentPos());
         }
 
-        Draw2DAim(tank,cam);
+        Draw2DAim(tank,cam.getCamParams());
 
         drawBorders();
 

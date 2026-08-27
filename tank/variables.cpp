@@ -1,8 +1,8 @@
 #include "variables.h"
 #include "rangefinder.h"
 
-int ECRANW = 1600; 
-int ECRANH = 1000;
+int ECRANW = 1920; 
+int ECRANH = 990;
 
 int lastHitID = -1;
 float lastHitDist = 0.0f;

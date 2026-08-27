@@ -21,7 +21,7 @@ void drawHUD(int WW,int WH,float lastHit) {
     glEnable(GL_LIGHTING);
     glEnable(GL_DEPTH_TEST);
 }
-void Draw2DAim(Tank& tank,Camera& cam){
+void Draw2DAim(Tank& tank, CameraParams& cam){
     float turretRad;
 
     if (tank.getTurretLocked())

@@ -1,8 +1,8 @@
 #pragma once
 #include <vector>
 
-class Camera;
+struct CameraParams;
 class Tank;
 
-void Draw2DAim(Tank& tank,Camera& cam);
+void Draw2DAim(Tank& tank, CameraParams& cam);
 void drawHUD(int WW,int WH,float lastHit);

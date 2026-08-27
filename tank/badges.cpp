@@ -26,75 +26,71 @@ void DrawSpawnMarker2D(const svbmath::Vec3& pos, bool selected, float size, floa
 
     glPopMatrix();
 }
-void drawRadar(float x, float y, float size, float angle) {
+void drawRadar(const svbmath::Vec2& pos, float size, float angle) {
     // circle
     glColor3f(0.0f, 1.0f, 0.0f);
     glBegin(GL_LINE_LOOP);
     for (int i = 0; i < 40; i++) {
         float a = i * 2.0f * 3.14159f / 40;
-        glVertex2f(x + cos(a) * size,
-            y + sin(a) * size);
+        glVertex2f(pos.x + cos(a) * size,pos.y + sin(a) * size);
     }
     glEnd();
 
     // ray
     glBegin(GL_LINES);
-    glVertex2f(x, y);
-    glVertex2f(x + cos(angle) * size,
-        y + sin(angle) * size);
+    glVertex2f(pos.x, pos.y);
+    glVertex2f(pos.x + cos(angle) * size,pos.y + sin(angle) * size);
     glEnd();
 }
-void drawTank(float x, float y, float size, float angle) {
+void drawTank(const svbmath::Vec2& pos, float size, float angle) {
     // body
     glColor3f(0.3f, 0.5f, 0.3f);
     glBegin(GL_QUADS);
-    glVertex2f(x - size, y - size * 0.5f);
-    glVertex2f(x + size, y - size * 0.5f);
-    glVertex2f(x + size, y + size * 0.5f);
-    glVertex2f(x - size, y + size * 0.5f);
+    glVertex2f(pos.x - size, pos.y - size * 0.5f);
+    glVertex2f(pos.x + size, pos.y - size * 0.5f);
+    glVertex2f(pos.x + size, pos.y + size * 0.5f);
+    glVertex2f(pos.x - size, pos.y + size * 0.5f);
     glEnd();
 
     // turret
     glColor3f(0.2f, 0.4f, 0.2f);
     glBegin(GL_TRIANGLE_FAN);
-    glVertex2f(x, y);
+    glVertex2f(pos.x, pos.y);
     for (int i = 0; i <= 20; i++) {
         float a = i * 2.0f * 3.14159f / 20;
-        glVertex2f(x + cos(a) * size * 0.5f,
-            y + sin(a) * size * 0.5f);
+        glVertex2f(pos.x + cos(a) * size * 0.5f,pos.y + sin(a) * size * 0.5f);
     }
     glEnd();
 
     // gun
     glBegin(GL_LINES);
-    glVertex2f(x, y);
-    glVertex2f(x + cos(angle) * size * 1.5f,
-        y + sin(angle) * size * 1.5f);
+    glVertex2f(pos.x, pos.y);
+    glVertex2f(pos.x + cos(angle) * size * 1.5f,pos.y + sin(angle) * size * 1.5f);
     glEnd();
 }
-void drawHouse(float x, float y, float size) {
+void drawHouse(const svbmath::Vec2& pos, float size) {
     // wall
     glColor3f(0.7f, 0.5f, 0.3f);
     glBegin(GL_QUADS);
-    glVertex2f(x - size, y);
-    glVertex2f(x + size, y);
-    glVertex2f(x + size, y + size);
-    glVertex2f(x - size, y + size);
+    glVertex2f(pos.x - size, pos.y);
+    glVertex2f(pos.x + size, pos.y);
+    glVertex2f(pos.x + size, pos.y + size);
+    glVertex2f(pos.x - size, pos.y + size);
     glEnd();
 
     // roof
     glColor3f(0.6f, 0.1f, 0.1f);
     glBegin(GL_TRIANGLES);
-    glVertex2f(x - size, y + size);
-    glVertex2f(x + size, y + size);
-    glVertex2f(x, y + size * 1.8f);
+    glVertex2f(pos.x - size, pos.y + size);
+    glVertex2f(pos.x + size, pos.y + size);
+    glVertex2f(pos.x, pos.y + size * 1.8f);
     glEnd();
 }
-void drawPlayerIcon(float x, float y, float size, float angle) {
+void drawPlayerIcon(const svbmath::Vec2& pos, float size, float angle) {
     glColor3f(1.0f, 1.0f, 0.0f); 
 
     glPushMatrix();
-    glTranslatef(x, y, 0.0f);
+    glTranslatef(pos.x, pos.y, 0.0f);
     glRotatef(angle * 180.0f / 3.14159f, 0.0f, 0.0f, 1.0f);
 
     glBegin(GL_TRIANGLES);
@@ -126,8 +122,8 @@ void End2D() {
     glMatrixMode(GL_PROJECTION);
     glPopMatrix();
 }
-void WorldToScreen(float worldX, float worldZ, float centerX, float centerZ, float yaw,const Camera& cam,float scale, 
-    float screenW, float screenH, float& outX, float& outY){
+void WorldToScreen(float worldX, float worldZ, float centerX, float centerZ, float yaw,
+    const Camera& cam,float scale, float screenW, float screenH, float& outX, float& outY){
 
     float dx = worldX - centerX;
     float dz = worldZ - centerZ;
@@ -135,7 +131,8 @@ void WorldToScreen(float worldX, float worldZ, float centerX, float centerZ, flo
     outX = dx * scale + screenW * 0.5f;
     outY = screenH * 0.5f - dz * scale;
 }
-void RenderBadges(int ww, int wh, float scale, Tank& tank,Camera cam) {
+void RenderBadges(int ww, int wh, float scale, Tank& tank,Camera& cam) {
+
     Begin2D(ww, wh); 
 
     for (auto e : entities) {
@@ -146,19 +143,20 @@ void RenderBadges(int ww, int wh, float scale, Tank& tank,Camera cam) {
 
         float sx, sy;
 
-        WorldToScreen(t.pos.x, t.pos.z, tank.getCurrentPos().x, tank.getCurrentPos().z, cam.cameraYaw,cam,scale, ww, wh,sx, sy);
+        WorldToScreen(t.pos.x, t.pos.z, tank.getCurrentPos().x, tank.getCurrentPos().z, 
+            cam.getCamParams().cameraYaw,cam,scale, ww, wh,sx, sy);
 
         switch (r.type) {
         case RenderType::Tank:
-            drawTank(sx, sy, 7, t.angle - cam.cameraYaw);
+            drawTank({ sx, sy }, 7, t.angle - cam.getCamParams().cameraYaw);
             break;
 
         case RenderType::Radar:
-            drawRadar(sx, sy, 8, t.angle - cam.cameraYaw);
+            drawRadar({ sx, sy }, 8, t.angle - cam.getCamParams().cameraYaw);
             break;
 
         case RenderType::Apartment:
-            drawHouse(sx, sy, 6);
+            drawHouse({ sx, sy }, 6);
             break;
         }
     }

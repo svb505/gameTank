@@ -4,23 +4,29 @@
 #include "cameraShake.h"
 #include "variables.h"
 
+svbmath::Vec3& Camera::getCamPos() {
+    return cameraPos;
+}
+CameraParams& Camera::getCamParams() {
+    return camParams;
+}
 void Camera::setupCamera(Tank& tank, CameraShake& shakeEffect,bool& aimMode) {
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
     // Ограничение pitch
-    if (cameraPitch > 89.0f) cameraPitch = 89.0f;
-    if (cameraPitch < -10.0f) cameraPitch = -10.0f;
+    if (camParams.cameraPitch > 89.0f) camParams.cameraPitch = 89.0f;
+    if (camParams.cameraPitch < -10.0f) camParams.cameraPitch = -10.0f;
 
-    float yawRad = cameraYaw * 3.1415926f / 180.0f;
-    float pitchRad = cameraPitch * 3.1415926f / 180.0f;
+    float yawRad = camParams.cameraYaw * 3.1415926f / 180.0f;
+    float pitchRad = camParams.cameraPitch * 3.1415926f / 180.0f;
 
     svbmath::Vec3 offset = shakeEffect.GetOffset();
 
     if (!aimMode) {
-        cameraPos.x = tank.getCurrentPos().x - cos(pitchRad) * sin(yawRad) * camDistance;
-        cameraPos.y = tank.getCurrentPos().y + camHeight + sin(pitchRad) * camDistance;
-        cameraPos.z = tank.getCurrentPos().z + cos(pitchRad) * cos(yawRad) * camDistance;
+        cameraPos.x = tank.getCurrentPos().x - cos(pitchRad) * sin(yawRad) * camParams.camDistance;
+        cameraPos.y = tank.getCurrentPos().y + camParams.camHeight + sin(pitchRad) * camParams.camDistance;
+        cameraPos.z = tank.getCurrentPos().z + cos(pitchRad) * cos(yawRad) * camParams.camDistance;
 
         gluLookAt(cameraPos.x + offset.x,cameraPos.y + offset.y,cameraPos.z + offset.z,
             tank.getCurrentPos().x, tank.getCurrentPos().y + 1.0f, tank.getCurrentPos().z,0,1,0);
@@ -49,8 +55,8 @@ void Camera::setupCamera(Tank& tank, CameraShake& shakeEffect,bool& aimMode) {
     }
 }
 svbmath::Vec3 Camera::returnForwardVector() {
-    float radYaw = cameraYaw * 3.14159265f / 180.0f;
-    float radPitch = angle * 3.14159265f / 180.0f;
+    float radYaw = camParams.cameraYaw * 3.14159265f / 180.0f;
+    float radPitch = camParams.angle * 3.14159265f / 180.0f;
     float fx = cos(radPitch) * sin(radYaw);
     float fy = sin(radPitch);
     float fz = -cos(radPitch) * cos(radYaw);
